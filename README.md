@@ -1,103 +1,119 @@
-📌 Descripción General
-| Componente    | Tecnología                         |
-| ------------- | ---------------------------------- |
-| Backend       | Java 21 + Spring Boot + PostgreSQL |
-| Frontend      | React + Vite + TypeScript          |
-| Base de Datos | PostgreSQL 17                      |
+# PORTAL ROSHKERO
 
+Portal Roshkero es una plataforma interna donde los colaboradores de Roshka pueden gestionar una variedad de solicitudes relacionadas con dispositivos, vacaciones, beneficios, equipos (como computadoras) y más. Además, el portal sirve como herramienta para el equipo de Recursos Humanos (RRHH) para aprobar y controlar las solicitudes y beneficios de los empleados.
 
-⚙️ Prerrequisitos
+Por otro lado, el área de Operaciones puede gestionar a los clientes, controlar las tecnologías utilizadas por cada uno de ellos y asignar colaboradores a los distintos equipos de trabajo dentro de cada cliente.
 
-| Herramienta              | Versión recomendada 
-| ------------------------ | -------------------
-| Java                     | 21 LTS              
-| Maven                    | 3.8+                
-| Node.js + npm            | 20.19.5 LTS         
-| PostgreSQL               | 17       
-| Thunder Client / Postman | —         
- 
+Además, el portal permite hacer un seguimiento detallado de las tecnologías que dominan los colaboradores, proporcionando una vista completa de las habilidades y capacidades del equipo.
 
+## Descripción del proyecto 🚀
 
-📦 Backend – Instalación
+Portal Roshkero es una solución full-stack diseñada para mejorar la eficiencia en la gestión de recursos humanos y operaciones dentro de Roshka. El sistema permite a los colaboradores realizar solicitudes de vacaciones, gestionar los equipos asignados, y hacer un seguimiento de los beneficios otorgados por la empresa. Por otro lado, el equipo de RRHH puede aprobar estas solicitudes y llevar un control detallado de las asignaciones y beneficios de los empleados.
 
-📍 Ubicación:
+### Características principales:
 
-BACKEND/portalroshkabackend
+* Gestión de solicitudes: vacaciones, equipos (computadoras), beneficios, entre otros.
+* Herramientas para RRHH para aprobar y monitorear las solicitudes y beneficios de los colaboradores.
+* Sistema de gestión de clientes para operaciones, permitiendo asignar colaboradores a proyectos específicos y realizar un seguimiento de las tecnologías utilizadas por los clientes.
+* Monitoreo de las tecnologías manejadas por cada colaborador, lo que permite a los equipos de operaciones gestionar mejor sus recursos humanos.
 
-▶️ 1. Verificar Java y Maven
+## Tecnologías Utilizadas 💻
 
- ```bash
- java -version
- mvn -version
- ```
+En este proyecto, hemos utilizado un conjunto de herramientas modernas para el desarrollo tanto del front-end como del back-end.
 
+### Front-End:
 
-🐘 2. Configurar PostgreSQL
+* React & Vite
 
-1. Crear base: portalroshka
+### Back-End:
 
-2. Restaurar Base de Datos de pgAdmin 
-📍 src/main/resources/application.properties
-  
-3. Crear Archivo application.properties
-   
+* Java & Springboot
+* PostgreSQL (base de datos).
+
+_Más información puedes encontrar en los readmes de cada proyecto 👇🏻_
+
+* [Readme - Portal Roshkero Frontend](./portalroshkafrontend/README.md)
+* [Readme - Portal Roshkero Backend](./BACKEND/README.md)
+
+## Estandares de Commit & Branches
+
+Para mantener un historial de cambios claro y organizado, utilizamos el estándar de commits [Conventional Commits](https://www.conventionalcommits.org/)
+
+Los tipos de commit recomendados son:
+
+* **feat**: Nuevas funcionalidades.
+* **fix**: Corrección de errores.
+* **docs**: Cambios en la documentación.
+* **style**: Cambios de formato que no afectan el código (espaciado, formateo).
+* **refactor**: Cambios en el código que no añaden nuevas funcionalidades ni corrigen errores.
+* **test**: Añadir o modificar pruebas.
+* **chore**: Tareas generales de mantenimiento.
+
+Ejemplos de commits:
+
+``` bash
+feat: agregar módulo de gestión de vacaciones
+fix: corregir bug en la asignación de equipos
+docs: actualizar readme con instrucciones de instalación
+```
+
+Asegúrate de seguir este formato para una mejor organización y comprensión del historial de cambios.
+
+> _**IMPORTANTE**: El repositorio está configurado para rechazar de manera automática los commits que no cumplan con los estándares establecidos._
+
+Estos estándares tambien aplican para los nombres de los branches:
+
+``` bash
+feat/perfil-del-usuario
+fix/bug-asignacion-de-equipos
+docs/actualizar-readme
+```
+
+## Instalación
+
+Para instalar el proyecto puedes recurrir a los readme que se encuentran dentro de los proyectos de backend y frontend.
+
+Ejecutar en la raíz del proyecto.
+
 ```bash
-spring.application.name=portalroshka
-spring.datasource.url=jdbc:postgresql://localhost:5432/portalroshka
-spring.datasource.username=<YOUR AWESOME DB USER>
-spring.datasource.password=<YOUR AWESOME PASSWORD>
-spring.datasource.driver-class-name=org.postgresql.Driver
-spring.jpa.show-sql:true
-spring.jpa.hibernate.ddl-auto:none
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
-spring.thymeleaf.cache=false
-spring.thymeleaf.prefix=classpath:/templates/
-spring.thymeleaf.suffix=.html
+npm install
 ```
-▶️ 4. Levantar backend
 
- ```bash
-  mvn clean install
-  mvn spring-boot:run
-  ```
-  Si funciona correctamente 👉
+* [Instalar el portal roshkero frontend](./portalroshkafrontend/README.md)
+* [Instalar el portal roshkero backend](./BACKEND/portalroshkabackend/README.md)
 
-  Tomcat started on port 8080
-  Started PortalroshkabackendApplication
 
-🧪 Testeo con Postman
-✔️ Endpoint PÚBLICO
+## Contribución
 
-GET http://localhost:8080/api/v1/admin/th/users
+Si deseas contribuir al proyecto, sigue estos pasos:
 
-👉 Status 200 OK
+1. Haz un clona el repositorio.
+2. Crea una nueva rama (git checkout -b feature/nueva-funcionalidad).
+3. Realiza tus cambios y haz commit siguiendo los estándares mencionados.
+4. Haz push a tu rama (git push origin feature/nueva-funcionalidad).
+5. Abre un pull request.
 
-🔐 Login para obtener Token
+Si encuentras algun error o sugerencia de funcionalidad, abre un issue. ✌🏻
 
-GET http://localhost:8080/login
+### Pull Request Template
 
-⚛️ 5. Frontend
+Este proyecto cuenta con un template para los pull request. Este template debe ser completado para poder tener información exacta de los cambios introducidos.
 
- FRONTEND/portalroshkafrontend
- ```bash
+> **IMPORTANTE:** *Si un PR no cuenta con el template correctamente completado, no será mergeado hasta que el PR cumpla con la condición*
 
- npm install
- ```
- 
- ```bash
+## Contribuidores principales
 
-npm run dev
-```
-URL del front:
+Gracias a los siguientes contribuyentes por su trabajo en este proyecto:
 
-http://localhost:5173/
+- [Julio Hermosa](https://github.com/jchermosa)
+- [Sergio Cáceres](https://github.com/sscaceres)
+- [Celeste Jimenez](https://github.com/mjimenez-r)
+- [Vladimir Gromov](https://github.com/vladgromovpy)
+- [José Olmedo](https://github.com/JOlmedoZero)
+- [Matías Orué](https://github.com/r-morue)
 
-🧠 6. Flujo completo
+¡Y a todos los demás que han contribuido de alguna manera!
 
-1️⃣ PostgreSQL ON  
-2️⃣ Backend → mvn spring-boot:run  
-3️⃣ Test en Postman  
-4️⃣ Login → guardar token  
-5️⃣ Front → npm run dev  
-6️⃣ Consumir API con token  
+## Licencia
 
+Este proyecto es propiedad de Roshka. No está bajo una licencia de código abierto y solo puede ser utilizado por miembros autorizados de la organización.
