@@ -1,69 +1,76 @@
-# React + TypeScript + Vite
+# Portal Roshkero - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este proyecto es una aplicación frontend moderna construida con React, potenciada por Vite para un desarrollo rápido, estilada con TailwindCSS, organizada con una arquitectura feature-based y asegurando calidad de código mediante ESLint y Prettier.
 
-Currently, two official plugins are available:
+## 📂 Tecnologías utilizadas
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+* [React](https://es.react.dev/) 19.1.1
+* [Vite](https://vite.dev/) 7.1.2
+* [TypeScript](https://www.typescriptlang.org/) 5.8.3
+* [React Router](https://reactrouter.com/home) 7.9.6
+* [TailwindCSS](https://tailwindcss.com/) 3.4.17
 
-## Expanding the ESLint configuration
+## Estructura del proyecto
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Arquitectura feature-based
+```
+src/
+ ├─ app/
+ │   ├─ router/
+ │   └─ providers/
+ │
+ ├─ features/
+ │   ├─ user/
+ │   │    ├─ pages/
+ │   │    ├─ components/
+ │   │    ├─ hooks/
+ │   │    └─ services/
+ │   ├─ auth/
+ │   └─ ...
+ │
+ ├─ shared/
+ │   ├─ services/
+ │   ├─ ui/
+ │   └─  utils/
+ │   
+ │
+ ├─ assets/
+ └─ main.tsx
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Scripts
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+| Script     | Descripción                                               |
+| ---------- | --------------------------------------------------------- |
+| `npm run dev`      | Inicia el servidor de desarrollo con Vite                 |
+| `npm run build`    | Compila TypeScript y genera el build optimizado           |
+| `npm run lint`     | Ejecuta ESLint sobre el código                            |
+| `npm run lint:fix` | Ejecuta ESLint e intenta corregir errores automáticamente |
+| `npm run preview`  | Sirve localmente el build generado                        |
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Instalación
+
+1. Clonar el repositorio e instalar las dependencias del proyecto raíz
+
+```sh
+git clone https://github.com/roshkadev/portal-roshkero.git
+cd portal-roshkero
+npm install
+cd portalroshkafrontend
 ```
+
+2. Instalar las dependencias del proyecto de frontend
+```sh
+npm install
+```
+
+3. Genera una copia del archivo .env.example y actualiza con tus datos.
+
+4. Ejecutar el proyecto localmente
+```sh
+npm run dev
+```
+
+## Licencia
+
+Este proyecto es propiedad de Roshka. No está bajo una licencia de código abierto y solo puede ser utilizado por miembros autorizados de la organización.
