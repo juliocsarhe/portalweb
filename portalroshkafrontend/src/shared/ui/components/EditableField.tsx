@@ -33,11 +33,11 @@ export default function EditableField({ label, value, placeholder, onSave }: Edi
             value={tempValue}
             onChange={(e) => setTempValue(e.target.value)}
             placeholder={placeholder}
-            className="rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 py-1 text-sm text-gray-800 dark:text-gray-200"
+            className="rounded-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-2 py-1 text-sm text-gray-800 dark:text-gray-200"
           />
           <button
             onClick={handleSave}
-            className="rounded bg-green-600 px-2 py-1 text-xs text-white hover:bg-green-700"
+            className="rounded-sm bg-green-600 px-2 py-1 text-xs text-white hover:bg-green-700"
           >
             Guardar
           </button>
@@ -46,7 +46,7 @@ export default function EditableField({ label, value, placeholder, onSave }: Edi
               setEditing(false)
               setTempValue(value ?? '')
             }}
-            className="rounded bg-gray-300 dark:bg-gray-600 px-2 py-1 text-xs text-gray-700 dark:text-gray-200 hover:bg-gray-400 dark:hover:bg-gray-500"
+            className="rounded-sm bg-gray-300 dark:bg-gray-600 px-2 py-1 text-xs text-gray-700 dark:text-gray-200 hover:bg-gray-400 dark:hover:bg-gray-500"
           >
             Cancelar
           </button>

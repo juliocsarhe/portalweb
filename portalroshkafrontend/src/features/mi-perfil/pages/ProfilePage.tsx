@@ -128,9 +128,9 @@ export default function ProfilePage() {
 
       {/* Contenedor principal */}
       <div className="relative z-10 flex flex-col h-full p-4">
-        <div className="bg-white/45 dark:bg-gray-900/70 backdrop-blur-sm rounded-2xl shadow-lg flex flex-col h-full overflow-hidden">
+        <div className="bg-white/45 dark:bg-gray-900/70 backdrop-blur-xs rounded-2xl shadow-lg flex flex-col h-full overflow-hidden">
           {/* Header */}
-          <div className="p-4 md:p-6 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
+          <div className="p-4 md:p-6 border-b border-gray-200 dark:border-gray-700 shrink-0">
             <h1 className="text-xl md:text-2xl font-bold text-brand-blue dark:text-white">
               Perfil
             </h1>
@@ -138,7 +138,7 @@ export default function ProfilePage() {
 
           {/* Contenido */}
           <div className="flex-1 overflow-auto p-4 md:p-6">
-            <div className="overflow-hidden rounded-2xl border border-white/40 dark:border-gray-700 bg-white/50 dark:bg-gray-800/70 backdrop-blur-sm shadow-sm">
+            <div className="overflow-hidden rounded-2xl border border-white/40 dark:border-gray-700 bg-white/50 dark:bg-gray-800/70 backdrop-blur-xs shadow-xs">
               {/* Encabezado responsive */}
               <div className="p-4 md:p-6 flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                 <div className="flex items-center gap-4 min-w-0">
@@ -148,10 +148,10 @@ export default function ProfilePage() {
                     <img
                       src={`data:image/png;base64,${user.urlPerfil}`}
                       alt={fullName}
-                      className="h-16 w-16 md:h-20 md:w-20 rounded-2xl object-cover shrink-0 shadow"
+                      className="h-16 w-16 md:h-20 md:w-20 rounded-2xl object-cover shrink-0 shadow-sm"
                     />
                   ) : (
-                    <div className="h-16 w-16 md:h-20 md:w-20 rounded-2xl bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white font-bold text-2xl shrink-0 shadow">
+                    <div className="h-16 w-16 md:h-20 md:w-20 rounded-2xl bg-linear-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white font-bold text-2xl shrink-0 shadow-sm">
                       {fullName.charAt(0).toUpperCase()}
                     </div>
                   )}
@@ -204,7 +204,7 @@ export default function ProfilePage() {
                   <div className="grid gap-3 sm:grid-cols-1">
                     {/* Cargos */}
                     {cargoNombre && (
-                      <div className="flex items-center justify-between rounded-xl border border-gray-300 dark:border-gray-600 bg-white/60 dark:bg-gray-700/70 backdrop-blur-sm p-3 min-w-0">
+                      <div className="flex items-center justify-between rounded-xl border border-gray-300 dark:border-gray-600 bg-white/60 dark:bg-gray-700/70 backdrop-blur-xs p-3 min-w-0">
                         <div className="flex items-center gap-3 shrink-0">
                           <span className="text-gray-600 dark:text-gray-400">🧩</span>
                           <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
@@ -219,7 +219,7 @@ export default function ProfilePage() {
 
                     {/* Equipos */}
                     {getEquipos.length > 0 && (
-                      <div className="flex items-center justify-between rounded-xl border border-gray-300 dark:border-gray-600 bg-white/60 dark:bg-gray-700/70 backdrop-blur-sm p-3 min-w-0">
+                      <div className="flex items-center justify-between rounded-xl border border-gray-300 dark:border-gray-600 bg-white/60 dark:bg-gray-700/70 backdrop-blur-xs p-3 min-w-0">
                         <div className="flex items-center gap-3 shrink-0">
                           <span className="text-gray-600 dark:text-gray-400">👥</span>
                           <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
@@ -267,7 +267,7 @@ export default function ProfilePage() {
 
                     {/* Fecha de ingreso */}
                     {joinedAt && (
-                      <div className="flex items-center justify-between rounded-xl border border-gray-300 dark:border-gray-600 bg-white/60 dark:bg-gray-700/70 backdrop-blur-sm p-3">
+                      <div className="flex items-center justify-between rounded-xl border border-gray-300 dark:border-gray-600 bg-white/60 dark:bg-gray-700/70 backdrop-blur-xs p-3">
                         <div className="flex items-center gap-3">
                           <span className="text-gray-600 dark:text-gray-400">📅</span>
                           <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
@@ -289,7 +289,7 @@ export default function ProfilePage() {
                   </h2>
                   <div className="grid grid-cols-2 gap-3">
                     {typeof diasVac !== 'undefined' && (
-                      <div className="rounded-2xl border border-gray-300 dark:border-gray-600 bg-white/60 dark:bg-gray-800/70 backdrop-blur-sm shadow-sm overflow-hidden w-full">
+                      <div className="rounded-2xl border border-gray-300 dark:border-gray-600 bg-white/60 dark:bg-gray-800/70 backdrop-blur-xs shadow-xs overflow-hidden w-full">
                         <div className="p-4 text-center bg-white/80 dark:bg-gray-800">
                           <div className="text-2xl font-bold text-gray-900 dark:text-gray-100 tabular-nums">
                             {diasVac}
@@ -304,7 +304,7 @@ export default function ProfilePage() {
                       </div>
                     )}
                     {typeof diasVacRest !== 'undefined' && (
-                      <div className="rounded-2xl border border-gray-300 dark:border-gray-600 bg-white/60 dark:bg-gray-800/70 backdrop-blur-sm shadow-sm overflow-hidden w-full">
+                      <div className="rounded-2xl border border-gray-300 dark:border-gray-600 bg-white/60 dark:bg-gray-800/70 backdrop-blur-xs shadow-xs overflow-hidden w-full">
                         <div className="p-4 text-center bg-white/80 dark:bg-gray-800">
                           <div className="text-2xl font-bold text-gray-900 dark:text-gray-100 tabular-nums">
                             {diasVacRest}

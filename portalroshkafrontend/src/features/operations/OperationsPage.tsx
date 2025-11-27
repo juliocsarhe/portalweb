@@ -344,8 +344,8 @@ export default function OperationsPage() {
       </div>
 
       <div className="relative z-10 flex flex-col h-full p-4">
-        <div className="bg-white/45 dark:bg-gray-900/70 backdrop-blur-sm rounded-2xl shadow-lg flex flex-col h-full overflow-hidden">
-          <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
+        <div className="bg-white/45 dark:bg-gray-900/70 backdrop-blur-xs rounded-2xl shadow-lg flex flex-col h-full overflow-hidden">
+          <div className="p-6 border-b border-gray-200 dark:border-gray-700 shrink-0">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-2xl font-bold text-brand-blue dark:text-blue-200">Equipos</h2>
               <IconButton
@@ -391,7 +391,7 @@ export default function OperationsPage() {
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setEquipoConfirm(null)}
-                className="px-4 py-2 rounded border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                className="px-4 py-2 rounded-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                 disabled={changingEstado}
               >
                 Cancelar
@@ -608,7 +608,7 @@ function TeamDetailsModal({ id, token, onClose }: TeamDetailsModalProps) {
           <div className="p-4 border-t border-gray-200 dark:border-gray-700 flex justify-end">
             <button
               onClick={onClose}
-              className="px-4 py-2 rounded border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="px-4 py-2 rounded-sm border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
             >
               Cerrar
             </button>

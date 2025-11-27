@@ -11,6 +11,6 @@
     "forceConsistentCasingInFileNames": true,
     "allowJs": true 
   },
-  "include": ["src", "jest.config.js", "babel.config.js"],
+  "include": ["src"],
   "exclude": ["node_modules", "dist", "tailwind.config.js", "prettier.config.js"]
 }

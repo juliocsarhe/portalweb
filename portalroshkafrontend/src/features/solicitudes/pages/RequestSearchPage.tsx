@@ -21,7 +21,7 @@ export default function RequestSearchPage() {
       </div>
 
       {/* Card central */}
-      <div className="relative z-10 w-full max-w-md bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm shadow-2xl rounded-2xl p-8">
+      <div className="relative z-10 w-full max-w-md bg-white/90 dark:bg-gray-900/90 backdrop-blur-xs shadow-2xl rounded-2xl p-8">
         <h1 className="text-xl font-semibold mb-6 text-center text-gray-800 dark:text-white">
           Seleccione el tipo de solicitudes
         </h1>

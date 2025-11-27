@@ -43,7 +43,7 @@ const SelectDropdown: React.FC<SelectDropdownProps> = ({
         onChange={onChange}
         required={required}
         className="w-full px-3 py-2 border rounded-lg 
-                   focus:ring-2 focus:ring-purple-500 focus:outline-none
+                   focus:ring-2 focus:ring-purple-500 focus:outline-hidden
                    bg-white text-gray-900 border-gray-300
                    dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600"
       >

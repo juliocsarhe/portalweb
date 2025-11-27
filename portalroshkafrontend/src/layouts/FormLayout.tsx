@@ -40,7 +40,7 @@ export default function FormLayout({
 
       <div className="relative z-10 flex flex-col h-full p-4">
         <div className="max-w-3xl w-full mx-auto flex flex-col h-full">
-          <div className="bg-white/45 dark:bg-gray-900/80 backdrop-blur-sm rounded-2xl shadow-lg flex flex-col w-full max-h-[96vh] overflow-hidden">
+          <div className="bg-white/45 dark:bg-gray-900/80 backdrop-blur-xs rounded-2xl shadow-lg flex flex-col w-full max-h-[96vh] overflow-hidden">
             <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center gap-3">
               {icon && <span className="text-2xl">{icon}</span>}
               <div>
@@ -61,7 +61,7 @@ export default function FormLayout({
                     ${
                       loading
                         ? 'bg-gray-400 cursor-not-allowed text-white'
-                        : 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 hover:scale-105 active:scale-95'
+                        : 'bg-linear-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 hover:scale-105 active:scale-95'
                     }`}
                 >
                   💾 {onSubmitLabel}

@@ -84,7 +84,7 @@ export default function RequestPage() {
   const renderActions = (s: SolicitudItem) => (
     <button
       onClick={() => navigate(`/requests/${s.idSolicitud}`)}
-      className="px-3 py-1 text-sm text-white bg-blue-600 rounded hover:bg-blue-700 disabled:opacity-50"
+      className="px-3 py-1 text-sm text-white bg-blue-600 rounded-sm hover:bg-blue-700 disabled:opacity-50"
       disabled={loading}
     >
       {'Ver'}
@@ -110,9 +110,9 @@ export default function RequestPage() {
       </div>
 
       <div className="relative z-10 flex flex-col h-full p-4">
-        <div className="bg-white/45 dark:bg-gray-900/70 backdrop-blur-sm rounded-2xl shadow-lg flex flex-col h-full overflow-hidden">
+        <div className="bg-white/45 dark:bg-gray-900/70 backdrop-blur-xs rounded-2xl shadow-lg flex flex-col h-full overflow-hidden">
           {/* Sección fija: botones + filtros + búsqueda */}
-          <div className="flex flex-col flex-shrink-0 p-6 border-b border-gray-200 gap-4">
+          <div className="flex flex-col shrink-0 p-6 border-b border-gray-200 gap-4">
             {/* Botones */}
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold text-brand-blue">Mis Solicitudes</h2>
@@ -191,7 +191,7 @@ export default function RequestPage() {
           </div>
 
           {/* Paginación */}
-          <div className="p-6 border-t border-gray-200 flex-shrink-0">
+          <div className="p-6 border-t border-gray-200 shrink-0">
             <PaginationFooter
               currentPage={page}
               totalPages={totalPages}

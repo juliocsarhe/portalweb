@@ -8,7 +8,7 @@ Este proyecto es una aplicación frontend moderna construida con React, potencia
 * [Vite](https://vite.dev/) 7.1.2
 * [TypeScript](https://www.typescriptlang.org/) 5.8.3
 * [React Router](https://reactrouter.com/home) 7.9.6
-* [TailwindCSS](https://tailwindcss.com/) 3.4.17
+* [TailwindCSS](https://tailwindcss.com/) 4.1.17
 * [Jest](https://jestjs.io/) 30.2.0
 * [Testing Library - React](https://testing-library.com/) 6.3.0
 

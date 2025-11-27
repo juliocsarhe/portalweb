@@ -306,7 +306,7 @@ export default function Configuration() {
       <div className="relative z-10 flex flex-col h-full p-6">
         <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-md rounded-2xl shadow-2xl flex flex-col h-full overflow-hidden border border-gray-200 dark:border-gray-800">
           {/* Header */}
-          <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
+          <div className="p-6 border-b border-gray-200 dark:border-gray-700 shrink-0">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Configuración</h2>
           </div>
 

@@ -100,7 +100,7 @@ export default function DashboardLayout() {
       {/* Sidebar */}
       <aside className="w-64 bg-white dark:bg-gray-900 shadow-xl border-r border-gray-200 dark:border-gray-800 flex flex-col">
         {/* Perfil compacto */}
-        <div className="p-6 border-b border-gray-200 dark:border-gray-800 flex-shrink-0">
+        <div className="p-6 border-b border-gray-200 dark:border-gray-800 shrink-0">
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 rounded-full flex items-center justify-center overflow-hidden">
               {user?.urlPerfil ? (
@@ -110,7 +110,7 @@ export default function DashboardLayout() {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full bg-gradient-to-r from-blue-600 to-blue-800 flex items-center justify-center text-white font-bold text-lg">
+                <div className="w-full h-full bg-linear-to-r from-blue-600 to-blue-800 flex items-center justify-center text-white font-bold text-lg">
                   👤
                 </div>
               )}
@@ -154,7 +154,7 @@ export default function DashboardLayout() {
         </nav>
 
         {/* Logout */}
-        <div className="p-6 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 flex-shrink-0">
+        <div className="p-6 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shrink-0">
           <button
             onClick={logout}
             className="w-full flex items-center space-x-3 px-4 py-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
