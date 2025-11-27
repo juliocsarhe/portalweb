@@ -8,8 +8,9 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "allowJs": true 
   },
-  "include": ["src"],
+  "include": ["src", "jest.config.js", "babel.config.js"],
   "exclude": ["node_modules", "dist", "tailwind.config.js", "prettier.config.js"]
 }

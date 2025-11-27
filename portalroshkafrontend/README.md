@@ -9,6 +9,8 @@ Este proyecto es una aplicación frontend moderna construida con React, potencia
 * [TypeScript](https://www.typescriptlang.org/) 5.8.3
 * [React Router](https://reactrouter.com/home) 7.9.6
 * [TailwindCSS](https://tailwindcss.com/) 3.4.17
+* [Jest](https://jestjs.io/) 30.2.0
+* [Testing Library - React](https://testing-library.com/) 6.3.0
 
 ## Estructura del proyecto
 
@@ -47,6 +49,7 @@ src/
 | `npm run lint`     | Ejecuta ESLint sobre el código                            |
 | `npm run lint:fix` | Ejecuta ESLint e intenta corregir errores automáticamente |
 | `npm run preview`  | Sirve localmente el build generado                        |
+| `npm run test`     | Ejectura los test unitarios del proyecto                  |
 
 ## Instalación
 
