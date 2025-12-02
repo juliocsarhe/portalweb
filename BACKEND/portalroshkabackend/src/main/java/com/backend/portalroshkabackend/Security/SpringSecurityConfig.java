@@ -80,7 +80,11 @@ public class SpringSecurityConfig {
                 
                 // ROLE_5 - DIRECTIVO: Esta regla debe ir AL FINAL porque es muy amplia
                 .requestMatchers("/api/v1/admin/**").hasAnyAuthority("ROLE_5")
-                
+
+                 // AGREGAR REQUEST MATCHER PARA NOVEDADES ROL DT Y TH
+                    .requestMatchers("/api/v1/admin/th/novedades/**")
+                    .hasAnyAuthority("ROLE_1", "ROLE_5")
+
                 // Cualquier otra request requiere autenticación
                 .anyRequest().authenticated()
             )
