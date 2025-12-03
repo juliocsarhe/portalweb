@@ -5,18 +5,17 @@ import com.backend.portalroshkabackend.DTO.Operationes.HistorialDTO;
 import java.util.List;
 
 public interface IHistorialService {
-    HistorialDTO crearHistorial(HistorialDTO dto);
-
-    HistorialDTO obtenerHistorialPorId(Long idHistorial);
 
     HistorialDTO asignarUsuarioAProyecto(HistorialDTO dto);
 
-    List<HistorialDTO> listarHistorialPorUsuario(Long idUsuario);
+    HistorialDTO obtenerHistorialPorId(Integer idHistorial);
 
-    List<HistorialDTO> listarHistorialPorProyecto(Long idProyecto);
+    List<HistorialDTO> listarHistorialPorUsuario(Integer idUsuario);
 
-    HistorialDTO actualizarHistorial(Long idHistorial, HistorialDTO dto);
+    List<HistorialDTO> listarHistorialPorProyecto(Integer idProyecto);
 
-    void eliminarHistorial(Long idHistorial);
+    HistorialDTO actualizarHistorial(Integer idHistorial, HistorialDTO dto);
+
+    void eliminarHistorial(Integer idHistorial);
 
 }

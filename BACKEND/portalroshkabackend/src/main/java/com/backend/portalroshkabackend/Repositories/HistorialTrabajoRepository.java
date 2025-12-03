@@ -11,11 +11,11 @@ public interface HistorialTrabajoRepository extends JpaRepository<HistorialTraba
 
     List<HistorialTrabajo> findByProyecto_IdProyecto(Integer idProyecto);
 
-    boolean existsByUsuario_IdUsuarioAndProyecto_IdProyecto(Integer idUsuario, Long idProyecto);
+    boolean existsByUsuario_IdUsuarioAndProyecto_IdProyecto(Integer idUsuario, Integer idProyecto);
 
     Optional<HistorialTrabajo> findByUsuario_IdUsuarioAndProyecto_IdProyecto(
             Integer idUsuario,
-            Long idProyecto
+            Integer idProyecto
     );
 
 }

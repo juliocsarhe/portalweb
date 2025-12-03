@@ -18,10 +18,7 @@ public class HistorialController {
     private final IHistorialService historialService;
     private final UsuariosService usuariosService;
 
-    // ==========================================
-    // RUTAS ADMIN / OPERACIONES / RRHH
-    // Base: /api/v1/admin/operations/historial
-    // ==========================================
+
 
     @PostMapping("/api/v1/admin/operations/historial")
     public ResponseEntity<HistorialDTO> asignarUsuarioAProyecto(@RequestBody HistorialDTO dto) {
@@ -30,27 +27,27 @@ public class HistorialController {
     }
 
     @GetMapping("/api/v1/admin/operations/historial/{idHistorial}")
-    public ResponseEntity<HistorialDTO> obtenerHistorialPorId(@PathVariable Long idHistorial) {
+    public ResponseEntity<HistorialDTO> obtenerHistorialPorId(@PathVariable Integer idHistorial) {
         HistorialDTO dto = historialService.obtenerHistorialPorId(idHistorial);
         return ResponseEntity.ok(dto);
     }
 
     @GetMapping("/api/v1/admin/operations/historial/usuario/{idUsuario}")
-    public ResponseEntity<List<HistorialDTO>> listarHistorialPorUsuario(@PathVariable Long idUsuario) {
+    public ResponseEntity<List<HistorialDTO>> listarHistorialPorUsuario(@PathVariable Integer idUsuario) {
         // tu service espera Long, por eso convertimos
         List<HistorialDTO> lista = historialService.listarHistorialPorUsuario(idUsuario);
         return ResponseEntity.ok(lista);
     }
 
     @GetMapping("/api/v1/admin/operations/historial/proyecto/{idProyecto}")
-    public ResponseEntity<List<HistorialDTO>> listarHistorialPorProyecto(@PathVariable Long idProyecto) {
+    public ResponseEntity<List<HistorialDTO>> listarHistorialPorProyecto(@PathVariable Integer idProyecto) {
         List<HistorialDTO> lista = historialService.listarHistorialPorProyecto(idProyecto);
         return ResponseEntity.ok(lista);
     }
 
     @PutMapping("/api/v1/admin/operations/historial/{idHistorial}")
     public ResponseEntity<HistorialDTO> actualizarHistorial(
-            @PathVariable Long idHistorial,
+            @PathVariable Integer idHistorial,
             @RequestBody HistorialDTO dto
     ) {
         HistorialDTO actualizado = historialService.actualizarHistorial(idHistorial, dto);
@@ -58,25 +55,22 @@ public class HistorialController {
     }
 
     @DeleteMapping("/api/v1/admin/operations/historial/{idHistorial}")
-    public ResponseEntity<Void> eliminarHistorial(@PathVariable Long idHistorial) {
+    public ResponseEntity<Void> eliminarHistorial(@PathVariable Integer idHistorial) {
         historialService.eliminarHistorial(idHistorial);
         return ResponseEntity.noContent().build();
     }
 
-    // ==========================================
-    // RUTA PARA DESARROLLADOR: ver SOLO su historial
-    // ==========================================
 
     @GetMapping("/api/v1/historial/mis-proyectos")
     public ResponseEntity<List<HistorialDTO>> verMiHistorial() {
+
         UserDto usuarioActual = usuariosService.getUsuarioActual();
-        if (usuarioActual == null || usuarioActual.getIdUsuario() == null) {
+        if (usuarioActual == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        Long idUsuarioLong = usuarioActual.getIdUsuario().longValue();
-        List<HistorialDTO> lista = historialService.listarHistorialPorUsuario(idUsuarioLong);
+        Integer idUsuario = usuarioActual.getIdUsuario();
 
-        return ResponseEntity.ok(lista);
+        return ResponseEntity.ok(historialService.listarHistorialPorUsuario(idUsuario));
     }
 }

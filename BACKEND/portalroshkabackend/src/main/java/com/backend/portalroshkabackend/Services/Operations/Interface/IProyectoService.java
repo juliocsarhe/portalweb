@@ -8,11 +8,11 @@ public interface IProyectoService {
 
     ProyectoDTO crearProyecto(ProyectoDTO dto);
 
-    ProyectoDTO obtenerProyectoPorId(Long idProyecto);
+    ProyectoDTO obtenerProyectoPorId(Integer idProyecto);
 
     List<ProyectoDTO> listarProyectos();
 
-    ProyectoDTO actualizarProyecto(Long idProyecto, ProyectoDTO dto);
+    ProyectoDTO actualizarProyecto(Integer idProyecto, ProyectoDTO dto);
 
 
 

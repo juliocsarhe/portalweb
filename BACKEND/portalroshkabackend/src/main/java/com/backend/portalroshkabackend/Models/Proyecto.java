@@ -16,13 +16,16 @@ public class Proyecto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_proyecto")
 
-    private Long idProyecto;
+    private Integer idProyecto;
 
     @Column(nullable = false)
     private String nombre;
+        //Debemos relacionar proyecto con usuario para estirar como lider a un usuario existente
+       //Que no sea solo texto
+        @OneToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "id_lider_equipo", unique = true, nullable = false)
+        private Usuario liderEquipo;
 
-    @Column(name = "lider_equipo")
-    private String liderEquipo;
 
     @Column(columnDefinition = "TEXT")
     private String tecnologias;

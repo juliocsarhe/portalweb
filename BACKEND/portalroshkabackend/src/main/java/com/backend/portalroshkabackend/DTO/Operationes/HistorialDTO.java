@@ -10,13 +10,13 @@ import java.time.LocalDate;
 @Data
 public class HistorialDTO {
 
-    private Long idHistorial;
+    private Integer idHistorial;
 
     private Integer idUsuario;
-    private Long idProyecto;
+    private Integer idProyecto;
 
     private  String nombreProyecto;
-    private String liderEquipo;
+    private String nombreLider;
     private String tecnologias;
 
     private LocalDate fechaInicial;
@@ -34,7 +34,7 @@ public class HistorialDTO {
         dto.setIdProyecto(h.getProyecto().getIdProyecto());
 
         dto.setNombreProyecto(h.getProyecto().getNombre());
-        dto.setLiderEquipo(h.getProyecto().getLiderEquipo());
+        dto.setNombreLider(h.getProyecto().getLiderEquipo().getNombre());
         dto.setTecnologias(h.getProyecto().getTecnologias());
 
         dto.setFechaInicial(h.getFechaInicio());

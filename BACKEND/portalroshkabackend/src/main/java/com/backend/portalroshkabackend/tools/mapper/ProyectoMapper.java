@@ -10,7 +10,8 @@ public class ProyectoMapper {
         ProyectoDTO dto = new ProyectoDTO();
         dto.setIdProyecto(entity.getIdProyecto());
         dto.setNombre(entity.getNombre());
-        dto.setLiderEquipo(entity.getLiderEquipo());
+        dto.setIdLiderEquipo(entity.getLiderEquipo().getIdUsuario());
+        dto.setNombreLider(entity.getLiderEquipo().getNombre());
         dto.setTecnologias(entity.getTecnologias());
         dto.setDescripcion(entity.getDescripcion());
         dto.setFechaInicio(entity.getFechaInicio());
@@ -25,7 +26,7 @@ public class ProyectoMapper {
         Proyecto entity = new Proyecto();
         entity.setIdProyecto(dto.getIdProyecto());
         entity.setNombre(dto.getNombre());
-        entity.setLiderEquipo(dto.getLiderEquipo());
+
         entity.setTecnologias(dto.getTecnologias());
         entity.setDescripcion(dto.getDescripcion());
         entity.setFechaInicio(dto.getFechaInicio());

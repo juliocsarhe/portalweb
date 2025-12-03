@@ -15,12 +15,12 @@ public class HistorialTrabajo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_historial")
-    private Long idHistorial;
-
+    private Integer idHistorial;
+        //Relacion Con Usuario
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
-
+        //Relacion con proyecto
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_proyecto", nullable = false)
     private Proyecto proyecto;

@@ -17,21 +17,21 @@ public class HistorialTHController {
 
     // ✔ TH puede ver historial de cualquier usuario
     @GetMapping("/usuario/{idUsuario}")
-    public ResponseEntity<List<HistorialDTO>> obtenerHistorialPorUsuario(@PathVariable Long idUsuario) {
+    public ResponseEntity<List<HistorialDTO>> obtenerHistorialPorUsuario(@PathVariable Integer idUsuario) {
         List<HistorialDTO> lista = historialService.listarHistorialPorUsuario(idUsuario);
         return ResponseEntity.ok(lista);
     }
 
     // ✔ TH puede ver historial por proyecto
     @GetMapping("/proyecto/{idProyecto}")
-    public ResponseEntity<List<HistorialDTO>> obtenerHistorialPorProyecto(@PathVariable Long idProyecto) {
+    public ResponseEntity<List<HistorialDTO>> obtenerHistorialPorProyecto(@PathVariable Integer idProyecto) {
         List<HistorialDTO> lista = historialService.listarHistorialPorProyecto(idProyecto);
         return ResponseEntity.ok(lista);
     }
 
     // ✔ TH puede ver historial por idHistorial
     @GetMapping("/{idHistorial}")
-    public ResponseEntity<HistorialDTO> obtenerHistorialPorId(@PathVariable Long idHistorial) {
+    public ResponseEntity<HistorialDTO> obtenerHistorialPorId(@PathVariable Integer idHistorial) {
         HistorialDTO dto = historialService.obtenerHistorialPorId(idHistorial);
         return ResponseEntity.ok(dto);
     }
@@ -39,10 +39,9 @@ public class HistorialTHController {
     // ✔ TH puede editar historial de cualquier usuario
     @PutMapping("/{idHistorial}")
     public ResponseEntity<HistorialDTO> actualizarHistorial(
-            @PathVariable Long idHistorial,
+            @PathVariable Integer idHistorial,
             @RequestBody HistorialDTO dto
     ) {
-        HistorialDTO actualizado = historialService.actualizarHistorial(idHistorial, dto);
-        return ResponseEntity.ok(actualizado);
+        return ResponseEntity.ok(historialService.actualizarHistorial(idHistorial, dto));
     }
 }

@@ -22,51 +22,53 @@ public class HistorialServiceImpl implements IHistorialService {
     private final UsuarioRepository usuarioRepository;
     private final ProyectoRepository proyectoRepository;
 
-    @Override
-    public HistorialDTO crearHistorial(HistorialDTO dto){
 
-        Usuario usuario = usuarioRepository.findById(dto.getIdUsuario())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        Proyecto proyecto = proyectoRepository.findById(dto.getIdProyecto())
-                .orElseThrow(() -> new RuntimeException("Proyecto no encontrado"));
-
-        HistorialTrabajo historial = dto.toEntity(usuario, proyecto);
-
-        historial = historialTrabajoRepository.save(historial);
-
-        return HistorialDTO.fromEntity(historial);
-    }
+    // OBTENER HISTORIAL POR ID
 
     @Override
-    public HistorialDTO obtenerHistorialPorId(Long idHistorial) {
-        HistorialTrabajo historial = historialTrabajoRepository.findById(idHistorial.intValue())
+    public HistorialDTO obtenerHistorialPorId(Integer idHistorial) {
+
+        HistorialTrabajo historial = historialTrabajoRepository.findById(idHistorial)
                 .orElseThrow(() -> new RuntimeException("Historial no encontrado"));
 
         return HistorialDTO.fromEntity(historial);
     }
 
+
+
+    // LISTAR POR USUARIO
+
     @Override
-    public List<HistorialDTO> listarHistorialPorUsuario(Long idUsuario) {
-        return historialTrabajoRepository.findByUsuario_IdUsuario(idUsuario.intValue())
+    public List<HistorialDTO> listarHistorialPorUsuario(Integer idUsuario) {
+
+        return historialTrabajoRepository.findByUsuario_IdUsuario(idUsuario)
                 .stream()
                 .map(HistorialDTO::fromEntity)
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public List<HistorialDTO> listarHistorialPorProyecto(Long idProyecto) {
 
-        return historialTrabajoRepository.findByProyecto_IdProyecto(idProyecto.intValue())
+
+    // LISTAR POR PROYECTO
+
+    @Override
+    public List<HistorialDTO> listarHistorialPorProyecto(Integer idProyecto) {
+
+        return historialTrabajoRepository.findByProyecto_IdProyecto(idProyecto)
                 .stream()
                 .map(HistorialDTO::fromEntity)
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public HistorialDTO actualizarHistorial(Long idHistorial, HistorialDTO dto) {
 
-        HistorialTrabajo historial = historialTrabajoRepository.findById(idHistorial.intValue())
+
+    // ACTUALIZAR HISTORIAL
+
+    @Override
+    public HistorialDTO actualizarHistorial(Integer idHistorial, HistorialDTO dto) {
+
+        HistorialTrabajo historial = historialTrabajoRepository.findById(idHistorial)
                 .orElseThrow(() -> new RuntimeException("Historial no encontrado"));
 
         historial.setFechaInicio(dto.getFechaInicial());
@@ -79,39 +81,45 @@ public class HistorialServiceImpl implements IHistorialService {
         return HistorialDTO.fromEntity(historial);
     }
 
+
+
+    // ELIMINAR HISTORIAL
+
     @Override
-    public void eliminarHistorial(Long idHistorial) {
-        historialTrabajoRepository.deleteById(idHistorial.intValue());
+    public void eliminarHistorial(Integer idHistorial) {
+
+        historialTrabajoRepository.deleteById(idHistorial);
     }
+
+
+
+    // ASIGNAR USUARIO A PROYECTO (EL PRINCIPAL)
 
     @Override
     public HistorialDTO asignarUsuarioAProyecto(HistorialDTO dto) {
 
         Integer idUsuario = dto.getIdUsuario();
-        Long idProyecto = dto.getIdProyecto();
+        Integer idProyecto = dto.getIdProyecto();
 
-        //  Verifica si ya existe esa asignación
-        boolean yaExiste = historialTrabajoRepository
-                .existsByUsuario_IdUsuarioAndProyecto_IdProyecto(idUsuario, idProyecto);
-
-        if (yaExiste) {
+        // Validar duplicado
+        if (historialTrabajoRepository
+                .existsByUsuario_IdUsuarioAndProyecto_IdProyecto(idUsuario, idProyecto)) {
             throw new RuntimeException("El usuario ya está asignado a este proyecto.");
         }
 
-        //  Busca usuario y proyecto
+        // Buscar usuario
         Usuario usuario = usuarioRepository.findById(idUsuario)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
+        // Buscar proyecto
         Proyecto proyecto = proyectoRepository.findById(idProyecto)
                 .orElseThrow(() -> new RuntimeException("Proyecto no encontrado"));
 
-        //  Crea entidad
+        // Crear registro
         HistorialTrabajo historial = dto.toEntity(usuario, proyecto);
 
         historial = historialTrabajoRepository.save(historial);
+
         return HistorialDTO.fromEntity(historial);
     }
-
-
-
 }

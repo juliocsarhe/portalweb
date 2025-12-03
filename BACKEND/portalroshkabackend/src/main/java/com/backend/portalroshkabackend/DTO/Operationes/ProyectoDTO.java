@@ -9,9 +9,10 @@ import java.time.LocalDate;
 @Data
 public class ProyectoDTO {
 
-    private Long idProyecto;
+    private Integer idProyecto;
     private String nombre;
-    private String liderEquipo;
+    private Integer idLiderEquipo;
+    private String nombreLider;
     private String tecnologias;
     private String descripcion;
     private LocalDate fechaInicio;
@@ -24,7 +25,8 @@ public class ProyectoDTO {
 
         dto.setIdProyecto(p.getIdProyecto());
         dto.setNombre(p.getNombre());
-        dto.setLiderEquipo(p.getLiderEquipo());
+        dto.setIdLiderEquipo(p.getLiderEquipo().getIdUsuario());
+        dto.setNombreLider(p.getLiderEquipo().getNombre());
         dto.setTecnologias(p.getTecnologias());
         dto.setDescripcion(p.getDescripcion());
         dto.setFechaInicio(p.getFechaInicio());
@@ -41,7 +43,6 @@ public class ProyectoDTO {
 
         p.setIdProyecto(this.idProyecto);
         p.setNombre(this.nombre);
-        p.setLiderEquipo(this.liderEquipo);
         p.setTecnologias(this.tecnologias);
         p.setDescripcion(this.descripcion);
         p.setFechaInicio(this.fechaInicio);
