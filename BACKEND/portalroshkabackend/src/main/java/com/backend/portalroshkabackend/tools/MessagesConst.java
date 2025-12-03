@@ -23,4 +23,9 @@ public class MessagesConst {
 
     // ----- DATABASE CONST -----
     public static final String DATABASE_DEFAULT_ERROR = "Ocurrio un error en la operacion: ";
+
+    //----- NOVEDADES CONST -----
+    public static final String NOVEDADES_UPDATED_MESSAGE = "Novedad actualizado exitosamente.";
+    public static final String NOVEDADES_DELETED_MESSAGE = "Novedad eliminado exitosamente.";
+    public static final String NOVEDADES_CREATED_MESSAGE = "Novedad creado exitosamente.";
 }
