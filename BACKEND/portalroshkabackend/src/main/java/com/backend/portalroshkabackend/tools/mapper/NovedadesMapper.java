@@ -23,4 +23,6 @@ public class NovedadesMapper {
     public static NovedadesDefaultResponseDto toDefaultResponseDto(Integer novedadUsuario, String titulo, String message){
 
     }
+
+    //TODO: continuar con DTO
 }

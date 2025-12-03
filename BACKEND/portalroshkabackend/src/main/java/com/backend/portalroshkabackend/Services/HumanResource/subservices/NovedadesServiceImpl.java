@@ -95,4 +95,6 @@ public class NovedadesServiceImpl implements INovedadesService {
                 .filter(n -> n.getImagenUrl() == null)
                 .map(NovedadesDefaultResponseDto::of).toList();
     }
+
+    //TODO: continuar con refactorización de servicios
 }
