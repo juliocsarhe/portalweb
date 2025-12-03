@@ -11,8 +11,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @Table(name = "novedades")
-public class
-Novedades {
+public class Novedades {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,5 +41,5 @@ Novedades {
 
     @ManyToOne
     @JoinColumn(name = "id_rol")
-    private Roles idRol;
+    private Usuario usuario;
 }

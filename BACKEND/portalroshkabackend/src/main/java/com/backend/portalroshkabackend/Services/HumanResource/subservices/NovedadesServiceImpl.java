@@ -3,82 +3,95 @@ package com.backend.portalroshkabackend.Services.HumanResource.subservices;
 import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesDefaultResponseDto;
 import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesInsertDto;
 import com.backend.portalroshkabackend.Models.Novedades;
-import com.backend.portalroshkabackend.Models.Roles;
+import com.backend.portalroshkabackend.Models.Usuario;
 import com.backend.portalroshkabackend.Repositories.TH.NovedadesRepository;
-import com.backend.portalroshkabackend.Repositories.TH.RolesRepository;
 
+import com.backend.portalroshkabackend.Repositories.TH.UserRepository;
+import com.backend.portalroshkabackend.tools.RepositoryService;
+import com.backend.portalroshkabackend.tools.errors.errorslist.novedades.NovedadesUserNotFoundException;
+import com.backend.portalroshkabackend.tools.mapper.NovedadesMapper;
 import com.backend.portalroshkabackend.tools.validator.ValidatorStrategy;
-import com.backend.portalroshkabackend.tools.validator.novedades.insert.NovedadInsertValidatorComposite;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.backend.portalroshkabackend.tools.MessagesConst.DATABASE_DEFAULT_ERROR;
+import static com.backend.portalroshkabackend.tools.MessagesConst.NOVEDADES_CREATED_MESSAGE;
+
 @Service
-@RequiredArgsConstructor
 public class NovedadesServiceImpl implements INovedadesService {
 
-    @Qualifier("novedadInsertValidatorComposite")
     private final ValidatorStrategy<NovedadesInsertDto> insertValidator;
-    private final NovedadesRepository repo;
-    private final RolesRepository rolesRepo;
+    private final NovedadesRepository novedadesRepository;
+    private final RepositoryService repositoryService;
+    private final UserRepository userRepository;
+
+    @Autowired
+    public NovedadesServiceImpl(NovedadesRepository novedadesRepository,
+                                @Qualifier("novedadInsertValidatorComposite") ValidatorStrategy<NovedadesInsertDto> insertValidator,
+                                RepositoryService repositoryService,
+                                UserRepository userRepository) {
+
+        this.novedadesRepository = novedadesRepository;
+        this.insertValidator = insertValidator;
+        this.repositoryService = repositoryService;
+        this.userRepository = userRepository;
+    }
 
     @Override
     public NovedadesDefaultResponseDto create(NovedadesInsertDto dto) {
 
         insertValidator.validate(dto);
 
-        Roles rol = rolesRepo.findById(dto.getIdRol())
-                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+        String correo = SecurityContextHolder.getContext().getAuthentication().getName();
+        Usuario user = userRepository.findByCorreo(correo)
+                .orElseThrow(NovedadesUserNotFoundException::new);
 
-        Novedades n = new Novedades();
-        n.setTitulo(dto.getTitulo());
-        n.setDescripcion(dto.getDescripcion());
-        n.setImagenUrl(dto.getImagenUrl());
-        n.setFechaExpiracion(dto.getFechaExpiracion());
-        n.setActivo(dto.getActivo());
-        n.setCategoria(dto.getCategoria());
-        n.setPrioridad(dto.getPrioridad());
-        n.setIdRol(rol);
+        Novedades novedades = NovedadesMapper.toEntityFromInsertDto(dto, user);
 
-        repo.save(n);
-
-        return NovedadesDefaultResponseDto.of(n);
+        Novedades savedNovedades = repositoryService.save(
+                novedadesRepository,
+                novedades,
+                DATABASE_DEFAULT_ERROR
+        );
+        return NovedadesMapper.toDefaultResponseDto(savedNovedades.getIdNovedades(), novedades.getTitulo(), NOVEDADES_CREATED_MESSAGE);
     }
 
     @Override
     public List<NovedadesDefaultResponseDto> getAll() {
-        return repo.findAll().stream().map(NovedadesDefaultResponseDto::of).toList();
+        return novedadesRepository.findAll().stream().map(NovedadesDefaultResponseDto::of).toList();
     }
 
     @Override
     public List<NovedadesDefaultResponseDto> getActivas() {
-        return repo.findVigentes().stream().map(NovedadesDefaultResponseDto::of).toList();
+        return novedadesRepository.findVigentes().stream().map(NovedadesDefaultResponseDto::of).toList();
     }
 
     @Override
     public List<NovedadesDefaultResponseDto> getByRol(Integer idRol) {
-        return repo.findByIdRol_IdRolAndActivoTrue(idRol)
+        return novedadesRepository.findByIdRol_IdRolAndActivoTrue(idRol)
                 .stream().map(NovedadesDefaultResponseDto::of).toList();
     }
 
     @Override
     public List<NovedadesDefaultResponseDto> getByCategoria(String categoria) {
-        return repo.findByCategoriaAndActivoTrue(categoria)
+        return novedadesRepository.findByCategoriaAndActivoTrue(categoria)
                 .stream().map(NovedadesDefaultResponseDto::of).toList();
     }
 
     @Override
     public List<NovedadesDefaultResponseDto> getCarrusel() {
-        return repo.findVigentes().stream()
+        return novedadesRepository.findVigentes().stream()
                 .filter(n -> n.getImagenUrl() != null)
                 .map(NovedadesDefaultResponseDto::of).toList();
     }
 
     @Override
     public List<NovedadesDefaultResponseDto> getAvisos() {
-        return repo.findVigentes().stream()
+        return novedadesRepository.findVigentes().stream()
                 .filter(n -> n.getImagenUrl() == null)
                 .map(NovedadesDefaultResponseDto::of).toList();
     }

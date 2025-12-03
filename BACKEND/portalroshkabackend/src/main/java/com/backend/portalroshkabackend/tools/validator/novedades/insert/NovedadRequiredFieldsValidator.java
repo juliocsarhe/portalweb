@@ -15,8 +15,9 @@ public class NovedadRequiredFieldsValidator implements ValidatorStrategy<Novedad
     public void validate(NovedadesInsertDto dto) {
 
         boolean valid =
-                dto.getTitulo() != null && !dto.getTitulo().trim().isEmpty() &&
-                dto.getDescripcion() != null && !dto.getDescripcion().trim().isEmpty();
+                dto.getTitulo() != null && !dto.getTitulo().trim().isEmpty() && dto.getTitulo().length() <= 50 &&
+                dto.getDescripcion() != null && !dto.getDescripcion().trim().isEmpty() &&
+                        dto.getDescripcion().length() <= 100;
 
         if (!valid) {
             throw new NovedadRequiredFieldsException();

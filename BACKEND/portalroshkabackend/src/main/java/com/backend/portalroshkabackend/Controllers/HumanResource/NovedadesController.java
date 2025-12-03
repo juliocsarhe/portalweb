@@ -2,6 +2,7 @@ package com.backend.portalroshkabackend.Controllers.HumanResource;
 
 import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesDefaultResponseDto;
 import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesInsertDto;
+import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesUpdateDto;
 import com.backend.portalroshkabackend.Services.HumanResource.subservices.INovedadesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,11 @@ public class NovedadesController {
     ){
         return ResponseEntity.ok(novedadesService.create(dto));
     }
+
+    @PutMapping("th/novedades")
+    public ResponseEntity<NovedadesDefaultResponseDto> update(
+            @RequestBody NovedadesUpdateDto dto
+    )
 }
 
 

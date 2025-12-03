@@ -10,23 +10,6 @@ public class NovedadesDefaultResponseDto {
 
     private Integer id;
     private String titulo;
-    private String descripcion;
-    private String imagenUrl;
-    private String categoria;
-    private String prioridad;
-    private Boolean activo;
+    private String message;
 
-    public static NovedadesDefaultResponseDto of(Novedades n) {
-        NovedadesDefaultResponseDto dto = new NovedadesDefaultResponseDto();
-
-        dto.setId(n.getIdNovedades());
-        dto.setTitulo(n.getTitulo());
-        dto.setDescripcion(n.getDescripcion());
-        dto.setImagenUrl(n.getImagenUrl());
-        dto.setCategoria(n.getCategoria());
-        dto.setPrioridad(n.getPrioridad());
-        dto.setActivo(n.getActivo());
-
-        return dto;
-    }
 }
