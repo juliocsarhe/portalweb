@@ -66,20 +66,37 @@ public class SpringSecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // Endpoints públicos primero
                 .requestMatchers(HttpMethod.GET, "/api/v1/usuarios/**").permitAll()
-                
+                //Historial de Trabajo
+
+                    .requestMatchers("/api/v1/admin/th/historial/**")
+                    .hasAnyAuthority("ROLE_1")  //Talento humano
+
+                    .requestMatchers("/api/v1/admin/operations/historial/**")
+                    .hasAnyAuthority("ROLE_2", "ROLE_5")  // Operaciones
+
+                    .requestMatchers("/api/v1/historial/teamleader/**")
+                    .hasAnyAuthority("ROLE_5")  // Team leader
+
+                    .requestMatchers("/api/v1/historial/mis-proyectos")
+                    .hasAnyAuthority("ROLE_4")  // Desarrollador
+
                 // Reglas específicas ANTES de las generales - ORDEN IMPORTANTE
                 
                 // ROLE_1 - TALENTO HUMANO: Acceso a recursos humanos
-                .requestMatchers("/api/v1/admin/th/**").hasAnyAuthority("ROLE_1", "ROLE_5") 
+                .requestMatchers("/api/v1/admin/th/**")
+                    .hasAnyAuthority("ROLE_1", "ROLE_5")
                 
                 // ROLE_2 - OPERACIONES: Acceso a operaciones
-                .requestMatchers("/api/v1/admin/operations/**").hasAnyAuthority("ROLE_2", "ROLE_5") 
+                .requestMatchers("/api/v1/admin/operations/**")
+                    .hasAnyAuthority("ROLE_2", "ROLE_5")
                 
                 // ROLE_3 - ADMINISTRADOR DE SISTEMAS: Acceso a sysadmin
-                .requestMatchers("/api/v1/admin/sysadmin/**").hasAnyAuthority("ROLE_3", "ROLE_5") 
+                .requestMatchers("/api/v1/admin/sysadmin/**")
+                    .hasAnyAuthority("ROLE_3", "ROLE_5")
                 
                 // ROLE_5 - DIRECTIVO: Esta regla debe ir AL FINAL porque es muy amplia
-                .requestMatchers("/api/v1/admin/**").hasAnyAuthority("ROLE_5")
+                .requestMatchers("/api/v1/admin/**")
+                    .hasAnyAuthority("ROLE_5")
                 
                 // Cualquier otra request requiere autenticación
                 .anyRequest().authenticated()
