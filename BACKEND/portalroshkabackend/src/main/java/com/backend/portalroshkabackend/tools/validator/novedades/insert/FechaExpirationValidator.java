@@ -10,10 +10,12 @@ import java.time.LocalDate;
 @Component
 public class FechaExpirationValidator implements ValidatorStrategy<NovedadesInsertDto> {
 
-
     @Override
     public void validate(NovedadesInsertDto dto) {
-        if(dto.getFechaExpiracion() == null || dto.getFechaExpiracion().isAfter(LocalDate.now())){
+
+        LocalDate hoy = LocalDate.now();
+
+        if (dto.getFechaExpiracion() == null || dto.getFechaExpiracion().isBefore(hoy)) {
             throw new InvalidDateException("Fecha de expiración inválida");
         }
     }

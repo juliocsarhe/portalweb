@@ -40,6 +40,6 @@ public class Novedades {
     private String prioridad; // BAJA - MEDIA - ALTA
 
     @ManyToOne
-    @JoinColumn(name = "id_rol", nullable = false)
-    private Roles roles;
+    @JoinColumn(name = "creado_por")
+    private Usuario usuario; // quién creó la novedad
 }

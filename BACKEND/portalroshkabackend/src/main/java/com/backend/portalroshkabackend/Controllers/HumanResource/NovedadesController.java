@@ -12,19 +12,19 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/admin")
+@RequestMapping("/api/v1/admin/th")
 public class NovedadesController {
 
     private final INovedadesService novedadesService;
 
-    @PostMapping("th/novedades")
+    @PostMapping("novedades")
     public ResponseEntity<NovedadesDefaultResponseDto> create(
             @RequestBody NovedadesInsertDto dto
     ){
         return ResponseEntity.ok(novedadesService.create(dto));
     }
 
-    @PutMapping("th/novedades")
+    @PutMapping("novedades")
     public ResponseEntity<NovedadesDefaultResponseDto> update(
             @RequestBody NovedadesUpdateDto dto
     ){
@@ -40,14 +40,6 @@ public class NovedadesController {
     @GetMapping("/activas")
     public ResponseEntity<List<NovedadesDefaultResponseDto>> getActivas(){
         return ResponseEntity.ok(novedadesService.getActivas());
-    }
-
-    // GET POR ROL
-    @GetMapping("/rol/{idRol}")
-    public ResponseEntity<List<NovedadesDefaultResponseDto>> getByRol(
-            @PathVariable Integer idRol
-    ){
-        return ResponseEntity.ok(novedadesService.getByRol(idRol));
     }
 
     // GET POR CATEGORÍA
@@ -68,6 +60,12 @@ public class NovedadesController {
     @GetMapping("/avisos")
     public ResponseEntity<List<NovedadesDefaultResponseDto>> getAvisos(){
         return ResponseEntity.ok(novedadesService.getAvisos());
+    }
+
+    // GET POR PRIORIDAD (ALTA - MEDIA - BAJA)
+    @GetMapping("/prioridad")
+    public ResponseEntity<List<NovedadesDefaultResponseDto>> getByPrioridad(){
+        return ResponseEntity.ok(novedadesService.getByPrioridad());
     }
 
     //DELETE novedades

@@ -8,8 +8,8 @@ import com.backend.portalroshkabackend.Models.Usuario;
 
 public class NovedadesMapper {
 
-    public static Novedades toEntityFromInsertDto(NovedadesInsertDto dto, Roles roles){
-        Novedades novedad =  new Novedades();
+    public static Novedades toEntityFromInsertDto(NovedadesInsertDto dto, Usuario usuario){
+        Novedades novedad = new Novedades();
         novedad.setTitulo(dto.getTitulo());
         novedad.setDescripcion(dto.getDescripcion());
         novedad.setCategoria(dto.getCategoria());
@@ -17,7 +17,7 @@ public class NovedadesMapper {
         novedad.setImagenUrl(dto.getImagenUrl());
         novedad.setFechaExpiracion(dto.getFechaExpiracion());
         novedad.setActivo(true);
-        novedad.setRoles(roles);
+        novedad.setUsuario(usuario);
         return novedad;
     }
 

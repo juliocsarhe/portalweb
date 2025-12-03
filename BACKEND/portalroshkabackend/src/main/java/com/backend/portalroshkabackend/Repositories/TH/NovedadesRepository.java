@@ -10,7 +10,7 @@ public interface NovedadesRepository extends JpaRepository<Novedades, Integer> {
 
     List<Novedades> findByActivoTrueOrderByPrioridadDesc();
     List<Novedades> findByCategoriaAndActivoTrue(String categoria);
-    List<Novedades> findByRoles_IdRolAndActivoTrue(Integer idRol);
+    List<Novedades> findByUsuario_IdUsuarioAndActivoTrue(Integer idRol);
 
 
     @Query("SELECT n FROM Novedades n WHERE n.fechaExpiracion > CURRENT_DATE AND n.activo = true")

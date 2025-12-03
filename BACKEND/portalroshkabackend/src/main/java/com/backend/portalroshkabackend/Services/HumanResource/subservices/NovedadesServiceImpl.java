@@ -30,19 +30,19 @@ public class NovedadesServiceImpl implements INovedadesService {
     private final ValidatorStrategy<NovedadesInsertDto> insertValidator;
     private final NovedadesRepository novedadesRepository;
     private final RepositoryService repositoryService;
-    private final RolesRepository rolesRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     public NovedadesServiceImpl(
             NovedadesRepository novedadesRepository,
             @Qualifier("novedadInsertValidatorComposite") ValidatorStrategy<NovedadesInsertDto> insertValidator,
             RepositoryService repositoryService,
-            RolesRepository rolesRepository
+            UserRepository userRepository
     ) {
         this.novedadesRepository = novedadesRepository;
         this.insertValidator = insertValidator;
         this.repositoryService = repositoryService;
-        this.rolesRepository = rolesRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -50,14 +50,15 @@ public class NovedadesServiceImpl implements INovedadesService {
 
         insertValidator.validate(dto);
 
-        // 1. Buscar rol
-        Roles rol = rolesRepository.findById(dto.getIdRol())
-                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+        // Obtener usuario logueado
+        String correo = SecurityContextHolder.getContext().getAuthentication().getName();
+        Usuario user = userRepository.findByCorreo(correo)
+                .orElseThrow(NovedadesUserNotFoundException::new);
 
-        // 2. Mapear entidad
-        Novedades novedades = NovedadesMapper.toEntityFromInsertDto(dto, rol);
+        // Mapear
+        Novedades novedades = NovedadesMapper.toEntityFromInsertDto(dto, user);
 
-        // 3. Guardar
+        // Guardar
         Novedades savedNovedades = repositoryService.save(
                 novedadesRepository,
                 novedades,
@@ -70,6 +71,7 @@ public class NovedadesServiceImpl implements INovedadesService {
                 NOVEDADES_CREATED_MESSAGE
         );
     }
+
 
     @Override
     public NovedadesDefaultResponseDto update(NovedadesUpdateDto dto) {
@@ -129,12 +131,6 @@ public class NovedadesServiceImpl implements INovedadesService {
     }
 
     @Override
-    public List<NovedadesDefaultResponseDto> getByRol(Integer idRol) {
-        return novedadesRepository.findByRoles_IdRolAndActivoTrue(idRol)
-                .stream().map(NovedadesDefaultResponseDto::of).toList();
-    }
-
-    @Override
     public List<NovedadesDefaultResponseDto> getByCategoria(String categoria) {
         return novedadesRepository.findByCategoriaAndActivoTrue(categoria)
                 .stream().map(NovedadesDefaultResponseDto::of).toList();
@@ -148,12 +144,17 @@ public class NovedadesServiceImpl implements INovedadesService {
     }
 
     @Override
+    public List<NovedadesDefaultResponseDto> getByPrioridad() {
+        return novedadesRepository.findByActivoTrueOrderByPrioridadDesc()
+                .stream()
+                .map(NovedadesDefaultResponseDto::of)
+                .toList();
+    }
+
+    @Override
     public List<NovedadesDefaultResponseDto> getAvisos() {
         return novedadesRepository.findVigentes().stream()
                 .filter(n -> n.getImagenUrl() == null)
                 .map(NovedadesDefaultResponseDto::of).toList();
     }
 }
-
-    //TODO: continuar con refactorización de servicios
-

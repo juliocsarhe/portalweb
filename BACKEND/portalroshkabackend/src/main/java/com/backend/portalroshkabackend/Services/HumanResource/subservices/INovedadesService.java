@@ -14,9 +14,9 @@ public interface INovedadesService {
 
     List<NovedadesDefaultResponseDto> getActivas();
 
-    List<NovedadesDefaultResponseDto> getByRol(Integer idRol);
-
     List<NovedadesDefaultResponseDto> getByCategoria(String categoria);
+
+    List<NovedadesDefaultResponseDto> getByPrioridad();
 
     List<NovedadesDefaultResponseDto> getCarrusel();
 
