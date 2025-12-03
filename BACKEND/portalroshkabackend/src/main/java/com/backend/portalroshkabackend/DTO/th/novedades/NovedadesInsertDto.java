@@ -18,4 +18,5 @@ public class NovedadesInsertDto {
     private LocalDate fechaExpiracion;
     private String categoria;
     private String prioridad;
+    private Integer idRol;
 }

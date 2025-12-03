@@ -4,9 +4,11 @@ import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesDefaultResponse
 import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesInsertDto;
 import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesUpdateDto;
 import com.backend.portalroshkabackend.Models.Novedades;
+import com.backend.portalroshkabackend.Models.Roles;
 import com.backend.portalroshkabackend.Models.Usuario;
 import com.backend.portalroshkabackend.Repositories.TH.NovedadesRepository;
 
+import com.backend.portalroshkabackend.Repositories.TH.RolesRepository;
 import com.backend.portalroshkabackend.Repositories.TH.UserRepository;
 import com.backend.portalroshkabackend.tools.RepositoryService;
 import com.backend.portalroshkabackend.tools.errors.errorslist.novedades.NovedadesUserNotFoundException;
@@ -28,18 +30,19 @@ public class NovedadesServiceImpl implements INovedadesService {
     private final ValidatorStrategy<NovedadesInsertDto> insertValidator;
     private final NovedadesRepository novedadesRepository;
     private final RepositoryService repositoryService;
-    private final UserRepository userRepository;
+    private final RolesRepository rolesRepository;
 
     @Autowired
-    public NovedadesServiceImpl(NovedadesRepository novedadesRepository,
-                                @Qualifier("novedadInsertValidatorComposite") ValidatorStrategy<NovedadesInsertDto> insertValidator,
-                                RepositoryService repositoryService,
-                                UserRepository userRepository) {
-
+    public NovedadesServiceImpl(
+            NovedadesRepository novedadesRepository,
+            @Qualifier("novedadInsertValidatorComposite") ValidatorStrategy<NovedadesInsertDto> insertValidator,
+            RepositoryService repositoryService,
+            RolesRepository rolesRepository
+    ) {
         this.novedadesRepository = novedadesRepository;
         this.insertValidator = insertValidator;
         this.repositoryService = repositoryService;
-        this.userRepository = userRepository;
+        this.rolesRepository = rolesRepository;
     }
 
     @Override
@@ -47,41 +50,44 @@ public class NovedadesServiceImpl implements INovedadesService {
 
         insertValidator.validate(dto);
 
-        String correo = SecurityContextHolder.getContext().getAuthentication().getName();
-        Usuario user = userRepository.findByCorreo(correo)
-                .orElseThrow(NovedadesUserNotFoundException::new);
+        // 1. Buscar rol
+        Roles rol = rolesRepository.findById(dto.getIdRol())
+                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
 
-        Novedades novedades = NovedadesMapper.toEntityFromInsertDto(dto, user);
+        // 2. Mapear entidad
+        Novedades novedades = NovedadesMapper.toEntityFromInsertDto(dto, rol);
 
+        // 3. Guardar
         Novedades savedNovedades = repositoryService.save(
                 novedadesRepository,
                 novedades,
                 DATABASE_DEFAULT_ERROR
         );
-        return NovedadesMapper.toDefaultResponseDto(savedNovedades.getIdNovedades(), novedades.getTitulo(), NOVEDADES_CREATED_MESSAGE);
+
+        return NovedadesMapper.toDefaultResponseDto(
+                savedNovedades.getIdNovedades(),
+                savedNovedades.getTitulo(),
+                NOVEDADES_CREATED_MESSAGE
+        );
     }
 
     @Override
     public NovedadesDefaultResponseDto update(NovedadesUpdateDto dto) {
 
-        // 1. Buscar la novedad por ID
         Novedades novedad = novedadesRepository.findById(dto.getId())
                 .orElseThrow(() -> new RuntimeException("Novedad no encontrada"));
 
-        // 2. Actualizar solo los campos enviados
         if (dto.getTitulo() != null) novedad.setTitulo(dto.getTitulo());
         if (dto.getDescripcion() != null) novedad.setDescripcion(dto.getDescripcion());
         if (dto.getImagenUrl() != null) novedad.setImagenUrl(dto.getImagenUrl());
         if (dto.getFechaExpiracion() != null) novedad.setFechaExpiracion(dto.getFechaExpiracion());
 
-        // 3. Guardar los cambios
         Novedades updated = repositoryService.save(
                 novedadesRepository,
                 novedad,
                 DATABASE_DEFAULT_ERROR
         );
 
-        // 4. Respuesta
         return NovedadesMapper.toDefaultResponseDto(
                 updated.getIdNovedades(),
                 updated.getTitulo(),
@@ -92,14 +98,11 @@ public class NovedadesServiceImpl implements INovedadesService {
     @Override
     public NovedadesDefaultResponseDto delete(Integer id) {
 
-        // Buscar la novedad
         Novedades novedad = novedadesRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Novedad no encontrada"));
 
-        // Desactivar
         novedad.setActivo(false);
 
-        // Guardar cambios
         Novedades updated = repositoryService.save(
                 novedadesRepository,
                 novedad,
@@ -113,20 +116,21 @@ public class NovedadesServiceImpl implements INovedadesService {
         );
     }
 
-
     @Override
     public List<NovedadesDefaultResponseDto> getAll() {
-        return novedadesRepository.findAll().stream().map(NovedadesDefaultResponseDto::of).toList();
+        return novedadesRepository.findAll().stream()
+                .map(NovedadesDefaultResponseDto::of).toList();
     }
 
     @Override
     public List<NovedadesDefaultResponseDto> getActivas() {
-        return novedadesRepository.findVigentes().stream().map(NovedadesDefaultResponseDto::of).toList();
+        return novedadesRepository.findVigentes().stream()
+                .map(NovedadesDefaultResponseDto::of).toList();
     }
 
     @Override
     public List<NovedadesDefaultResponseDto> getByRol(Integer idRol) {
-        return novedadesRepository.findByIdRol_IdRolAndActivoTrue(idRol)
+        return novedadesRepository.findByRoles_IdRolAndActivoTrue(idRol)
                 .stream().map(NovedadesDefaultResponseDto::of).toList();
     }
 
@@ -149,6 +153,7 @@ public class NovedadesServiceImpl implements INovedadesService {
                 .filter(n -> n.getImagenUrl() == null)
                 .map(NovedadesDefaultResponseDto::of).toList();
     }
+}
 
     //TODO: continuar con refactorización de servicios
-}
+
