@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/admin")
@@ -25,7 +27,58 @@ public class NovedadesController {
     @PutMapping("th/novedades")
     public ResponseEntity<NovedadesDefaultResponseDto> update(
             @RequestBody NovedadesUpdateDto dto
-    )
+    ){
+        return ResponseEntity.ok(novedadesService.update(dto));
+    }
+    // GET ALL
+    @GetMapping
+    public ResponseEntity<List<NovedadesDefaultResponseDto>> getAll(){
+        return ResponseEntity.ok(novedadesService.getAll());
+    }
+
+    // GET ACTIVAS (solo las que están vigentes)
+    @GetMapping("/activas")
+    public ResponseEntity<List<NovedadesDefaultResponseDto>> getActivas(){
+        return ResponseEntity.ok(novedadesService.getActivas());
+    }
+
+    // GET POR ROL
+    @GetMapping("/rol/{idRol}")
+    public ResponseEntity<List<NovedadesDefaultResponseDto>> getByRol(
+            @PathVariable Integer idRol
+    ){
+        return ResponseEntity.ok(novedadesService.getByRol(idRol));
+    }
+
+    // GET POR CATEGORÍA
+    @GetMapping("/categoria/{categoria}")
+    public ResponseEntity<List<NovedadesDefaultResponseDto>> getByCategoria(
+            @PathVariable String categoria
+    ){
+        return ResponseEntity.ok(novedadesService.getByCategoria(categoria));
+    }
+
+    // GET CARRUSEL (solo con imagen)
+    @GetMapping("/carrusel")
+    public ResponseEntity<List<NovedadesDefaultResponseDto>> getCarrusel(){
+        return ResponseEntity.ok(novedadesService.getCarrusel());
+    }
+
+    // GET AVISOS (sin imagen)
+    @GetMapping("/avisos")
+    public ResponseEntity<List<NovedadesDefaultResponseDto>> getAvisos(){
+        return ResponseEntity.ok(novedadesService.getAvisos());
+    }
+
+    //DELETE novedades
+    @DeleteMapping("/{id}")
+    public ResponseEntity<NovedadesDefaultResponseDto> delete(
+            @PathVariable Integer id
+    ){
+        return ResponseEntity.ok(novedadesService.delete(id));
+    }
+
 }
+
 
 

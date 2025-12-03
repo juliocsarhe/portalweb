@@ -20,9 +20,11 @@ public class NovedadesMapper {
         return novedad;
     }
 
-    public static NovedadesDefaultResponseDto toDefaultResponseDto(Integer novedadUsuario, String titulo, String message){
-
+    public static NovedadesDefaultResponseDto toDefaultResponseDto(Integer id, String titulo, String message){
+        NovedadesDefaultResponseDto dto = new NovedadesDefaultResponseDto();
+        dto.setId(id);
+        dto.setTitulo(titulo);
+        dto.setMessage(message);
+        return dto;
     }
-
-    //TODO: continuar con DTO
 }

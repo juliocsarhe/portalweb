@@ -2,6 +2,7 @@ package com.backend.portalroshkabackend.Services.HumanResource.subservices;
 
 import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesDefaultResponseDto;
 import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesInsertDto;
+import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesUpdateDto;
 import com.backend.portalroshkabackend.Models.Novedades;
 import com.backend.portalroshkabackend.Models.Usuario;
 import com.backend.portalroshkabackend.Repositories.TH.NovedadesRepository;
@@ -59,6 +60,59 @@ public class NovedadesServiceImpl implements INovedadesService {
         );
         return NovedadesMapper.toDefaultResponseDto(savedNovedades.getIdNovedades(), novedades.getTitulo(), NOVEDADES_CREATED_MESSAGE);
     }
+
+    @Override
+    public NovedadesDefaultResponseDto update(NovedadesUpdateDto dto) {
+
+        // 1. Buscar la novedad por ID
+        Novedades novedad = novedadesRepository.findById(dto.getId())
+                .orElseThrow(() -> new RuntimeException("Novedad no encontrada"));
+
+        // 2. Actualizar solo los campos enviados
+        if (dto.getTitulo() != null) novedad.setTitulo(dto.getTitulo());
+        if (dto.getDescripcion() != null) novedad.setDescripcion(dto.getDescripcion());
+        if (dto.getImagenUrl() != null) novedad.setImagenUrl(dto.getImagenUrl());
+        if (dto.getFechaExpiracion() != null) novedad.setFechaExpiracion(dto.getFechaExpiracion());
+
+        // 3. Guardar los cambios
+        Novedades updated = repositoryService.save(
+                novedadesRepository,
+                novedad,
+                DATABASE_DEFAULT_ERROR
+        );
+
+        // 4. Respuesta
+        return NovedadesMapper.toDefaultResponseDto(
+                updated.getIdNovedades(),
+                updated.getTitulo(),
+                "Novedad actualizada correctamente"
+        );
+    }
+
+    @Override
+    public NovedadesDefaultResponseDto delete(Integer id) {
+
+        // Buscar la novedad
+        Novedades novedad = novedadesRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Novedad no encontrada"));
+
+        // Desactivar
+        novedad.setActivo(false);
+
+        // Guardar cambios
+        Novedades updated = repositoryService.save(
+                novedadesRepository,
+                novedad,
+                DATABASE_DEFAULT_ERROR
+        );
+
+        return NovedadesMapper.toDefaultResponseDto(
+                updated.getIdNovedades(),
+                updated.getTitulo(),
+                "Novedad eliminada correctamente"
+        );
+    }
+
 
     @Override
     public List<NovedadesDefaultResponseDto> getAll() {

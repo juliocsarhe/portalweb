@@ -8,6 +8,7 @@ import java.time.LocalDate;
 
 @Data
 public class NovedadesUpdateDto {
+    private Integer id;
     private String titulo;
     private String descripcion;
     private String imagenUrl;

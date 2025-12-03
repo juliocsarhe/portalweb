@@ -12,4 +12,14 @@ public class NovedadesDefaultResponseDto {
     private String titulo;
     private String message;
 
+    // Método necesario para los stream.map
+    public static NovedadesDefaultResponseDto of(Novedades n) {
+        NovedadesDefaultResponseDto dto = new NovedadesDefaultResponseDto();
+        dto.setId(n.getIdNovedades());
+        dto.setTitulo(n.getTitulo());
+        dto.setMessage("OK");
+        return dto;
+    }
 }
+
+
