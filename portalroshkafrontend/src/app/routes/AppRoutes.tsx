@@ -26,6 +26,8 @@ import DeviceFormPage from '../../features/dispositivos/pages/DeviceFormPage.tsx
 import SolicitudDispositivoPage from '../../features/dispositivos/pages/SolicitudDispositivoPage.tsx'
 //import SolicitudDispositivoFormPage from "../features/dispositivos/SolicitudDispositivoFormPage.tsx";
 
+// pagina de novedades
+import novedadesPage from '../features/novedades/page/novedadesPage.tsx'
 import UserFormPage from '../../features/user/pages/UserFormPage.tsx'
 import UserSearchPage from '../../features/user/pages/UserSearchPage.tsx'
 import DeviceAssignmentFormPage from '../../features/dispositivos/pages/DeviceAssignmentFormPage'
@@ -51,6 +53,8 @@ export default function AppRoutes() {
     <Routes>
       {/* Rutas públicas */}
       <Route path="/login" element={<LoginPage />} />
+
+      {/* if usuario ChangePassword = true  -FER*/}
       {/* <Route path="/cambiar-contraseña" element={<ChangePasswordPage />} /> */}
 
       {/* Rutas privadas */}
@@ -79,6 +83,8 @@ export default function AppRoutes() {
           <Route path="/solicitudesTH/:id/ver" element={<RequestViewPage />} />
           <Route path="/solicitudesTH/:id/evaluar" element={<RequestViewPage />} />
 
+          {/* CREACION DE LAS NOVEDADES (para TH) */}
+          <Route path="/crear-novedadesTH" element={<novedadesPage />} />
           {/* Usuarios */}
           <Route path="/usuarios" element={<UsuariosPage />} />
           <Route path="/usuarios/buscar" element={<UserSearchPage />} />
@@ -126,6 +132,8 @@ export default function AppRoutes() {
 
           {/* Ubicación */}
           <Route path="/ubicacion" element={<UbicacionPage />} />
+
+          {/* declarar ruta para th y admin */}
 
           {/* CatalogoSysAdmin */}
           <Route path="/catalogo-sys" element={<CatalogoOperacionesPage />} />

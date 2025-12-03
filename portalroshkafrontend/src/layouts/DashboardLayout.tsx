@@ -5,6 +5,8 @@ import { Roles } from '../types/roles'
 import '../shared/ui/styles/scrollbar.css'
 import { tieneRol } from '../shared/utils/permisos'
 
+// aca va el side-bar en general para los users
+
 export default function DashboardLayout() {
   const { user, logout } = useAuth()
 
@@ -18,65 +20,65 @@ export default function DashboardLayout() {
     {
       id: '/',
       label: 'Inicio',
-      icon: '🏠',
+      icon: '',
       available: true,
       end: true as const,
     },
-    { id: '/profile', label: 'Mi Perfil', icon: '👤', available: true },
-    { id: '/requests', label: 'Solicitudes', icon: '📩', available: true },
+    { id: '/profile', label: 'Mi Perfil', icon: '', available: true },
+    { id: '/requests', label: 'Solicitudes', icon: '', available: true },
     {
       id: '/solicitud-dispositivo',
       label: 'Solicitar Dispositivos',
-      icon: '📱',
+      icon: '',
       available: true,
     },
-    { id: '/benefits', label: 'Beneficios', icon: '🎁', available: true },
+    { id: '/benefits', label: 'Beneficios', icon: '', available: true },
     {
       id: '/catalogo-th',
       label: 'Cargos',
-      icon: '👥',
+      icon: '',
       available: talentoHumano,
     },
     {
       id: '/usuarios',
       label: 'Funcionarios',
-      icon: '🧑‍💼',
+      icon: '',
       available: talentoHumano,
     },
     {
       id: '/catalogo-sys',
       label: 'Tipos de Disp. y Ubicaciones',
-      icon: '📚',
+      icon: '',
       available: sysadmin,
     },
     {
       id: '/dispositivos',
       label: 'Dispositivos',
-      icon: '🖥️',
+      icon: '',
       available: sysadmin,
     },
     {
       id: '/gestion-dispositivos',
       label: 'Gestión de Dispositivos',
-      icon: '💻',
+      icon: '',
       available: sysadmin,
     },
     {
       id: '/catalogo-op',
       label: 'Clientes y Tecnologías',
-      icon: '🏢',
+      icon: '',
       available: operaciones,
     },
     {
       id: '/operations',
       label: 'Gestión de Equipos',
-      icon: '🛠️',
+      icon: '',
       available: operaciones,
     },
     {
       id: '/seleccion-solicitudesTH',
       label: 'Gestión de Solicitudes',
-      icon: '📤',
+      icon: '',
       available: talentoHumano,
     },
     // { id: "/vacaciones", label: "Vacaciones", icon: "🏖️", available: true },
@@ -84,13 +86,13 @@ export default function DashboardLayout() {
     {
       id: '/solicitudesTL',
       label: 'Solicitudes de Equipo',
-      icon: '📬',
+      icon: '',
       available: leader,
     },
     {
       id: '/configuracion',
       label: 'Configuración',
-      icon: '⚙️',
+      icon: '',
       available: true,
     },
   ].filter((o) => o.available)
@@ -102,7 +104,7 @@ export default function DashboardLayout() {
         {/* Perfil compacto */}
         <div className="p-6 border-b border-gray-200 dark:border-gray-800 shrink-0">
           <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 rounded-full flex items-center justify-center overflow-hidden">
+            <div className="w-20 h-20 rounded-full flex items-center justify-center overflow-hidden">
               {user?.urlPerfil ? (
                 <img
                   src={`data:image/png;base64,${user.urlPerfil}`}
@@ -110,17 +112,20 @@ export default function DashboardLayout() {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full bg-linear-to-r from-blue-600 to-blue-800 flex items-center justify-center text-white font-bold text-lg">
-                  👤
+                <div className="w-full h-full flex items-center justify-center text-white font-bold text-lg">
+                  <img
+                    className="w-18 h-18 bg-black rounded-full"
+                    src="src\assets\icono-user2.svg"
+                    alt="icono-user"
+                  />
                 </div>
               )}
             </div>
-
             <div>
               <p className="font-semibold text-gray-800 dark:text-gray-100 line-clamp-1">
                 {user?.nombre}
               </p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">{user?.rol?.nombre}</p>
+              <p className="text-sm text-gray-600 dark:text-white">{user?.rol?.nombre}</p>
             </div>
           </div>
         </div>

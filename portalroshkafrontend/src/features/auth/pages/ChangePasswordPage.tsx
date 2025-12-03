@@ -42,7 +42,8 @@ export function ChangePasswordPage() {
       // setTimeout(() => navigate("/"), 2000);
 
       // 👇 Variante B: producción con backend real
-      // Guardamos el nuevo token que ya no requiere cambio de contraseña
+      // Guardamos el nuevo token que ya no requiere cambio de contraseña //
+      // CREAR SERVICIO PARA ESTA PAGINA (Fernanda)
       setTimeout(() => {
         if (newToken) {
           login(newToken) // refresca el token

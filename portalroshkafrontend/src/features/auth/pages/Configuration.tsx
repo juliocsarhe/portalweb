@@ -240,7 +240,7 @@ function PasswordField({ label, onSave }: PasswordFieldProps) {
 }
 
 export default function Configuration() {
-  const [darkMode, setDarkMode] = useState(true)
+  const [darkMode, setDarkMode] = useState(true) ///////
 
   useEffect(() => {
     if (darkMode) {
