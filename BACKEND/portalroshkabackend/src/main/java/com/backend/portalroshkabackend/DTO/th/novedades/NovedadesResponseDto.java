@@ -1,18 +1,20 @@
 package com.backend.portalroshkabackend.DTO.th.novedades;
 
-import com.backend.portalroshkabackend.Models.Usuario;
 import lombok.Data;
-import org.springframework.stereotype.Component;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Data
-public class NovedadesUpdateDto {
-    private Integer id;
+@NoArgsConstructor
+public class NovedadesResponseDto {
+    private Integer idNovedades;
     private String titulo;
     private String descripcion;
     private String imagenUrl;
     private LocalDate fechaExpiracion;
-    private String prioridad;
+    private Boolean activo;
     private String categoria;
+    private String prioridad;
+
 }

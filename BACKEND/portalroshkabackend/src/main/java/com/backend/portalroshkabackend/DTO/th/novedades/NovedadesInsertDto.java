@@ -1,6 +1,5 @@
 package com.backend.portalroshkabackend.DTO.th.novedades;
 
-import com.backend.portalroshkabackend.Models.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,5 +17,5 @@ public class NovedadesInsertDto {
     private LocalDate fechaExpiracion;
     private String categoria;
     private String prioridad;
-    private Integer idRol;
+
 }

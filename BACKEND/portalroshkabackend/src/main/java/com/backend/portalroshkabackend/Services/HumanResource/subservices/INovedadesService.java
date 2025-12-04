@@ -1,6 +1,7 @@
 package com.backend.portalroshkabackend.Services.HumanResource.subservices;
 
 import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesDefaultResponseDto;
+import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesResponseDto;
 import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesInsertDto;
 import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesUpdateDto;
 
@@ -10,20 +11,21 @@ public interface INovedadesService {
 
     NovedadesDefaultResponseDto create(NovedadesInsertDto dto);
 
-    List<NovedadesDefaultResponseDto> getAll();
+    List<NovedadesResponseDto> getAll();
 
-    List<NovedadesDefaultResponseDto> getActivas();
+    List<NovedadesResponseDto> getActivas();
 
-    List<NovedadesDefaultResponseDto> getByCategoria(String categoria);
+/*    List<NovedadesResponseDto> getByRol(Integer idRol);  */
 
-    List<NovedadesDefaultResponseDto> getByPrioridad();
+    List<NovedadesResponseDto> getByCategoria(String categoria);
 
-    List<NovedadesDefaultResponseDto> getCarrusel();
+    List<NovedadesResponseDto> getCarrusel();
 
-    List<NovedadesDefaultResponseDto> getAvisos();
+    List<NovedadesResponseDto> getAvisos();
 
     NovedadesDefaultResponseDto update(NovedadesUpdateDto dto);
 
     NovedadesDefaultResponseDto delete(Integer id);
 
+    List<NovedadesResponseDto> getByPrioridad();
 }
