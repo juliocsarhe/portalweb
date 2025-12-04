@@ -1,6 +1,7 @@
 package com.backend.portalroshkabackend.Services;
 
 import com.backend.portalroshkabackend.DTO.common.UserDto;
+
 import com.backend.portalroshkabackend.DTO.common.UserUpdateDto;
 import com.backend.portalroshkabackend.Models.Usuario;
 import com.backend.portalroshkabackend.Repositories.TH.UserRepository;
@@ -110,26 +111,33 @@ public class UsuariosService {
     }
 
     private UserDto mapUsuarioToDto(Usuario usuario) {
-    if (usuario == null) return null;
-    UserDto dto = new UserDto();
-    dto.setIdUsuario(usuario.getIdUsuario());
-    dto.setNombre(usuario.getNombre());
-    dto.setApellido(usuario.getApellido());
-    dto.setNroCedula(usuario.getNroCedula());
-    dto.setCorreo(usuario.getCorreo());
-    //dto.setIdRol(usuario.getIdRol() != null ? usuario.getIdRol().getIdRol() : null);
-    dto.setFechaIngreso(usuario.getFechaIngreso());
-    dto.setAntiguedad(usuario.getAntiguedad());
-    dto.setDiasVacaciones(usuario.getDiasVacaciones());
-    dto.setEstado(usuario.getEstado());
-    dto.setContrasena(usuario.getContrasena());
-    dto.setTelefono(usuario.getTelefono());
-    // dto.setIdEquipo(null); // Campo no disponible en el modelo Usuario actual
-    //dto.setIdCargo(usuario.getIdCargo() != null ? usuario.getIdCargo().getIdCargo() : null);
-    dto.setFechaNacimiento(usuario.getFechaNacimiento());
-    dto.setDiasVacacionesRestante(usuario.getDiasVacacionesRestante());
-    dto.setRequiereCambioContrasena(usuario.getRequiereCambioContrasena());
-    return dto;
+        if (usuario == null) return null;
+
+        UserDto dto = new UserDto();
+        dto.setIdUsuario(usuario.getIdUsuario());
+        dto.setNombre(usuario.getNombre());
+        dto.setApellido(usuario.getApellido());
+        dto.setNroCedula(usuario.getNroCedula());
+        dto.setCorreo(usuario.getCorreo());
+
+
+        if (usuario.getRol() != null) {
+            dto.setRoles(usuario.getRol());
+        }
+
+
+        dto.setFechaIngreso(usuario.getFechaIngreso());
+        dto.setAntiguedad(usuario.getAntiguedad());
+        dto.setDiasVacaciones(usuario.getDiasVacaciones());
+        dto.setEstado(usuario.getEstado());
+        dto.setContrasena(usuario.getContrasena());
+        dto.setTelefono(usuario.getTelefono());
+        dto.setFechaNacimiento(usuario.getFechaNacimiento());
+        dto.setDiasVacacionesRestante(usuario.getDiasVacacionesRestante());
+        dto.setRequiereCambioContrasena(usuario.getRequiereCambioContrasena());
+
+        return dto;
     }
+
 
 }

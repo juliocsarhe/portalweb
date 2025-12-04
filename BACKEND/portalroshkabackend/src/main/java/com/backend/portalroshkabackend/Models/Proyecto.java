@@ -1,10 +1,13 @@
 package com.backend.portalroshkabackend.Models;
 
+
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name="proyectos")
@@ -26,6 +29,14 @@ public class Proyecto {
         @JoinColumn(name = "id_lider_equipo", unique = true, nullable = false)
         private Usuario liderEquipo;
 
+    @ManyToMany
+    @JoinTable(
+            name = "proyecto_usuarios",
+            joinColumns = @JoinColumn(name = "id_proyecto"),
+            inverseJoinColumns = @JoinColumn(name = "id_usuario")
+    )
+    private Set<Usuario> equipoAsignado = new HashSet<>();
+
 
     @Column(columnDefinition = "TEXT")
     private String tecnologias;
@@ -39,8 +50,15 @@ public class Proyecto {
     @Column(name = "fecha_limite")
     private LocalDate fechaLimite;
 
-    @Column(name = "estado")
-    private String estado; // ACTIVO, FINALIZADO, PAUSADO
+    public enum EstadoProyectoEnum {
+        ACTIVO,
+        PAUSADO,
+        FINALIZADO
+    } // ACTIVO, FINALIZADO, PAUSADO
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado", nullable = false)
+    private EstadoProyectoEnum estado = EstadoProyectoEnum.ACTIVO;
 
     @Column(nullable = false)
     private Boolean activo = true;

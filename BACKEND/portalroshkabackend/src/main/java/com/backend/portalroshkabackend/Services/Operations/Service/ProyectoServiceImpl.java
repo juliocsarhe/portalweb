@@ -39,6 +39,10 @@ public class ProyectoServiceImpl implements IProyectoService {
         Proyecto p = dto.toEntity();
         p.setLiderEquipo(lider);
 
+        if (p.getEstado() == null){
+            p.setEstado(Proyecto.EstadoProyectoEnum.ACTIVO);
+        }
+
         p = proyectoRepository.save(p);
 
         return ProyectoDTO.fromEntity(p);
@@ -82,6 +86,14 @@ public class ProyectoServiceImpl implements IProyectoService {
         proyectoRepository.save(proyecto);
 
         return ProyectoDTO.fromEntity(proyecto);
+    }
+
+    @Override
+    public void eliminarProyecto(Integer idProyecto) {
+        Proyecto proyecto = proyectoRepository.findById(idProyecto)
+                .orElseThrow(() -> new RuntimeException("Proyecto no encontrado"));
+
+        proyectoRepository.delete(proyecto);
     }
 
 

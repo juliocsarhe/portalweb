@@ -43,5 +43,15 @@ public class ProyectoController {
         return ResponseEntity.ok(actualizado);
     }
 
+    @DeleteMapping("/{id}")
+    public  ResponseEntity<Void> eliminarProyecto(@PathVariable Integer id){
+        proyectoService.eliminarProyecto(id);
+        return ResponseEntity.noContent().build();
+    }
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> manejarErrores(RuntimeException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
 
 }

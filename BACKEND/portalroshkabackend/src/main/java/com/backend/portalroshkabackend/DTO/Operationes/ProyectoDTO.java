@@ -4,6 +4,7 @@ package com.backend.portalroshkabackend.DTO.Operationes;
 import com.backend.portalroshkabackend.Models.Proyecto;
 import lombok.Data;
 
+
 import java.time.LocalDate;
 
 @Data
@@ -17,7 +18,8 @@ public class ProyectoDTO {
     private String descripcion;
     private LocalDate fechaInicio;
     private LocalDate fechaLimite;
-    private String estado;
+    private Proyecto.EstadoProyectoEnum estado;
+
     private Boolean activo;
 
     public static ProyectoDTO fromEntity(Proyecto p) {
@@ -35,7 +37,6 @@ public class ProyectoDTO {
         dto.setActivo(p.getActivo());
 
         return dto;
-
     }
 
     public Proyecto toEntity() {
@@ -47,8 +48,8 @@ public class ProyectoDTO {
         p.setDescripcion(this.descripcion);
         p.setFechaInicio(this.fechaInicio);
         p.setFechaLimite(this.fechaLimite);
-        p.setEstado(this.estado);
-        p.setActivo(this.activo);
+        p.setEstado(this.estado != null ? this.estado : Proyecto.EstadoProyectoEnum.ACTIVO);
+        p.setActivo(this.activo != null ? this.activo : true);
 
         return p;
     }

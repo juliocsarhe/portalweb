@@ -14,6 +14,9 @@ public interface IProyectoService {
 
     ProyectoDTO actualizarProyecto(Integer idProyecto, ProyectoDTO dto);
 
+    void eliminarProyecto(Integer idProyecto);
+
+
 
 
 }
