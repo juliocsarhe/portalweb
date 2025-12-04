@@ -60,7 +60,7 @@ public class NovedadesController {
         return ResponseEntity.ok(novedadesService.getByRol(idRol));
     }
 */
-    // GET POR CATEGORÍA
+    // GET POR CATEGORÍA TH - OP - AS - DT - DS - TL
     @GetMapping("/categoria/{categoria}")
     public ResponseEntity<List<NovedadesResponseDto>> getByCategoria(
             @PathVariable String categoria

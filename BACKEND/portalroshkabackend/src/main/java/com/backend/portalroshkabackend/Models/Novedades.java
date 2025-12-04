@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @Data
@@ -34,7 +33,7 @@ public class Novedades {
     private Boolean activo;
 
     @Column(name = "categoria")
-    private String categoria; // TH - OP - DT - TD
+    private String categoria; // TH - OP - AS - DT - DS - TL - ALL
 
     @Column(name = "prioridad")
     private String prioridad; // BAJA - MEDIA - ALTA
