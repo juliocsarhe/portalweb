@@ -8,14 +8,14 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 
 @Component
-public class FechaExpirationValidator implements ValidatorStrategy<NovedadesInsertDto> {
+public class FechaExpiracionValidator implements ValidatorStrategy<NovedadesInsertDto> {
 
     @Override
     public void validate(NovedadesInsertDto dto) {
 
         LocalDate hoy = LocalDate.now();
 
-        if (dto.getFechaExpiracion() == null || dto.getFechaExpiracion().isBefore(hoy)) {
+        if (dto.getFechaExpiracion() == null || dto.getFechaExpiracion().isBefore(hoy) || dto.getFechaExpiracion().isEqual(hoy)) {
             throw new InvalidDateException("Fecha de expiración inválida");
         }
     }

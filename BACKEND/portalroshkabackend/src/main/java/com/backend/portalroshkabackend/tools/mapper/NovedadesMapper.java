@@ -1,7 +1,9 @@
 package com.backend.portalroshkabackend.tools.mapper;
 
 import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesDefaultResponseDto;
+import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesResponseDto;
 import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesInsertDto;
+import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesUpdateDto;
 import com.backend.portalroshkabackend.Models.Novedades;
 import com.backend.portalroshkabackend.Models.Roles;
 import com.backend.portalroshkabackend.Models.Usuario;
@@ -26,6 +28,28 @@ public class NovedadesMapper {
         dto.setId(id);
         dto.setTitulo(titulo);
         dto.setMessage(message);
+        return dto;
+    }
+
+    public static Novedades toEntityFromUpdateDto(NovedadesUpdateDto dto, Novedades novedad){
+        if (dto.getTitulo() != null) novedad.setTitulo(dto.getTitulo());
+        if (dto.getDescripcion() != null) novedad.setDescripcion(dto.getDescripcion());
+        if (dto.getImagenUrl() != null) novedad.setImagenUrl(dto.getImagenUrl());
+        if (dto.getFechaExpiracion() != null) novedad.setFechaExpiracion(dto.getFechaExpiracion());
+        if(dto.getCategoria() != null) novedad.setCategoria(dto.getCategoria());
+        if(dto.getPrioridad() != null) novedad.setPrioridad(dto.getPrioridad());
+        return novedad;
+
+    }
+    public static NovedadesResponseDto toResponseDto(Novedades novedad){
+        NovedadesResponseDto dto = new NovedadesResponseDto();
+        dto.setIdNovedades(novedad.getIdNovedades());
+        dto.setTitulo(novedad.getTitulo());
+        dto.setDescripcion(novedad.getDescripcion());
+        dto.setImagenUrl(novedad.getImagenUrl());
+        dto.setFechaExpiracion(novedad.getFechaExpiracion());
+        dto.setCategoria(novedad.getCategoria());
+        dto.setPrioridad(novedad.getPrioridad());
         return dto;
     }
 }

@@ -41,5 +41,5 @@ public class Novedades {
 
     @ManyToOne
     @JoinColumn(name = "creado_por")
-    private Usuario usuario; // quién creó la novedad
+    private Usuario usuario;
 }

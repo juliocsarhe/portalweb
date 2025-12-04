@@ -1,6 +1,7 @@
 package com.backend.portalroshkabackend.Controllers.HumanResource;
 
 import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesDefaultResponseDto;
+import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesResponseDto;
 import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesInsertDto;
 import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesUpdateDto;
 import com.backend.portalroshkabackend.Services.HumanResource.subservices.INovedadesService;
@@ -12,60 +13,23 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/admin/th")
+@RequestMapping("/api/v1/admin")
 public class NovedadesController {
 
     private final INovedadesService novedadesService;
 
-    @PostMapping("novedades")
+    @PostMapping("th/novedades")
     public ResponseEntity<NovedadesDefaultResponseDto> create(
             @RequestBody NovedadesInsertDto dto
     ){
         return ResponseEntity.ok(novedadesService.create(dto));
     }
 
-    @PutMapping("novedades")
+    @PutMapping("th/novedades")
     public ResponseEntity<NovedadesDefaultResponseDto> update(
             @RequestBody NovedadesUpdateDto dto
     ){
         return ResponseEntity.ok(novedadesService.update(dto));
-    }
-    // GET ALL
-    @GetMapping
-    public ResponseEntity<List<NovedadesDefaultResponseDto>> getAll(){
-        return ResponseEntity.ok(novedadesService.getAll());
-    }
-
-    // GET ACTIVAS (solo las que están vigentes)
-    @GetMapping("/activas")
-    public ResponseEntity<List<NovedadesDefaultResponseDto>> getActivas(){
-        return ResponseEntity.ok(novedadesService.getActivas());
-    }
-
-    // GET POR CATEGORÍA
-    @GetMapping("/categoria/{categoria}")
-    public ResponseEntity<List<NovedadesDefaultResponseDto>> getByCategoria(
-            @PathVariable String categoria
-    ){
-        return ResponseEntity.ok(novedadesService.getByCategoria(categoria));
-    }
-
-    // GET CARRUSEL (solo con imagen)
-    @GetMapping("/carrusel")
-    public ResponseEntity<List<NovedadesDefaultResponseDto>> getCarrusel(){
-        return ResponseEntity.ok(novedadesService.getCarrusel());
-    }
-
-    // GET AVISOS (sin imagen)
-    @GetMapping("/avisos")
-    public ResponseEntity<List<NovedadesDefaultResponseDto>> getAvisos(){
-        return ResponseEntity.ok(novedadesService.getAvisos());
-    }
-
-    // GET POR PRIORIDAD (ALTA - MEDIA - BAJA)
-    @GetMapping("/prioridad")
-    public ResponseEntity<List<NovedadesDefaultResponseDto>> getByPrioridad(){
-        return ResponseEntity.ok(novedadesService.getByPrioridad());
     }
 
     //DELETE novedades
@@ -75,6 +39,56 @@ public class NovedadesController {
     ){
         return ResponseEntity.ok(novedadesService.delete(id));
     }
+
+    // GET ALL
+    @GetMapping
+    public ResponseEntity<List<NovedadesResponseDto>> getAll(){
+        return ResponseEntity.ok(novedadesService.getAll());
+    }
+
+    // GET ACTIVAS (solo las que están vigentes)
+    @GetMapping("/activas")
+    public ResponseEntity<List<NovedadesResponseDto>> getActivas(){
+        return ResponseEntity.ok(novedadesService.getActivas());
+    }
+
+/*    // GET POR ROL
+    @GetMapping("/rol/{idRol}")
+    public ResponseEntity<List<NovedadesResponseDto>> getByRol(
+            @PathVariable Integer idRol
+    ){
+        return ResponseEntity.ok(novedadesService.getByRol(idRol));
+    }
+*/
+    // GET POR CATEGORÍA
+    @GetMapping("/categoria/{categoria}")
+    public ResponseEntity<List<NovedadesResponseDto>> getByCategoria(
+            @PathVariable String categoria
+    ){
+        return ResponseEntity.ok(novedadesService.getByCategoria(categoria));
+    }
+
+    // GET CARRUSEL (solo con imagen)
+    @GetMapping("/carrusel")
+    public ResponseEntity<List<NovedadesResponseDto>> getCarrusel(){
+        return ResponseEntity.ok(novedadesService.getCarrusel());
+    }
+
+    // GET AVISOS (sin imagen)
+    @GetMapping("/avisos")
+    public ResponseEntity<List<NovedadesResponseDto>> getAvisos(){
+        return ResponseEntity.ok(novedadesService.getAvisos());
+    }
+
+    // GET POR PRIORIDAD (ALTA - MEDIA - BAJA)
+    @GetMapping("/prioridad")
+    public ResponseEntity<List<NovedadesResponseDto>> getByPrioridad(){
+        return ResponseEntity.ok(novedadesService.getByPrioridad());
+    }
+
+
+    //TODO: consultar validez de obtener por buscar por idRol
+    //TODO: consultar sobre rutas correctas
 
 }
 
