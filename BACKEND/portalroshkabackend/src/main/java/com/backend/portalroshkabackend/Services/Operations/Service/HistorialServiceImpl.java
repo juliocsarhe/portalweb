@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,9 +26,7 @@ public class HistorialServiceImpl implements IHistorialService {
     private final ProyectoRepository proyectoRepository;
     private final UsuariosService usuariosService;
 
-    // -----------------------------
-    // MÉTODOS AUXILIARES DE ROLES
-    // -----------------------------
+
 
     private boolean esTalentoHumano(Usuario u) {
         return u.getRol().getNombre().equalsIgnoreCase("TALENTO HUMANO");
@@ -55,9 +54,7 @@ public class HistorialServiceImpl implements IHistorialService {
                 .orElseThrow(() -> new RuntimeException("Usuario actual no encontrado"));
     }
 
-    // -----------------------------
-    // OBTENER HISTORIAL POR ID
-    // -----------------------------
+
     @Override
     public HistorialDTO obtenerHistorialPorId(Integer idHistorial) {
 
@@ -89,30 +86,45 @@ public class HistorialServiceImpl implements IHistorialService {
         return HistorialDTO.fromEntity(historial);
     }
 
-    // -----------------------------
-    // LISTAR POR USUARIO
-    // -----------------------------
+
     @Override
     public List<HistorialDTO> listarHistorialPorUsuario(Integer idUsuario) {
 
         Usuario actual = getUsuarioActualEntity();
 
-        // DESARROLLO → SOLO SU HISTORIAL
+
         if (esDesarrollo(actual) && !actual.getIdUsuario().equals(idUsuario)) {
             throw new RuntimeException("No tienes permiso para ver historial de otros usuarios.");
         }
 
-        // TEAM LEADER → SOLO SU EQUIPO
-        if (esTeamLeader(actual)) {
-            Proyecto proyecto = proyectoRepository.findByLiderEquipo(actual)
-                    .orElseThrow(() -> new RuntimeException("No lideras ningún proyecto."));
 
-            boolean pertenece = proyecto.getEquipoAsignado()
-                    .stream()
+        if (esTeamLeader(actual)) {
+
+            boolean autorizado = false;
+
+            Optional<Proyecto> liderado = proyectoRepository.findByLiderEquipo(actual);
+
+            if (liderado.isPresent()) {
+                boolean pertenecePorLiderazgo = liderado.get()
+                        .getEquipoAsignado()
+                        .stream()
+                        .anyMatch(u -> u.getIdUsuario().equals(idUsuario));
+
+                if (pertenecePorLiderazgo) autorizado = true;
+            }
+
+            List<Proyecto> misProyectos = proyectoRepository.findByEquipoAsignado_IdUsuario(actual.getIdUsuario());
+
+            boolean perteneceComoMiembro = misProyectos.stream()
+                    .flatMap(p -> p.getEquipoAsignado().stream())
                     .anyMatch(u -> u.getIdUsuario().equals(idUsuario));
 
-            if (!pertenece && !actual.getIdUsuario().equals(idUsuario)) {
-                throw new RuntimeException("Solo puedes ver historial de tu equipo.");
+            if (perteneceComoMiembro) autorizado = true;
+
+            if (actual.getIdUsuario().equals(idUsuario)) autorizado = true;
+
+            if (!autorizado) {
+                throw new RuntimeException("No puedes ver historial de este usuario.");
             }
         }
 
@@ -122,9 +134,6 @@ public class HistorialServiceImpl implements IHistorialService {
                 .collect(Collectors.toList());
     }
 
-    // -----------------------------
-    // LISTAR POR PROYECTO
-    // -----------------------------
     @Override
     public List<HistorialDTO> listarHistorialPorProyecto(Integer idProyecto) {
 
@@ -151,9 +160,7 @@ public class HistorialServiceImpl implements IHistorialService {
                 .collect(Collectors.toList());
     }
 
-    // -----------------------------
-    // ACTUALIZAR HISTORIAL
-    // -----------------------------
+
     @Override
     public HistorialDTO actualizarHistorial(Integer idHistorial, HistorialDTO dto) {
 
@@ -176,9 +183,7 @@ public class HistorialServiceImpl implements IHistorialService {
         return HistorialDTO.fromEntity(historial);
     }
 
-    // -----------------------------
-    // ELIMINAR HISTORIAL
-    // -----------------------------
+
     @Override
     public void eliminarHistorial(Integer idHistorial) {
 

@@ -25,8 +25,8 @@ public class Proyecto {
     private String nombre;
         //Debemos relacionar proyecto con usuario para estirar como lider a un usuario existente
        //Que no sea solo texto
-        @OneToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "id_lider_equipo", unique = true, nullable = false)
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "id_lider_equipo", nullable = false)
         private Usuario liderEquipo;
 
     @ManyToMany

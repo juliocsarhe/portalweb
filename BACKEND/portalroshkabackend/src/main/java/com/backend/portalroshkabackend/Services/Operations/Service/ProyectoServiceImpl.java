@@ -31,9 +31,6 @@ public class ProyectoServiceImpl implements IProyectoService {
                 .orElseThrow(() -> new RuntimeException("El líder no existe."));
 
 
-        if (proyectoRepository.existsByLiderEquipo_IdUsuario(dto.getIdLiderEquipo())) {
-            throw new RuntimeException("Este líder ya está asignado a otro proyecto.");
-        }
 
         // Crea el proyecto
         Proyecto p = dto.toEntity();
@@ -67,12 +64,6 @@ public class ProyectoServiceImpl implements IProyectoService {
 
         Usuario lider = usuarioRepository.findById(dto.getIdLiderEquipo())
                 .orElseThrow(() -> new RuntimeException("El líder no existe."));
-
-        // Validar que el líder no esté liderando otro proyecto (excepto el mismo)
-        if (proyectoRepository.existsByLiderEquipo_IdUsuario(dto.getIdLiderEquipo())
-                && !proyecto.getLiderEquipo().getIdUsuario().equals(dto.getIdLiderEquipo())) {
-            throw new RuntimeException("Este líder ya está asignado a otro proyecto.");
-        }
 
         proyecto.setNombre(dto.getNombre());
         proyecto.setTecnologias(dto.getTecnologias());

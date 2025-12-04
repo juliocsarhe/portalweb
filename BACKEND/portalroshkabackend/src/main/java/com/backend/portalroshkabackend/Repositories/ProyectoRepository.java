@@ -1,6 +1,8 @@
 package com.backend.portalroshkabackend.Repositories;
 
 import com.backend.portalroshkabackend.Models.Proyecto;
+
+import java.util.List;
 import java.util.Optional;
 
 import com.backend.portalroshkabackend.Models.Usuario;
@@ -14,4 +16,7 @@ public interface ProyectoRepository extends JpaRepository<Proyecto, Integer> {
 
 
     boolean existsByLiderEquipo_IdUsuario(Integer idUsuario);
+
+    List<Proyecto> findByEquipoAsignado_IdUsuario(Integer idUsuario);
+
 }
