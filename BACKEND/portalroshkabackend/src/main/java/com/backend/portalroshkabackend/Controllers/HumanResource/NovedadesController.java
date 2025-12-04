@@ -13,19 +13,19 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/admin")
+@RequestMapping("/api/v1/admin/th")
 public class NovedadesController {
 
     private final INovedadesService novedadesService;
 
-    @PostMapping("th/novedades")
+    @PostMapping("novedades")
     public ResponseEntity<NovedadesDefaultResponseDto> create(
             @RequestBody NovedadesInsertDto dto
     ){
         return ResponseEntity.ok(novedadesService.create(dto));
     }
 
-    @PutMapping("th/novedades")
+    @PutMapping("novedades")
     public ResponseEntity<NovedadesDefaultResponseDto> update(
             @RequestBody NovedadesUpdateDto dto
     ){
