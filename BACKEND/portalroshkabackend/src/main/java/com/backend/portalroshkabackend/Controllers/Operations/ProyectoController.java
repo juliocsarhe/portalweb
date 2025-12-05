@@ -48,6 +48,24 @@ public class ProyectoController {
         proyectoService.eliminarProyecto(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{idProyecto}/equipo/agregar")
+    public ResponseEntity<ProyectoDTO> agregarMiembros(@PathVariable Integer idProyecto, @RequestBody
+                                                       List<Integer> usuarioIds){
+        ProyectoDTO proyectoDTO = proyectoService.agregarAlEquipo(idProyecto, usuarioIds);
+        return ResponseEntity.ok(proyectoDTO);
+    }
+
+    @DeleteMapping("/{idProyecto}/equipo/eliminar")
+    public ResponseEntity<ProyectoDTO> eliminarMiembros(
+            @PathVariable Integer idProyecto,
+            @RequestBody List<Integer> usuarioIds
+    ){
+        ProyectoDTO proyectoDTO = proyectoService.eliminarUsuarioEquipo(idProyecto, usuarioIds);
+        return ResponseEntity.ok(proyectoDTO);
+    }
+
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> manejarErrores(RuntimeException ex) {
         return ResponseEntity.badRequest().body(ex.getMessage());

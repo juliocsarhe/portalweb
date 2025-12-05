@@ -2,10 +2,12 @@ package com.backend.portalroshkabackend.DTO.Operationes;
 
 
 import com.backend.portalroshkabackend.Models.Proyecto;
+import com.backend.portalroshkabackend.Models.Usuario;
 import lombok.Data;
 
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 public class ProyectoDTO {
@@ -19,7 +21,7 @@ public class ProyectoDTO {
     private LocalDate fechaInicio;
     private LocalDate fechaLimite;
     private Proyecto.EstadoProyectoEnum estado;
-
+    private List<Integer> equipoId;
     private Boolean activo;
 
     public static ProyectoDTO fromEntity(Proyecto p) {
@@ -35,6 +37,12 @@ public class ProyectoDTO {
         dto.setFechaLimite(p.getFechaLimite());
         dto.setEstado(p.getEstado());
         dto.setActivo(p.getActivo());
+        dto.setEquipoId(
+                p.getEquipoAsignado()
+                .stream()
+                .map(Usuario::getIdUsuario)
+                .toList()
+        );
 
         return dto;
     }

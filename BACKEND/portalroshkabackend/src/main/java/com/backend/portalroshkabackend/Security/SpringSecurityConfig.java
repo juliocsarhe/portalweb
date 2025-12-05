@@ -22,7 +22,7 @@ public class SpringSecurityConfig {
     private AuthenticationConfiguration authenticationConfiguration;
 
     @Autowired
-    private UsuariosService userService; // ✅ inyectamos UserService
+    private UsuariosService userService;
 
     // Bean de AuthenticationManager
     @Bean
@@ -96,7 +96,7 @@ public class SpringSecurityConfig {
 
                 // ROLE_5 - DIRECTIVO: Esta regla debe ir AL FINAL porque es muy amplia
                 .requestMatchers("/api/v1/admin/**")
-                    .hasAnyAuthority("ROLE_3")
+                    .hasAnyAuthority("ROLE_5")
                 
                 // Cualquier otra request requiere autenticación
                 .anyRequest().authenticated()

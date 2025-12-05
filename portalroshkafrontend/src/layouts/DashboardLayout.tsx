@@ -4,7 +4,7 @@ import { useAuth } from '../app/providers/AuthContext'
 import { Roles } from '../types/roles'
 import '../shared/ui/styles/scrollbar.css'
 import { tieneRol } from '../shared/utils/permisos'
-
+import DevicePage from '../features/dispositivos/pages/DevicePage'
 export default function DashboardLayout() {
   const { user, logout } = useAuth()
 
