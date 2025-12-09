@@ -432,6 +432,20 @@ export interface NovedadesDefaultResponseDto {
 export interface InsertDto {
   titulo: string
   descripcion: string
+  imagenUrl: string
+  fechaExpiracion: Date
+  categoria: string
+  prioridad: string
+}
+export interface NovedadesResponseDto {
+  titulo: string
+  idNovedades: number
+  descripcion: string
+  imagenUrl: string
+  fechaExpiracion: Date
+  activo: boolean
+  categoria: string
+  prioridad: string
 }
 export interface NovedadesUpdateDto {
   id: number
@@ -439,4 +453,6 @@ export interface NovedadesUpdateDto {
   descripcion: string
   imagenUrl: string
   fechaExpiracion: string
+  categoria: string
+  prioridad: string
 }
