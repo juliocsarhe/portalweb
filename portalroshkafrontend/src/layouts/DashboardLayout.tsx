@@ -5,6 +5,8 @@ import { Roles } from '../types/roles'
 import '../shared/ui/styles/scrollbar.css'
 import { tieneRol } from '../shared/utils/permisos'
 
+
+
 export default function DashboardLayout() {
   const { user, logout } = useAuth()
 
