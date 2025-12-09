@@ -15,10 +15,6 @@ public interface INovedadesService {
 
     List<NovedadesResponseDto> getActivas();
 
-/*    List<NovedadesResponseDto> getByRol(Integer idRol);  */
-
-    List<NovedadesResponseDto> getByCategoria(String categoria);
-
     List<NovedadesResponseDto> getCarrusel();
 
     List<NovedadesResponseDto> getAvisos();
@@ -26,6 +22,10 @@ public interface INovedadesService {
     NovedadesDefaultResponseDto update(NovedadesUpdateDto dto);
 
     NovedadesDefaultResponseDto delete(Integer id);
+
+    List<NovedadesResponseDto> getOrdenadasPorFechaDesc();
+
+    List<NovedadesResponseDto> getOrdenadasPorFechaAsc();
 
     List<NovedadesResponseDto> getByPrioridad();
 }

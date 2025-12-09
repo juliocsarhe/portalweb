@@ -15,7 +15,6 @@ public class NovedadesInsertDto {
     private String descripcion;
     private String imagenUrl;
     private LocalDate fechaExpiracion;
-    private String categoria;
-    private String prioridad;
+    private Boolean prioridad;
 
 }

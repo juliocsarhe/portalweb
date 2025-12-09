@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.backend.portalroshkabackend.tools.MessagesConst.*;
@@ -51,18 +52,29 @@ public class NovedadesServiceImpl implements INovedadesService {
 
         insertValidator.validate(dto);
 
+        // Obtener usuario del token JWT
         String correo = SecurityContextHolder.getContext().getAuthentication().getName();
         Usuario user = userRepository.findByCorreo(correo)
                 .orElseThrow(NovedadesUserNotFoundException::new);
 
+        // Mapear DTO a entidad
         Novedades novedad = NovedadesMapper.toEntityFromInsertDto(dto, user);
 
-        Novedades savedNovedades = repositoryService.save(
+        // Fecha de creación automática
+        novedad.setFechaCreacion(LocalDateTime.now());
+
+        // Guardar en BD
+        Novedades savedNovedad = repositoryService.save(
                 novedadesRepository,
                 novedad,
                 DATABASE_DEFAULT_ERROR
         );
-        return NovedadesMapper.toDefaultResponseDto(savedNovedades.getIdNovedades(), novedad.getTitulo(), NOVEDADES_CREATED_MESSAGE);
+
+        return NovedadesMapper.toDefaultResponseDto(
+                savedNovedad.getIdNovedades(),
+                savedNovedad.getTitulo(),
+                NOVEDADES_CREATED_MESSAGE
+        );
     }
 
     @Override
@@ -132,23 +144,6 @@ public class NovedadesServiceImpl implements INovedadesService {
                 .toList();
     }
 
-/*    @Override
-    public List<NovedadesResponseDto> getByRol(Integer idRol) {
-        return novedadesRepository.findByIdRol_IdRolAndActivoTrue(idRol)
-                .stream()
-                .map(NovedadesMapper::toResponseDto)
-                .toList();
-    }
-*/
-
-
-    @Override
-    public List<NovedadesResponseDto> getByCategoria(String categoria) {
-        return novedadesRepository.findByCategoriaAndActivoTrue(categoria)
-                .stream()
-                .map(NovedadesMapper::toResponseDto)
-                .toList();
-    }
 
     @Override
     public List<NovedadesResponseDto> getCarrusel() {
@@ -169,10 +164,29 @@ public class NovedadesServiceImpl implements INovedadesService {
 
     @Override
     public List<NovedadesResponseDto> getByPrioridad() {
-        return novedadesRepository.findByActivoTrueOrderByPrioridadDesc()
+        return novedadesRepository.findAllByOrderByPrioridadDescFechaExpiracionAsc()
+                .stream()
+                .filter(Novedades::getActivo)
+                .filter(n -> n.getFechaExpiracion() != null && n.getFechaExpiracion().isAfter(java.time.LocalDate.now()))
+                .map(NovedadesMapper::toResponseDto)
+                .toList();
+    }
+
+    @Override
+    public List<NovedadesResponseDto> getOrdenadasPorFechaDesc() {
+        return novedadesRepository.findAllByOrderByFechaCreacionDesc()
                 .stream()
                 .map(NovedadesMapper::toResponseDto)
                 .toList();
     }
+
+    @Override
+    public List<NovedadesResponseDto> getOrdenadasPorFechaAsc() {
+        return novedadesRepository.findAllByOrderByFechaCreacionAsc()
+                .stream()
+                .map(NovedadesMapper::toResponseDto)
+                .toList();
+    }
+
 
 }
