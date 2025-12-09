@@ -64,7 +64,7 @@ export default function FormLayout({
                         : 'bg-linear-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 hover:scale-105 active:scale-95'
                     }`}
                 >
-                  💾 {onSubmitLabel}
+                  <span className="material-symbols-outlined">save</span> {onSubmitLabel}
                 </button>
               )}
 
@@ -77,7 +77,7 @@ export default function FormLayout({
                     bg-white border border-gray-300 text-gray-700 hover:bg-gray-50
                     dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700 dark:hover:bg-gray-700 hover:scale-105 active:scale-95"
                 >
-                  ↩️ {onCancelLabel}
+                  <span className="material-symbols-outlined">undo</span> {onCancelLabel}
                 </button>
               )}
             </div>

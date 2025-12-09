@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import PageLayout from '@/layouts/PageLayout'
 
 // Iconos SVG nativos
 const EyeIcon = () => (
@@ -240,15 +241,20 @@ function PasswordField({ label, onSave }: PasswordFieldProps) {
 }
 
 export default function Configuration() {
-  const [darkMode, setDarkMode] = useState(true)
+  const [darkMode, setDarkMode] = useState(() => {
+  // Si ya hay preferencia guardada
+  const saved = localStorage.getItem('darkMode');
+  return saved ? JSON.parse(saved) : false; // default claro
+});
+useEffect(() => {
+  if (darkMode) {
+    document.documentElement.classList.add('dark');
+  } else {
+    document.documentElement.classList.remove('dark');
+  }
 
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-    }
-  }, [darkMode])
+  localStorage.setItem('darkMode', JSON.stringify(darkMode));
+}, [darkMode]);
 
   // Función para cambiar contraseña con Spring Boot
   const handlePasswordChange = async (
@@ -288,20 +294,7 @@ export default function Configuration() {
   }
 
   return (
-    <div className="h-full flex flex-col overflow-hidden">
-      {/* Fondo */}
-      <div
-        className="absolute inset-0 bg-blue-600"
-        style={{
-          backgroundImage: "url('/src/assets/ilustracion-herov3.svg')",
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-        }}
-      >
-        <div className="absolute inset-0 bg-blue-600/40"></div>
-      </div>
-
+      <PageLayout>
       {/* Main content */}
       <div className="relative z-10 flex flex-col h-full p-6">
         <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-md rounded-2xl shadow-2xl flex flex-col h-full overflow-hidden border border-gray-200 dark:border-gray-800">
@@ -345,6 +338,6 @@ export default function Configuration() {
           </div>
         </div>
       </div>
-    </div>
+    </PageLayout>
   )
 }
