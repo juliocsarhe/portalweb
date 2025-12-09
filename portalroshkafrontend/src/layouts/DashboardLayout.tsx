@@ -102,21 +102,22 @@ export default function DashboardLayout() {
     <div className="h-screen bg-gray-50 dark:bg-gray-950 flex overflow-hidden">
       {/* Sidebar */}
       <aside
-        className="w-64 shadow-xl border-r border-gray-200 dark:border-gray-800 flex flex-col backdrop-blur-sm 
-        bg-white text-black dark:bg-none dark:text-gray-200"
+        className="
+        bg-white/60 dark:bg-gray-900/70 w-64 shadow-xl border-r border-gray-200 dark:border-gray-800 flex flex-col
+        backdrop-blur-xs bg-white text-black
+        dark:bg-[linear-gradient(270deg,rgba(11,14,94,0.9),rgba(0,1,37,0.8)80%)] dark:text-gray-200"
         style={{
-          background: 'linear-gradient(270deg, rgba(11, 14, 94, 0.9), rgba(0, 1, 37, 0.8) 80%)',
           WebkitBackdropFilter: 'blur(10px)',
           backdropFilter: 'blur(10px)',
         }}
       >
         {/* Perfil compacto */}
-        <div className="p-6 border-b-[2px] border-black dark:border-gray-800 shrink-0">
+        <div className="p-6 border-b-2 border-black dark:border-gray-800 shrink-0">
           <NavLink
             to="/profile"
             className="flex items-center space-x-3 cursor-pointer hover:opacity-80 transition"
           >
-            <div className="w-12 h-12 rounded-full flex items-center justify-center overflow-hidden">
+            <div className="w-24 h-20 rounded-full flex items-center justify-center overflow-hidden">
               {user?.urlPerfil ? (
                 <img
                   src={`data:image/png;base64,${user.urlPerfil}`}
@@ -138,13 +139,10 @@ export default function DashboardLayout() {
           </NavLink>
         </div>
 
-        {/* Menú con scroll personalizado */}
+        {/* Menú con scroll */}
         <nav
           className="flex-1 overflow-y-auto mt-6 custom-scrollbar"
-          style={{
-            scrollbarWidth: 'thin',
-            scrollbarColor: 'rgb(209 213 219) transparent',
-          }}
+          style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgb(209 213 219) transparent' }}
         >
           {menuOptions.map((opt) => (
             <NavLink
