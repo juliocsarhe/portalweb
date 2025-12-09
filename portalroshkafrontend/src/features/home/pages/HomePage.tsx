@@ -33,9 +33,8 @@ export default function HomePage() {
             <h2 className="text-2xl font-bold text-brand-blue dark:text-white mb-1">
               Bienvenido de nuevo, {user?.nombre} {user?.apellido}
             </h2>
-            <p className="text-gray-700 dark:text-gray-200 text-lg">NOVEDADES</p>
-          </div>{' '}
-          {/* aca ira el carrusel de las imagenes  -Fer */}
+            <h3 className="text-gray-800 dark:text-white">Últimas Novedades</h3>
+          </div>
         </div>
       </div>
     </div>

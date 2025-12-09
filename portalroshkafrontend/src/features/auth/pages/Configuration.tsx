@@ -240,15 +240,20 @@ function PasswordField({ label, onSave }: PasswordFieldProps) {
 }
 
 export default function Configuration() {
-  const [darkMode, setDarkMode] = useState(true) ///////
+  const [darkMode, setDarkMode] = useState(() => {
+  // Si ya hay preferencia guardada
+  const saved = localStorage.getItem('darkMode');
+  return saved ? JSON.parse(saved) : false; // default claro
+});
+useEffect(() => {
+  if (darkMode) {
+    document.documentElement.classList.add('dark');
+  } else {
+    document.documentElement.classList.remove('dark');
+  }
 
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-    }
-  }, [darkMode])
+  localStorage.setItem('darkMode', JSON.stringify(darkMode));
+}, [darkMode]);
 
   // Función para cambiar contraseña con Spring Boot
   const handlePasswordChange = async (

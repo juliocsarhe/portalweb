@@ -1,5 +1,4 @@
 import { NavLink, Outlet } from 'react-router'
-
 import { useAuth } from '../app/providers/AuthContext'
 import { Roles } from '../types/roles'
 import '../shared/ui/styles/scrollbar.css'
@@ -10,89 +9,91 @@ import { tieneRol } from '../shared/utils/permisos'
 export default function DashboardLayout() {
   const { user, logout } = useAuth()
 
-  // Permisos usando tieneRol
   const talentoHumano = tieneRol(user, Roles.TALENTO_HUMANO, Roles.DIRECTIVO)
   const operaciones = tieneRol(user, Roles.OPERACIONES, Roles.DIRECTIVO)
   const sysadmin = tieneRol(user, Roles.ADMINISTRADOR_DEL_SISTEMA, Roles.DIRECTIVO)
   const leader = tieneRol(user, Roles.TEAM_LEADER, Roles.DIRECTIVO)
+  const novedades = tieneRol(user, Roles.ADMINISTRADOR_DEL_SISTEMA, Roles.TALENTO_HUMANO)
 
   const menuOptions = [
     {
       id: '/',
-      label: 'Inicio',
-      icon: '',
+      label: <span className="font-semibold text-[15px]">Inicio</span>,
+      icon: <span className="material-symbols-outlined weight: 500">home</span>,
       available: true,
       end: true as const,
     },
-    { id: '/profile', label: 'Mi Perfil', icon: '', available: true },
-    { id: '/requests', label: 'Solicitudes', icon: '', available: true },
     {
       id: '/solicitud-dispositivo',
-      label: 'Solicitar Dispositivos',
-      icon: '',
+      label: <span className="font-semibold text-[15px]">Solicitar Dispositivos</span>,
+      icon: <span className="material-symbols-outlined">devices</span>,
       available: true,
     },
-    { id: '/benefits', label: 'Beneficios', icon: '', available: true },
+    { id: '/benefits', label: 'Beneficios', available: true },
+    {
+      id: '/novedades',
+      label: <span className="font-semibold text-[15px]">Crear Novedades</span>,
+      icon: <span className="material-symbols-outlined">newspaper</span>,
+      available: novedades,
+    },
     {
       id: '/catalogo-th',
-      label: 'Cargos',
-      icon: '',
+      label: <span className="font-semibold text-[15px]">Cargos y Roles</span>,
+      icon: <span className="material-symbols-outlined">group</span>,
       available: talentoHumano,
     },
     {
       id: '/usuarios',
-      label: 'Funcionarios',
-      icon: '',
+      label: <span className="font-semibold text-[15px]">Funcionarios</span>,
+      icon: <span className="material-symbols-outlined">groups_2</span>,
       available: talentoHumano,
     },
     {
       id: '/catalogo-sys',
-      label: 'Tipos de Disp. y Ubicaciones',
-      icon: '',
+      label: <span className="font-semibold text-[15px]">Dispositivos y Ubicaciones</span>,
+      icon: <span className="material-symbols-outlined">devices_other</span>,
       available: sysadmin,
     },
     {
       id: '/dispositivos',
-      label: 'Dispositivos',
-      icon: '',
+      label: <span className="font-semibold text-[15px]">Dispositivos</span>,
+      icon: <span className="material-symbols-outlined">desktop_windows</span>,
       available: sysadmin,
     },
     {
       id: '/gestion-dispositivos',
-      label: 'Gestión de Dispositivos',
-      icon: '',
+      label: <span className="font-semibold text-[15px]">Gestion de Dispositivos</span>,
+      icon: <span className="material-symbols-outlined">computer</span>,
       available: sysadmin,
     },
     {
       id: '/catalogo-op',
-      label: 'Clientes y Tecnologías',
-      icon: '',
+      label: <span className="font-semibold text-[15px]">Clientes y Tecnologias</span>,
+      icon: <span className="material-symbols-outlined">domain</span>,
       available: operaciones,
     },
     {
       id: '/operations',
-      label: 'Gestión de Equipos',
-      icon: '',
+      label: <span className="font-semibold text-[15px]">Gestion de Equipos</span>,
+      icon: <span className="material-symbols-outlined">construction</span>,
       available: operaciones,
     },
     {
       id: '/seleccion-solicitudesTH',
-      label: 'Gestión de Solicitudes',
-      icon: '',
+      label: <span className="font-semibold text-[15px]">Gestion de Solicitudes</span>,
+      icon: <span className="material-symbols-outlined">assignment</span>,
       available: talentoHumano,
     },
-    // { id: "/vacaciones", label: "Vacaciones", icon: "🏖️", available: true },
-
     {
       id: '/solicitudesTL',
-      label: 'Solicitudes de Equipo',
-      icon: '',
+      label: <span className="font-semibold text-[15px]">Solicitudes de Equipos</span>,
+      icon: <span className="material-symbols-outlined">article_person</span>,
       available: leader,
     },
     {
       id: '/configuracion',
-      label: 'Configuración',
-      icon: '',
+      label: <span className="font-semibold text-[15px]">Configuracion</span>,
+      icon: <span className="material-symbols-outlined">settings</span>,
       available: true,
     },
   ].filter((o) => o.available)
@@ -100,11 +101,22 @@ export default function DashboardLayout() {
   return (
     <div className="h-screen bg-gray-50 dark:bg-gray-950 flex overflow-hidden">
       {/* Sidebar */}
-      <aside className="w-64 bg-white dark:bg-gray-900 shadow-xl border-r border-gray-200 dark:border-gray-800 flex flex-col">
+      <aside
+        className="w-64 shadow-xl border-r border-gray-200 dark:border-gray-800 flex flex-col backdrop-blur-sm 
+        bg-white text-black dark:bg-none dark:text-gray-200"
+        style={{
+          background: 'linear-gradient(270deg, rgba(11, 14, 94, 0.9), rgba(0, 1, 37, 0.8) 80%)',
+          WebkitBackdropFilter: 'blur(10px)',
+          backdropFilter: 'blur(10px)',
+        }}
+      >
         {/* Perfil compacto */}
-        <div className="p-6 border-b border-gray-200 dark:border-gray-800 shrink-0">
-          <div className="flex items-center space-x-3">
-            <div className="w-20 h-20 rounded-full flex items-center justify-center overflow-hidden">
+        <div className="p-6 border-b-[2px] border-black dark:border-gray-800 shrink-0">
+          <NavLink
+            to="/profile"
+            className="flex items-center space-x-3 cursor-pointer hover:opacity-80 transition"
+          >
+            <div className="w-12 h-12 rounded-full flex items-center justify-center overflow-hidden">
               {user?.urlPerfil ? (
                 <img
                   src={`data:image/png;base64,${user.urlPerfil}`}
@@ -112,22 +124,18 @@ export default function DashboardLayout() {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-white font-bold text-lg">
-                  <img
-                    className="w-18 h-18 bg-black rounded-full"
-                    src="src\assets\icono-user2.svg"
-                    alt="icono-user"
-                  />
+                <div className="w-full h-full flex items-center justify-center text-black dark:text-white font-bold text-lg">
+                  <span className="material-symbols-outlined">account_circle</span>
                 </div>
               )}
             </div>
             <div>
-              <p className="font-semibold text-gray-800 dark:text-gray-100 line-clamp-1">
+              <p className="font-semibold text-black dark:text-gray-100 line-clamp-1">
                 {user?.nombre}
               </p>
-              <p className="text-sm text-gray-600 dark:text-white">{user?.rol?.nombre}</p>
+              <p className="text-sm text-gray-700 dark:text-gray-400">{user?.rol?.nombre}</p>
             </div>
-          </div>
+          </NavLink>
         </div>
 
         {/* Menú con scroll personalizado */}
@@ -147,8 +155,8 @@ export default function DashboardLayout() {
                 [
                   'w-full text-left px-6 py-3 flex items-center space-x-3 transition-colors',
                   isActive
-                    ? 'bg-blue-50 dark:bg-blue-900/30 border-r-2 border-blue-600 text-blue-700 dark:text-blue-200'
-                    : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800',
+                    ? 'bg-[#ECB22E] text-white border-r-2 border-[#ECB22E]'
+                    : 'text-black hover:text-blue-500 dark:text-gray-200 dark:hover:text-[#ECB22E]',
                 ].join(' ')
               }
             >
@@ -162,10 +170,9 @@ export default function DashboardLayout() {
         <div className="p-6 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shrink-0">
           <button
             onClick={logout}
-            className="w-full flex items-center space-x-3 px-4 py-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+            className="w-full flex items-center space-x-3 px-4 py-2 text-red-600 dark:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
           >
-            <span className="text-xl">🚪</span>
-            <span className="font-medium">Cerrar sesión</span>
+            <span className="font-semibold text-[15px]">Cerrar Sesión</span>
           </button>
         </div>
       </aside>
