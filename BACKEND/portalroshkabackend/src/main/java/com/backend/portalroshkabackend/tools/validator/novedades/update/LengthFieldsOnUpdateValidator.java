@@ -13,11 +13,11 @@ public class LengthFieldsOnUpdateValidator implements ValidatorStrategy<Novedade
             throw new NovedadesFieldsLengthException("Longitud del título y descripción mayor de lo esperado");
         }
 
-        if (dto.getTitulo().length() < 50) {
+        if (dto.getTitulo().length() > 50) {
             throw new NovedadesFieldsLengthException("Longitud del título mayor de lo esperado");
         }
 
-        if(dto.getDescripcion().length() < 100) {
+        if(dto.getDescripcion().length() > 100) {
             throw new NovedadesFieldsLengthException("Longitud de la descripción mayor de la esperada");
         }
 
