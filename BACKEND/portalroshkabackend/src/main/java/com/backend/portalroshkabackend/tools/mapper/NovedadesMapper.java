@@ -13,7 +13,6 @@ public class NovedadesMapper {
         Novedades novedad = new Novedades();
         novedad.setTitulo(dto.getTitulo());
         novedad.setDescripcion(dto.getDescripcion());
-        novedad.setCategoria(dto.getCategoria());
         novedad.setPrioridad(dto.getPrioridad());
         novedad.setImagenUrl(dto.getImagenUrl());
         novedad.setFechaExpiracion(dto.getFechaExpiracion());
@@ -35,7 +34,6 @@ public class NovedadesMapper {
         if (dto.getDescripcion() != null) novedad.setDescripcion(dto.getDescripcion());
         if (dto.getImagenUrl() != null) novedad.setImagenUrl(dto.getImagenUrl());
         if (dto.getFechaExpiracion() != null) novedad.setFechaExpiracion(dto.getFechaExpiracion());
-        if(dto.getCategoria() != null) novedad.setCategoria(dto.getCategoria());
         if(dto.getPrioridad() != null) novedad.setPrioridad(dto.getPrioridad());
         return novedad;
 
@@ -48,7 +46,6 @@ public class NovedadesMapper {
         dto.setImagenUrl(novedad.getImagenUrl());
         dto.setActivo(novedad.getActivo());
         dto.setFechaExpiracion(novedad.getFechaExpiracion());
-        dto.setCategoria(novedad.getCategoria());
         dto.setPrioridad(novedad.getPrioridad());
         return dto;
     }

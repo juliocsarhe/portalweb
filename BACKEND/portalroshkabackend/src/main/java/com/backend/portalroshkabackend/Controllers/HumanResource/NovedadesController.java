@@ -10,22 +10,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/admin/th")
+@RequestMapping("/api/v1/admin/th/novedades")
 public class NovedadesController {
 
     private final INovedadesService novedadesService;
 
-    @PostMapping("novedades")
+    @PostMapping
     public ResponseEntity<NovedadesDefaultResponseDto> create(
             @RequestBody NovedadesInsertDto dto
     ){
         return ResponseEntity.ok(novedadesService.create(dto));
     }
 
-    @PutMapping("novedades")
+    @PutMapping
     public ResponseEntity<NovedadesDefaultResponseDto> update(
             @RequestBody NovedadesUpdateDto dto
     ){
@@ -52,20 +51,10 @@ public class NovedadesController {
         return ResponseEntity.ok(novedadesService.getActivas());
     }
 
-/*    // GET POR ROL
-    @GetMapping("/rol/{idRol}")
-    public ResponseEntity<List<NovedadesResponseDto>> getByRol(
-            @PathVariable Integer idRol
-    ){
-        return ResponseEntity.ok(novedadesService.getByRol(idRol));
-    }
-*/
-    // GET POR CATEGORÍA TH - OP - AS - DT - DS - TL
-    @GetMapping("/categoria/{categoria}")
-    public ResponseEntity<List<NovedadesResponseDto>> getByCategoria(
-            @PathVariable String categoria
-    ){
-        return ResponseEntity.ok(novedadesService.getByCategoria(categoria));
+    // GET POR PRIORIDAD
+    @GetMapping("/prioridad")
+    public ResponseEntity<List<NovedadesResponseDto>> getByPrioridad(){
+        return ResponseEntity.ok(novedadesService.getByPrioridad());
     }
 
     // GET CARRUSEL (solo con imagen)
@@ -80,10 +69,14 @@ public class NovedadesController {
         return ResponseEntity.ok(novedadesService.getAvisos());
     }
 
-    // GET POR PRIORIDAD (ALTA - MEDIA - BAJA)
-    @GetMapping("/prioridad")
-    public ResponseEntity<List<NovedadesResponseDto>> getByPrioridad(){
-        return ResponseEntity.ok(novedadesService.getByPrioridad());
+    @GetMapping("/fecha/desc")
+    public ResponseEntity<List<NovedadesResponseDto>> getOrdenadasPorFechaDesc() {
+        return ResponseEntity.ok(novedadesService.getOrdenadasPorFechaDesc());
+    }
+
+    @GetMapping("/fecha/asc")
+    public ResponseEntity<List<NovedadesResponseDto>> getOrdenadasPorFechaAsc() {
+        return ResponseEntity.ok(novedadesService.getOrdenadasPorFechaAsc());
     }
 
 

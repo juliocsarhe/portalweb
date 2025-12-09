@@ -13,6 +13,5 @@ public class NovedadesUpdateDto {
     private String descripcion;
     private String imagenUrl;
     private LocalDate fechaExpiracion;
-    private String prioridad;
-    private String categoria;
+    private Boolean prioridad;
 }

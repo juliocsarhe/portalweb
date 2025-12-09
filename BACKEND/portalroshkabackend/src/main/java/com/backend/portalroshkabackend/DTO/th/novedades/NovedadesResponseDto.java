@@ -14,7 +14,6 @@ public class NovedadesResponseDto {
     private String imagenUrl;
     private LocalDate fechaExpiracion;
     private Boolean activo;
-    private String categoria;
-    private String prioridad;
+    private Boolean prioridad;
 
 }

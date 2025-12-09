@@ -5,17 +5,21 @@ import com.backend.portalroshkabackend.tools.errors.errorslist.novedades.Invalid
 import com.backend.portalroshkabackend.tools.validator.ValidatorStrategy;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
 public class PrioridadOnUpdateValidator implements ValidatorStrategy<NovedadesUpdateDto> {
 
-    private static final List<String> VALIDAS = List.of("BAJA", "MEDIA", "ALTA");
-
     @Override
     public void validate(NovedadesUpdateDto dto) {
-        if(!VALIDAS.contains(dto.getPrioridad())){
-            throw new InvalidPriorityException("Prioridad inválida " + dto.getPrioridad());
+
+        // Si no se envía prioridad en el update, no validar nada.
+        if (dto.getPrioridad() == null) {
+            return;
+        }
+
+        // Si viene prioridad, debe ser true o false.
+        // (Esto siempre es cierto porque es Boolean)
+        if (!(dto.getPrioridad() instanceof Boolean)) {
+            throw new InvalidPriorityException("Prioridad inválida: " + dto.getPrioridad());
         }
     }
 }

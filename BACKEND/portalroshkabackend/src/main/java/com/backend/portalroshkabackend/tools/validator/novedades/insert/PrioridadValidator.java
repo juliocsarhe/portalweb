@@ -5,17 +5,14 @@ import com.backend.portalroshkabackend.tools.errors.errorslist.novedades.Invalid
 import com.backend.portalroshkabackend.tools.validator.ValidatorStrategy;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
 public class PrioridadValidator implements ValidatorStrategy<NovedadesInsertDto> {
 
-    private static final List<String> VALIDAS = List.of("BAJA", "MEDIA", "ALTA");
-
     @Override
     public void validate(NovedadesInsertDto dto) {
-        if(dto.getPrioridad()==null || !VALIDAS.contains(dto.getPrioridad())){
-            throw new InvalidPriorityException("Prioridad inválida " + dto.getPrioridad());
+        // Solo validar que no sea null
+        if (dto.getPrioridad() == null) {
+            throw new InvalidPriorityException("La prioridad no puede ser nula");
         }
     }
 }
