@@ -707,7 +707,7 @@ export default function EditarEquipoPage() {
               const v = Number(e.target.value) || 1
               updateMemberDisp(s.id, Math.max(1, Math.min(cap, v)))
             }}
-            className="w-20 px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm"
+            className="w-20 px-2 py-1 rounded-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm"
             title={`Máximo permitido: ${cap}%`}
           />
         )
@@ -734,7 +734,7 @@ export default function EditarEquipoPage() {
           }}
           min={formData.fechaInicio || undefined}
           max={s.fechaFin || formData.fechaFin || undefined}
-          className="px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm"
+          className="px-2 py-1 rounded-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm"
         />
       ),
     },
@@ -758,7 +758,7 @@ export default function EditarEquipoPage() {
           }}
           min={s.fechaEntrada || formData.fechaInicio || undefined}
           max={formData.fechaFin || undefined}
-          className="px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm"
+          className="px-2 py-1 rounded-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm"
         />
       ),
     },
@@ -784,7 +784,7 @@ export default function EditarEquipoPage() {
       render: (s: IMiembrosEquipo) => (
         <button
           onClick={() => handleEliminarMiembro(s)}
-          className="px-3 py-1 text-sm text-white bg-blue-600 rounded hover:bg-blue-700 focus:outline-none"
+          className="px-3 py-1 text-sm text-white bg-blue-600 rounded-sm hover:bg-blue-700 focus:outline-hidden"
         >
           Eliminar
         </button>
@@ -877,7 +877,7 @@ export default function EditarEquipoPage() {
       render: (r: AsignDU) => (
         <button
           onClick={() => setUbicacionForDay(r.idDiaLaboral, null)}
-          className="px-3 py-1 text-sm text-white bg-blue-600 rounded hover:bg-blue-700"
+          className="px-3 py-1 text-sm text-white bg-blue-600 rounded-sm hover:bg-blue-700"
         >
           Eliminar
         </button>
@@ -986,7 +986,7 @@ export default function EditarEquipoPage() {
       </div>
 
       <div className="relative z-10 h-full p-4">
-        <div className="mx-auto w-full max-w-5xl bg-white/45 dark:bg-gray-900/80 backdrop-blur-sm rounded-2xl shadow-lg flex flex-col max-h-[calc(100vh-2rem)] text-gray-900 dark:text-gray-100">
+        <div className="mx-auto w-full max-w-5xl bg-white/45 dark:bg-gray-900/80 backdrop-blur-xs rounded-2xl shadow-lg flex flex-col max-h-[calc(100vh-2rem)] text-gray-900 dark:text-gray-100">
           <div className="p-6 border-b border-gray-200 dark:border-gray-700">
             <h2 className="text-xl font-bold">Editar Equipo: {team.nombre}</h2>
             <p className="text-sm text-gray-700 dark:text-gray-300">
@@ -1122,7 +1122,7 @@ export default function EditarEquipoPage() {
                     }
                   }}
                   disabled={leadSaving || (leadSel?.value ?? null) === (team.leadId ?? null)}
-                  className="h-10 px-3 rounded bg-green-600 text-white text-sm disabled:opacity-60"
+                  className="h-10 px-3 rounded-sm bg-green-600 text-white text-sm disabled:opacity-60"
                   title="Aplicar cambio de Team Lead ahora"
                 >
                   {leadSaving ? 'Guardando…' : 'Cambiar'}
@@ -1134,7 +1134,7 @@ export default function EditarEquipoPage() {
               <label className="block text-sm mb-2">Tecnologías</label>
               <div className="flex gap-2">
                 <select
-                  className="w-full h-10 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-3"
+                  className="w-full h-10 rounded-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-3"
                   value={tecPick}
                   onChange={(e) => setTecPick(e.target.value === '' ? '' : Number(e.target.value))}
                 >
@@ -1149,7 +1149,7 @@ export default function EditarEquipoPage() {
                   type="button"
                   onClick={handleAddTec}
                   disabled={tecPick === ''}
-                  className="px-4 h-10 rounded bg-blue-600 text-white text-sm disabled:opacity-60"
+                  className="px-4 h-10 rounded-sm bg-blue-600 text-white text-sm disabled:opacity-60"
                 >
                   Agregar
                 </button>
@@ -1216,7 +1216,7 @@ export default function EditarEquipoPage() {
                   onChange={(e) => setNewMemberStart(e.target.value)}
                   min={formData.fechaInicio || undefined}
                   max={formData.fechaFin || undefined}
-                  className="w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm"
+                  className="w-full px-3 py-2 rounded-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm"
                 />
               </div>
               <div>
@@ -1227,7 +1227,7 @@ export default function EditarEquipoPage() {
                   onChange={(e) => setNewMemberEnd(e.target.value)}
                   min={newMemberStart || formData.fechaInicio || undefined}
                   max={formData.fechaFin || undefined}
-                  className="w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm"
+                  className="w-full px-3 py-2 rounded-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm"
                 />
               </div>
               <div className="flex items-end gap-2">
@@ -1241,7 +1241,7 @@ export default function EditarEquipoPage() {
                       Math.max(1, Math.min(newMemberMax, Number(e.target.value) || 1))
                     )
                   }
-                  className="w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm"
+                  className="w-full px-3 py-2 rounded-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm"
                   placeholder="Disp. %"
                   title={
                     selectedMember ? `Disponible máx: ${newMemberMax}%` : 'Elegí un miembro primero'
@@ -1251,7 +1251,7 @@ export default function EditarEquipoPage() {
                   type="button"
                   onClick={handleAddMember}
                   disabled={!selectedMember || newMemberMax <= 0}
-                  className="px-4 h-10 rounded bg-blue-600 text-white text-sm disabled:opacity-60"
+                  className="px-4 h-10 rounded-sm bg-blue-600 text-white text-sm disabled:opacity-60"
                 >
                   Agregar
                 </button>
@@ -1267,13 +1267,13 @@ export default function EditarEquipoPage() {
             />
           </div>
 
-          <div className="p-4 md:p-6 border-t border-gray-200 dark:border-gray-700 flex-shrink-0 flex items-center justify-between">
+          <div className="p-4 md:p-6 border-t border-gray-200 dark:border-gray-700 shrink-0 flex items-center justify-between">
             <p className="text-sm text-gray-700 dark:text-gray-300">Revisá y guardá los cambios.</p>
             <div className="flex items-center gap-3">
               <button
                 type="button"
                 onClick={() => navigate('/operations')}
-                className="px-4 py-2 rounded border border-gray-300 dark:border-gray-600 text-sm"
+                className="px-4 py-2 rounded-sm border border-gray-300 dark:border-gray-600 text-sm"
               >
                 Cancelar
               </button>
@@ -1281,7 +1281,7 @@ export default function EditarEquipoPage() {
                 type="submit"
                 form="editar-equipo-form"
                 disabled={saving}
-                className="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white text-sm disabled:opacity-60"
+                className="px-4 py-2 rounded-sm bg-blue-600 hover:bg-blue-700 text-white text-sm disabled:opacity-60"
               >
                 {saving ? 'Guardando…' : 'Guardar'}
               </button>

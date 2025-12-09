@@ -18,7 +18,7 @@ export default function LoadingButton({
       aria-busy={loading}
       disabled={loading || props.disabled}
       className={`w-full font-bold py-4 rounded-full transition-all duration-200 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed text-lg
-      bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-blue-900
+      bg-linear-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-blue-900
       dark:from-blue-600 dark:to-blue-700 dark:hover:from-blue-700 dark:hover:to-blue-800 dark:text-white
       ${props.className || ''}`}
     >

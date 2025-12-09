@@ -18,6 +18,7 @@ import { MsIcon } from '../../../shared/ui/components/MsIcon'
 import PaginationFooter from '../../../shared/ui/components/PaginationFooter'
 import SelectDropdown from '../../../shared/ui/components/SelectDropdown'
 import { tieneRol } from '../../../shared/utils/permisos'
+import DataTable, { RowAction } from '../../../shared/ui/components/DataTable'
 
 export default function DevicePage() {
   const { token, user } = useAuth()

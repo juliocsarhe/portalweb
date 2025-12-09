@@ -24,7 +24,7 @@ export default function PageLayout({ title, actions, children }: PageLayoutProps
 
       {/* Contenido */}
       <div className="relative z-10 flex flex-col h-full p-4">
-        <div className="bg-white/45 dark:bg-gray-900/70 backdrop-blur-sm rounded-2xl shadow-lg flex flex-col h-full overflow-hidden">
+        <div className="bg-white/45 dark:bg-gray-900/70 backdrop-blur-xs rounded-2xl shadow-lg flex flex-col h-full overflow-hidden">
           {/* Header */}
           <div className="p-6 border-b border-gray-200 flex items-center justify-between">
             <h2 className="text-2xl font-bold text-brand-blue dark:text-white">{title}</h2>

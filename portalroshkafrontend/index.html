@@ -6,19 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Portal Roshka</title>
     <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400..700,0..1,0..1"
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
     />
+
     <script>
-      const mq = window.matchMedia('(prefers-color-scheme: dark)');
-      const link = document.getElementById('favicon');
+      const mq = window.matchMedia('(prefers-color-scheme: dark)')
+      const link = document.getElementById('favicon')
 
       function setFavicon(e) {
-        link.href = e.matches ? '/roshkaw.svg' : '/roshkab.svg';
+        link.href = e.matches ? '/roshkaw.svg' : '/roshkab.svg'
       }
 
-      setFavicon(mq);                // inicial
-      mq.addEventListener('change', setFavicon); // escucha cambios
+      setFavicon(mq) // inicial
+      mq.addEventListener('change', setFavicon) // escucha cambios
     </script>
   </head>
   <body>

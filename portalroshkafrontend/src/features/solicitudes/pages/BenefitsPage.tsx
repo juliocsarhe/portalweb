@@ -120,8 +120,8 @@ export default function BeneficiosPage() {
         </div>
 
         <div className="relative z-10 flex flex-col h-full p-4">
-          <div className="bg-white/80 dark:bg-gray-900/70 backdrop-blur-sm rounded-2xl shadow-lg flex flex-col h-full overflow-hidden">
-            <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
+          <div className="bg-white/80 dark:bg-gray-900/70 backdrop-blur-xs rounded-2xl shadow-lg flex flex-col h-full overflow-hidden">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700 shrink-0">
               <h2 className="text-2xl font-bold text-brand-blue dark:text-white">
                 {seleccionado.nombre}
               </h2>
@@ -132,11 +132,11 @@ export default function BeneficiosPage() {
               <img
                 src={getImage(seleccionado.imagen)}
                 alt={seleccionado.nombre}
-                className="w-full max-w-xl max-h-[800px] object-contain rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm"
+                className="w-full max-w-xl max-h-[800px] object-contain rounded-xl border border-gray-200 dark:border-gray-700 shadow-xs"
               />
             </div>
 
-            <div className="p-6 border-t border-gray-200 dark:border-gray-700 flex-shrink-0 flex justify-end">
+            <div className="p-6 border-t border-gray-200 dark:border-gray-700 shrink-0 flex justify-end">
               <button
                 onClick={() => setSeleccionado(null)}
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
@@ -170,13 +170,13 @@ export default function BeneficiosPage() {
       </div>
 
       <div className="relative z-10 flex flex-col h-full p-4">
-        <div className="bg-white/45 dark:bg-gray-900/70 backdrop-blur-sm rounded-2xl shadow-lg flex flex-col h-full overflow-hidden">
-          <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex-shrink-0 flex items-center justify-between">
+        <div className="bg-white/45 dark:bg-gray-900/70 backdrop-blur-xs rounded-2xl shadow-lg flex flex-col h-full overflow-hidden">
+          <div className="p-6 border-b border-gray-200 dark:border-gray-700 shrink-0 flex items-center justify-between">
             <h2 className="text-2xl font-bold text-brand-blue dark:text-white">Beneficios</h2>
           </div>
 
           <div className="flex-1 overflow-auto p-6">
-            <div className="rounded-2xl overflow-hidden shadow bg-white dark:bg-gray-800">
+            <div className="rounded-2xl overflow-hidden shadow-sm bg-white dark:bg-gray-800">
               <table className="min-w-full border-collapse">
                 <thead className="bg-blue-100 dark:bg-blue-900">
                   <tr>
@@ -221,7 +221,7 @@ export default function BeneficiosPage() {
             </div>
           </div>
 
-          <div className="p-6 border-t border-gray-200 dark:border-gray-700 flex-shrink-0">
+          <div className="p-6 border-t border-gray-200 dark:border-gray-700 shrink-0">
             <PaginationFooter
               currentPage={page}
               totalPages={totalPages}
