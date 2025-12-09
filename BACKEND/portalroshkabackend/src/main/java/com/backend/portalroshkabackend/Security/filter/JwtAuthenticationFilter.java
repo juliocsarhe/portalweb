@@ -26,7 +26,6 @@ import static com.backend.portalroshkabackend.Security.TokenJwtConfig.*;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
 
-    
     private final UsuariosService userService;
 
 
@@ -44,7 +43,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             Usuario user = new ObjectMapper().readValue(request.getInputStream(), Usuario.class);
 
             UsernamePasswordAuthenticationToken authRequest =
-                new UsernamePasswordAuthenticationToken(user.getCorreo(), user.getContrasena());
+                    new UsernamePasswordAuthenticationToken(user.getCorreo(), user.getContrasena());
 
             setDetails(request, authRequest); // importante para que el filtro padre agregue metadata
             return this.getAuthenticationManager().authenticate(authRequest);
@@ -56,18 +55,18 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
-            Authentication authResult) throws IOException, ServletException {
-        
-            User user = (User) authResult.getPrincipal();
-            String correo = user.getUsername();
+                                            Authentication authResult) throws IOException, ServletException {
 
-            // obtenemos el usuario del correo para obtener su rol
-            Usuario usuario = userService.getUserByCorreo(correo);
-            
-            // Obtener solo el ID del rol
-            Integer rolId = usuario.getRol().getIdRol();
+        User user = (User) authResult.getPrincipal();
+        String correo = user.getUsername();
 
-            String token = Jwts.builder()
+        // obtenemos el usuario del correo para obtener su rol
+        Usuario usuario = userService.getUserByCorreo(correo);
+
+        // Obtener solo el ID del rol
+        Integer rolId = usuario.getRol().getIdRol();
+
+        String token = Jwts.builder()
                 .subject(correo)
                 .claim("rol", rolId) // Solo guardamos el ID del rol
                 .expiration(Date.from(new Date().toInstant().plusSeconds(7200))) // 2 horas de validez
@@ -75,13 +74,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .signWith(SECRET_KEY)
                 .compact();
 
-            response.addHeader(HEADER_AUTHORIZATION, PREFIX_TOKEN + token);
+        response.addHeader(HEADER_AUTHORIZATION, PREFIX_TOKEN + token);
 
-            Map<String, Object> body = new HashMap<>();
-            body.put("token", token);
-            body.put("correo", correo);
-            body.put("rol", rolId); // Solo devolvemos el ID del rol
-            body.put("Message", "Authentication successful");
+        Map<String, Object> body = new HashMap<>();
+        body.put("token", token);
+        body.put("correo", correo);
+        body.put("rol", rolId); // Solo devolvemos el ID del rol
+        body.put("Message", "Authentication successful");
 
         response.getWriter().write(new ObjectMapper().writeValueAsString(body));
         response.setContentType(CONTENT_TYPE);
@@ -89,15 +88,19 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     }
 
-    
-    @Override
-    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-            AuthenticationException failed) throws IOException, ServletException {
 
-        Map<String, String> body = new HashMap<>();
-        body.put("Message", "Authentication failed");
-        response.getWriter().write(new ObjectMapper().writeValueAsString(body));
-        response.setContentType(CONTENT_TYPE);
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request,
+                                              HttpServletResponse response,
+                                              AuthenticationException failed)
+            throws IOException, ServletException {
+
+        String errorMessage = "Credenciales inválidas";
+
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType(CONTENT_TYPE); // application/json
+        response.getWriter().write(new ObjectMapper().writeValueAsString(errorMessage));
     }
+
+
 }
