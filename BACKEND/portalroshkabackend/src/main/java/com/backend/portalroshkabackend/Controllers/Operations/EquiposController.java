@@ -31,19 +31,56 @@ import com.backend.portalroshkabackend.Services.Operations.Interface.Equipo.IEqu
 import jakarta.validation.Valid;
 
 @RestController("equiposController")
-@RequestMapping("/api/v1/admin/operations")
+@RequestMapping("/api/v1/admin/operations/equipos")
 public class EquiposController {
 
-    private final IMetaDatasService metaDatasService;
+    //private final IMetaDatasService metaDatasService;
     private final IEquiposService equiposService;
 
     @Autowired
-    public EquiposController(IEquiposService equiposService,
-            IMetaDatasService metaDatasService) {
+    public EquiposController(IEquiposService equiposService){
+            //IMetaDatasService metaDatasService) {
         this.equiposService = equiposService;
-        this.metaDatasService = metaDatasService;
+        //this.metaDatasService = metaDatasService;
+    }
+            //Lista equipos
+    @GetMapping
+    public ResponseEntity<List<EquiposResponseDto>> listarEquipos(){
+        return  ResponseEntity.ok(equiposService.listarEquipos());
+    }
+            //trae equipo por el id
+    @GetMapping("/{id}")
+    public ResponseEntity<EquiposResponseDto> obtenerPorId(@PathVariable Integer id) {
+        return ResponseEntity.ok(equiposService.obtenerPorId(id));
+    }
+            //Crea un equipo
+    @PostMapping
+    public ResponseEntity<EquiposResponseDto> crearEquipo(
+            @Valid @RequestBody EquiposRequestDto dto) {
+
+        EquiposResponseDto creado = equiposService.crearEquipo(dto);
+        return ResponseEntity.ok(creado);
+    }
+            //Editar Equipo
+    @PutMapping("/{id}")
+    public ResponseEntity<EquiposResponseDto> editarEquipo(
+            @PathVariable Integer id,
+            @Valid @RequestBody EquiposRequestDto dto) {
+
+        EquiposResponseDto actualizado = equiposService.editarEquipo(id, dto);
+        return ResponseEntity.ok(actualizado);
     }
 
+
+    //Estado del equipo / activo o !activo
+
+    @PatchMapping("/{id}/toggle")
+    public ResponseEntity<Void> toggleEquipo(@PathVariable Integer id) {
+        equiposService.toggleEquipo(id);
+        return ResponseEntity.ok().build();
+    }
+
+/*
     @GetMapping("/teams")
     public ResponseEntity<Map<String, Object>> getAllTeams(
             @PageableDefault(size = 10, sort = "idEquipo", direction = Sort.Direction.ASC) Pageable pageable,
@@ -97,6 +134,6 @@ public class EquiposController {
 
         equiposService.updateTeam(id, equipoRequest);
     }
-
+*/
 
 }

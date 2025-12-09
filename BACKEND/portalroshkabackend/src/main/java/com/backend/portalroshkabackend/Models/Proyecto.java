@@ -29,13 +29,17 @@ public class Proyecto {
         @JoinColumn(name = "id_lider_equipo", nullable = false)
         private Usuario liderEquipo;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_equipo_asignado", nullable = true)
+    private Equipos equipoAsignado;
+
     @ManyToMany
     @JoinTable(
             name = "proyecto_usuarios",
             joinColumns = @JoinColumn(name = "id_proyecto"),
             inverseJoinColumns = @JoinColumn(name = "id_usuario")
     )
-    private Set<Usuario> equipoAsignado = new HashSet<>();
+    private Set<Usuario> usuariosAsignados = new HashSet<>();
 
 
     @Column(columnDefinition = "TEXT")
