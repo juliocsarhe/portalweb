@@ -42,7 +42,8 @@ export function ChangePasswordPage() {
       // setTimeout(() => navigate("/"), 2000);
 
       // 👇 Variante B: producción con backend real
-      // Guardamos el nuevo token que ya no requiere cambio de contraseña
+      // Guardamos el nuevo token que ya no requiere cambio de contraseña //
+      // CREAR SERVICIO PARA ESTA PAGINA (Fernanda)
       setTimeout(() => {
         if (newToken) {
           login(newToken) // refresca el token
@@ -74,7 +75,7 @@ export function ChangePasswordPage() {
       </div>
 
       {/* Card */}
-      <div className="relative z-10 w-full max-w-md bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm shadow-2xl rounded-2xl p-8">
+      <div className="relative z-10 w-full max-w-md bg-white/90 dark:bg-gray-900/90 backdrop-blur-xs shadow-2xl rounded-2xl p-8">
         <h1 className="text-xl font-semibold mb-6 text-center text-gray-800 dark:text-white">
           Cambio de contraseña
         </h1>
@@ -90,7 +91,7 @@ export function ChangePasswordPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Nueva contraseña"
-              className="w-full px-4 py-3 border rounded-lg mb-3 focus:ring focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
+              className="w-full px-4 py-3 border rounded-lg mb-3 focus:ring-3 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
             />
 
             <input
@@ -98,7 +99,7 @@ export function ChangePasswordPage() {
               value={confirm}
               onChange={(e) => setConfirm(e.target.value)}
               placeholder="Confirmar contraseña"
-              className="w-full px-4 py-3 border rounded-lg mb-3 focus:ring focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
+              className="w-full px-4 py-3 border rounded-lg mb-3 focus:ring-3 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
             />
 
             {error && <p className="text-sm text-red-500 mt-2 text-center">{error}</p>}

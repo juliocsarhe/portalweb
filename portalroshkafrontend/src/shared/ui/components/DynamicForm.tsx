@@ -167,7 +167,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
             </label>
             <select
               {...baseProps}
-              className={`w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500
+              className={`w-full rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-500
                           bg-white text-gray-800 border
                           border-gray-300 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600
                           ${error ? 'border-red-500 focus:ring-red-500' : ''}
@@ -201,7 +201,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
               checked={!!formData[field.name]}
               onChange={handleChange}
               disabled={isFieldDisabled}
-              className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-600"
+              className="w-5 h-5 text-blue-600 border-gray-300 rounded-sm focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-600"
             />
             <span className="text-gray-800 dark:text-gray-200 flex-1">{field.label}</span>
             {error && <span className="text-red-500 dark:text-red-400 text-sm">⚠️ {error}</span>}
@@ -310,7 +310,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
               onChange={handleChange}
               placeholder={field.placeholder}
               disabled={isFieldDisabled}
-              className={`w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500
+              className={`w-full rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-500
                           bg-white text-gray-800 border
                           border-gray-300 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600
                           ${error ? 'border-red-500 focus:ring-red-500' : ''}
@@ -337,7 +337,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
             <input
               type={field.type}
               {...baseProps}
-              className={`w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500
+              className={`w-full rounded-lg px-3 py-2 text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-500
                           bg-white text-gray-800 border
                           border-gray-300 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600
                           ${error ? 'border-red-500 focus:ring-red-500' : ''}

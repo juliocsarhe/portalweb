@@ -144,7 +144,7 @@ const DynamicModalForm: React.FC<Props> = ({
               field.onChange?.(e)
             }}
             disabled={isDisabled(field)}
-            className={`w-full rounded-lg px-3 py-2 text-sm border focus:outline-none
+            className={`w-full rounded-lg px-3 py-2 text-sm border focus:outline-hidden
                         ${error ? 'border-red-500' : 'border-gray-300'}
                         ${isDisabled(field) ? 'bg-gray-100 dark:bg-gray-800 cursor-not-allowed' : ''}`}
           >

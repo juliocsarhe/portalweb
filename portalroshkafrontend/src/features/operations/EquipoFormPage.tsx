@@ -412,7 +412,7 @@ export default function EquipoFormPage() {
               const v = Number(e.target.value) || 1
               updateMemberDisp(s.id, Math.max(1, Math.min(cap, v)))
             }}
-            className="w-20 px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm"
+            className="w-20 px-2 py-1 rounded-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm"
             title={`Máximo permitido: ${cap}%`}
           />
         )
@@ -439,7 +439,7 @@ export default function EquipoFormPage() {
           }}
           min={formData.fechaInicio || undefined}
           max={s.fechaFin || formData.fechaFin || undefined}
-          className="px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm"
+          className="px-2 py-1 rounded-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm"
         />
       ),
     },
@@ -463,7 +463,7 @@ export default function EquipoFormPage() {
           }}
           min={s.fechaEntrada || formData.fechaInicio || undefined}
           max={formData.fechaFin || undefined}
-          className="px-2 py-1 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm"
+          className="px-2 py-1 rounded-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm"
         />
       ),
     },
@@ -500,7 +500,7 @@ export default function EquipoFormPage() {
               },
             ])
           }}
-          className="px-3 py-1 text-sm text-white bg-blue-600 rounded hover:bg-blue-700 focus:outline-none"
+          className="px-3 py-1 text-sm text-white bg-blue-600 rounded-sm hover:bg-blue-700 focus:outline-hidden"
         >
           Eliminar
         </button>
@@ -659,7 +659,7 @@ export default function EquipoFormPage() {
       </div>
 
       <div className="relative z-10 h-full p-4">
-        <div className="mx-auto w-full max-w-5xl bg-white/45 dark:bg-gray-900/80 backdrop-blur-sm rounded-2xl shadow-lg flex flex-col max-h-[calc(100vh-2rem)] text-gray-900 dark:text-gray-100">
+        <div className="mx-auto w-full max-w-5xl bg-white/45 dark:bg-gray-900/80 backdrop-blur-xs rounded-2xl shadow-lg flex flex-col max-h-[calc(100vh-2rem)] text-gray-900 dark:text-gray-100">
           {/* Header */}
           <div className="p-6 border-b border-gray-200 dark:border-gray-700">
             <h2 className="text-xl font-bold">Crear Equipo</h2>
@@ -731,7 +731,7 @@ export default function EquipoFormPage() {
                           <button
                             type="button"
                             onClick={() => setUbicacionForDay(r.idDiaLaboral, null)}
-                            className="px-3 py-1 text-xs text-white bg-blue-600 rounded hover:bg-blue-700"
+                            className="px-3 py-1 text-xs text-white bg-blue-600 rounded-sm hover:bg-blue-700"
                           >
                             Limpiar
                           </button>
@@ -783,7 +783,7 @@ export default function EquipoFormPage() {
               <label className="block text-sm mb-2">Tecnologías</label>
               <div className="flex gap-2">
                 <select
-                  className="w-full h-10 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-3"
+                  className="w-full h-10 rounded-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 px-3"
                   value={tecPick}
                   onChange={(e) => setTecPick(e.target.value === '' ? '' : Number(e.target.value))}
                 >
@@ -798,7 +798,7 @@ export default function EquipoFormPage() {
                   type="button"
                   onClick={handleAddTec}
                   disabled={tecPick === ''}
-                  className="px-4 h-10 rounded bg-blue-600 text-white text-sm disabled:opacity-60"
+                  className="px-4 h-10 rounded-sm bg-blue-600 text-white text-sm disabled:opacity-60"
                 >
                   Agregar
                 </button>
@@ -866,7 +866,7 @@ export default function EquipoFormPage() {
                   onChange={(e) => setNewMemberStart(e.target.value)}
                   min={formData.fechaInicio || undefined}
                   max={formData.fechaFin || undefined}
-                  className="w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm"
+                  className="w-full px-3 py-2 rounded-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm"
                 />
               </div>
               <div>
@@ -877,7 +877,7 @@ export default function EquipoFormPage() {
                   onChange={(e) => setNewMemberEnd(e.target.value)}
                   min={newMemberStart || formData.fechaInicio || undefined}
                   max={formData.fechaFin || undefined}
-                  className="w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm"
+                  className="w-full px-3 py-2 rounded-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm"
                 />
               </div>
               <div className="flex items-end gap-2">
@@ -891,7 +891,7 @@ export default function EquipoFormPage() {
                       Math.max(1, Math.min(newMemberMax, Number(e.target.value) || 1))
                     )
                   }
-                  className="w-full px-3 py-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm"
+                  className="w-full px-3 py-2 rounded-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm"
                   placeholder="Disp. %"
                   title={
                     selectedMember ? `Disponible máx: ${newMemberMax}%` : 'Elegí un miembro primero'
@@ -901,7 +901,7 @@ export default function EquipoFormPage() {
                   type="button"
                   onClick={handleAddMember}
                   disabled={!selectedMember || newMemberMax <= 0}
-                  className="px-4 h-10 rounded bg-blue-600 text-white text-sm disabled:opacity-60"
+                  className="px-4 h-10 rounded-sm bg-blue-600 text-white text-sm disabled:opacity-60"
                 >
                   Agregar
                 </button>
@@ -930,14 +930,14 @@ export default function EquipoFormPage() {
             <button
               type="button"
               onClick={() => navigate('/operations')}
-              className="px-4 py-2 rounded border border-gray-300 dark:border-gray-600 text-sm"
+              className="px-4 py-2 rounded-sm border border-gray-300 dark:border-gray-600 text-sm"
             >
               Cancelar
             </button>
             <button
               type="submit"
               form="equipo-form"
-              className="px-4 py-2 rounded bg-blue-600 text-white text-sm"
+              className="px-4 py-2 rounded-sm bg-blue-600 text-white text-sm"
             >
               Guardar
             </button>

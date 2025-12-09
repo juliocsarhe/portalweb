@@ -91,7 +91,7 @@ export default function Login() {
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* --- SPLASH ANIMADO --- */}
       {showSplash && (
-        <div className="flex items-center justify-center absolute inset-0 bg-[radial-gradient(circle_at_center,_#1D75BD_0%,_#0a3d62_100%)] z-50">
+        <div className="flex items-center justify-center absolute inset-0 bg-[radial-gradient(circle_at_center,#1D75BD_0%,#0a3d62_100%)] z-50">
           <img
             src={logo_white_transparent}
             alt="Splash Logo"
@@ -129,7 +129,7 @@ export default function Login() {
 
       {/* Contenedor del login */}
       <div
-        className={`relative z-10 w-full max-w-md bg-white/95 dark:bg-gray-900/90 backdrop-blur-sm shadow-2xl rounded-2xl p-10 transform transition-all duration-1000
+        className={`relative z-10 w-full max-w-md bg-white/95 dark:bg-gray-900/90 backdrop-blur-xs shadow-2xl rounded-2xl p-10 transform transition-all duration-1000
           ${
             phase === 'move' || phase === 'done'
               ? 'translate-y-0 opacity-100 delay-500'
@@ -162,8 +162,8 @@ export default function Login() {
               onChange={(e) => setCorreo(e.target.value)}
               required
               placeholder="Correo electrónico"
-              className="w-full border-0 rounded-full px-14 py-4 text-blue-900 dark:text-gray-100 placeholder-blue-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-inner text-lg
-                         bg-gradient-to-r from-blue-50 to-blue-100 dark:from-gray-700 dark:to-gray-800"
+              className="w-full border-0 rounded-full px-14 py-4 text-blue-900 dark:text-gray-100 placeholder-blue-400 dark:placeholder-gray-500 focus:outline-hidden focus:ring-2 focus:ring-blue-500 shadow-inner text-lg
+                         bg-linear-to-r from-blue-50 to-blue-100 dark:from-gray-700 dark:to-gray-800"
             />
           </div>
 
@@ -184,8 +184,8 @@ export default function Login() {
               onChange={(e) => setContrasena(e.target.value)}
               required
               placeholder="Contraseña"
-              className="w-full border-0 rounded-full px-14 py-4 text-blue-900 dark:text-gray-100 placeholder-blue-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-inner text-lg
-                         bg-gradient-to-r from-blue-50 to-blue-100 dark:from-gray-700 dark:to-gray-800"
+              className="w-full border-0 rounded-full px-14 py-4 text-blue-900 dark:text-gray-100 placeholder-blue-400 dark:placeholder-gray-500 focus:outline-hidden focus:ring-2 focus:ring-blue-500 shadow-inner text-lg
+                         bg-linear-to-r from-blue-50 to-blue-100 dark:from-gray-700 dark:to-gray-800"
             />
           </div>
 

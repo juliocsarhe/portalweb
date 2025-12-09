@@ -31,14 +31,14 @@ export default function ConfirmModal({
       <div className="flex justify-end gap-2 mt-6">
         <button
           onClick={onCancel}
-          className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+          className="px-4 py-2 bg-gray-500 text-white rounded-sm hover:bg-gray-600"
           disabled={loading}
         >
           {cancelText}
         </button>
         <button
           onClick={onConfirm}
-          className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50"
+          className="px-4 py-2 bg-red-600 text-white rounded-sm hover:bg-red-700 disabled:opacity-50"
           disabled={loading}
         >
           {loading ? 'Procesando...' : confirmText}

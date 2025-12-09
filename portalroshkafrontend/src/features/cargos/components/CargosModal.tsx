@@ -121,14 +121,14 @@ export default function CargosModal({
             form="cargo-form"
             type="submit"
             disabled={saving || detailLoading}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+            className="px-4 py-2 bg-blue-600 text-white rounded-sm hover:bg-blue-700 disabled:opacity-50"
           >
             {saving ? 'Procesando...' : isEditing ? 'Guardar cambios' : 'Crear'}
           </button>
         )}
         <button
           onClick={onClose}
-          className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+          className="px-4 py-2 bg-gray-500 text-white rounded-sm hover:bg-gray-600"
         >
           Cerrar
         </button>
