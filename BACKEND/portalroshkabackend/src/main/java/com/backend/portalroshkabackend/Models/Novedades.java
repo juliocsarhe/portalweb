@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -29,14 +30,14 @@ public class Novedades {
     @Column(name = "fecha_expiracion")
     private LocalDate fechaExpiracion;
 
+    @Column(name = "fecha_creacion", nullable = false)
+    private LocalDateTime fechaCreacion;
+
     @Column(name = "activo")
     private Boolean activo;
 
-    @Column(name = "categoria")
-    private String categoria; // TH - OP - AS - DT - DS - TL - ALL
-
     @Column(name = "prioridad")
-    private String prioridad; // BAJA - MEDIA - ALTA
+    private Boolean prioridad;
 
     @ManyToOne
     @JoinColumn(name = "creado_por")

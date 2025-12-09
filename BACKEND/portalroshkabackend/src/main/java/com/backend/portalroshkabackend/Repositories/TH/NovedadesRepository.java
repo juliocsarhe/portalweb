@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface NovedadesRepository extends JpaRepository<Novedades, Integer> {
 
-    List<Novedades> findByActivoTrueOrderByPrioridadDesc();
-    List<Novedades> findByCategoriaAndActivoTrue(String categoria);
-   /* List<Novedades> findByIdRol_IdRolAndActivoTrue(Integer idRol); */
+    List<Novedades> findAllByOrderByPrioridadDescFechaExpiracionAsc();
+    List<Novedades> findAllByOrderByFechaCreacionDesc();
+    List<Novedades> findAllByOrderByFechaCreacionAsc();
     //TODO: preguntar sobre validez de este consulta
 
     @Query("SELECT n FROM Novedades n WHERE n.fechaExpiracion > CURRENT_DATE AND n.activo = true")

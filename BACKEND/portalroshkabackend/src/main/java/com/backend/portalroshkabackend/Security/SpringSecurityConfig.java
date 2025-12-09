@@ -70,20 +70,19 @@ public class SpringSecurityConfig {
                 // Reglas específicas ANTES de las generales - ORDEN IMPORTANTE
                 
                 // ROLE_1 - TALENTO HUMANO: Acceso a recursos humanos
-                .requestMatchers("/api/v1/admin/th/**").hasAnyAuthority("ROLE_1", "ROLE_5") 
+                .requestMatchers("/api/v1/admin/th/**").hasAnyAuthority("ROLE_1")
                 
                 // ROLE_2 - OPERACIONES: Acceso a operaciones
-                .requestMatchers("/api/v1/admin/operations/**").hasAnyAuthority("ROLE_2", "ROLE_5") 
+                .requestMatchers("/api/v1/admin/operations/**").hasAnyAuthority("ROLE_2")
                 
                 // ROLE_3 - ADMINISTRADOR DE SISTEMAS: Acceso a sysadmin
-                .requestMatchers("/api/v1/admin/sysadmin/**").hasAnyAuthority("ROLE_3", "ROLE_5") 
-                
-                // ROLE_5 - DIRECTIVO: Esta regla debe ir AL FINAL porque es muy amplia
-                .requestMatchers("/api/v1/admin/**").hasAnyAuthority("ROLE_5")
+                .requestMatchers("/api/v1/admin/sysadmin/**").hasAnyAuthority("ROLE_3")
 
-                 // AGREGAR REQUEST MATCHER PARA NOVEDADES ROL DT Y TH
-                    .requestMatchers("/api/v1/admin/th/novedades/**")
-                    .hasAnyAuthority("ROLE_1", "ROLE_5")
+                //role_6 - TEAM LIDER - acceso a team lider
+                .requestMatchers("/api/v1/teamleader/**").hasAuthority("ROLE_6")
+
+                // ROLE_5 - DIRECTIVO: tiene acceso a TODOS(menos team lider)
+                .requestMatchers("/api/v1/admin/**").hasAnyAuthority("ROLE_5")
 
                 // Cualquier otra request requiere autenticación
                 .anyRequest().authenticated()
@@ -99,3 +98,4 @@ public class SpringSecurityConfig {
         return http.build();
     }
 }
+

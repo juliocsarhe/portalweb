@@ -1,10 +1,8 @@
 package com.backend.portalroshkabackend.tools.mapper;
 
-import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesDefaultResponseDto;
-import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesResponseDto;
-import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesInsertDto;
-import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesUpdateDto;
+import com.backend.portalroshkabackend.DTO.th.novedades.*;
 import com.backend.portalroshkabackend.Models.Novedades;
+import com.backend.portalroshkabackend.Models.Roles;
 import com.backend.portalroshkabackend.Models.Usuario;
 
 public class NovedadesMapper {
@@ -13,7 +11,6 @@ public class NovedadesMapper {
         Novedades novedad = new Novedades();
         novedad.setTitulo(dto.getTitulo());
         novedad.setDescripcion(dto.getDescripcion());
-        novedad.setCategoria(dto.getCategoria());
         novedad.setPrioridad(dto.getPrioridad());
         novedad.setImagenUrl(dto.getImagenUrl());
         novedad.setFechaExpiracion(dto.getFechaExpiracion());
@@ -35,7 +32,6 @@ public class NovedadesMapper {
         if (dto.getDescripcion() != null) novedad.setDescripcion(dto.getDescripcion());
         if (dto.getImagenUrl() != null) novedad.setImagenUrl(dto.getImagenUrl());
         if (dto.getFechaExpiracion() != null) novedad.setFechaExpiracion(dto.getFechaExpiracion());
-        if(dto.getCategoria() != null) novedad.setCategoria(dto.getCategoria());
         if(dto.getPrioridad() != null) novedad.setPrioridad(dto.getPrioridad());
         return novedad;
 
@@ -48,8 +44,25 @@ public class NovedadesMapper {
         dto.setImagenUrl(novedad.getImagenUrl());
         dto.setActivo(novedad.getActivo());
         dto.setFechaExpiracion(novedad.getFechaExpiracion());
-        dto.setCategoria(novedad.getCategoria());
         dto.setPrioridad(novedad.getPrioridad());
+        dto.setUsuario(toUsuarioNovedadesDto(novedad.getUsuario()));
+        return dto;
+    }
+
+    public static UsuarioNovedadesDto toUsuarioNovedadesDto(Usuario usuario){
+        UsuarioNovedadesDto dto = new UsuarioNovedadesDto();
+        dto.setIdUsuario(usuario.getIdUsuario());
+        dto.setNombre(usuario.getNombre());
+        dto.setApellido(usuario.getApellido());
+        dto.setRol(toRolNovedadesDto(usuario));
+        return dto;
+    }
+
+    public static RolNovedadesDto toRolNovedadesDto(Usuario usuario){
+        RolNovedadesDto dto = new RolNovedadesDto();
+        Roles rol = usuario.getRol();
+        dto.setIdRol(rol.getIdRol());
+        dto.setNombre(rol.getNombre());
         return dto;
     }
 }
