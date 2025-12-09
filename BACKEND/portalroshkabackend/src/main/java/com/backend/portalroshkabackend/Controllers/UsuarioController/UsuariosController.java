@@ -2,6 +2,9 @@ package com.backend.portalroshkabackend.Controllers.UsuarioController;
 
 import java.util.List;
 
+import com.backend.portalroshkabackend.notification.NotificationService;
+import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSolicitudSaEvent;
+import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSolicitudThEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +33,10 @@ import com.backend.portalroshkabackend.Services.UsuarioServicio.UserService;
 @RestController
 @RequestMapping("/api/v1/usuarios")
 public class UsuariosController {
+
+    @Autowired
+    private NotificationService notificationService;
+
 
     @Autowired
     private UserService userService;
@@ -67,6 +74,8 @@ public class UsuariosController {
     public ResponseEntity<UserSolPermisoDto> crearPermisoUsuarioActual(@RequestBody UserSolPermisoDto solPermisoDto) {
         // System.out.println("\n \n Solicitud DTO Recibida en el Controller: \n\n" + solPermisoDto + "\n \n");
         solPermisoDto = userService.crearPermisoUsuarioActual(solPermisoDto);
+        NotificarSolicitudThEvent event = new NotificarSolicitudThEvent();
+        notificationService.sendEvent(event);
         return ResponseEntity.ok(solPermisoDto);
     }
 
@@ -74,6 +83,8 @@ public class UsuariosController {
     public ResponseEntity<UserSolBeneficioDto> crearBeneficioUsuarioActual(@RequestBody UserSolBeneficioDto solBeneficioDto) {
         // process POST request
         solBeneficioDto = userService.crearBeneficioUsuarioActual(solBeneficioDto);
+        NotificarSolicitudThEvent event = new NotificarSolicitudThEvent();
+        notificationService.sendEvent(event);
         return ResponseEntity.ok(solBeneficioDto);
     }
 
@@ -81,6 +92,8 @@ public class UsuariosController {
     public ResponseEntity<UserSolVacacionDto> crearVacacionUsuarioActual(@RequestBody UserSolVacacionDto solVacacionDto) {
         //TODO: process POST request
         solVacacionDto = userService.crearVacacionUsuarioActual(solVacacionDto);
+        NotificarSolicitudThEvent event = new NotificarSolicitudThEvent();
+        notificationService.sendEvent(event);
         return ResponseEntity.ok(solVacacionDto);
     }
     
@@ -88,6 +101,8 @@ public class UsuariosController {
     public ResponseEntity<UserSolDispositivoDto> pedirDispositivoUsuarioActual(@RequestBody UserSolDispositivoDto solDispositivoDto) {
         //TODO: process POST request
         solDispositivoDto = userService.pedirDispositivoUsuarioActual(solDispositivoDto);
+        NotificarSolicitudSaEvent event = new NotificarSolicitudSaEvent();
+        notificationService.sendEvent(event);
         return ResponseEntity.ok(solDispositivoDto);
     }
     
