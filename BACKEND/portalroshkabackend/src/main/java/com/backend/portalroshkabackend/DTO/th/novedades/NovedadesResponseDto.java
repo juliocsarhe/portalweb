@@ -15,5 +15,6 @@ public class NovedadesResponseDto {
     private LocalDate fechaExpiracion;
     private Boolean activo;
     private Boolean prioridad;
+    private UsuarioNovedadesDto usuario;
 
 }

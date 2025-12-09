@@ -1,10 +1,8 @@
 package com.backend.portalroshkabackend.tools.mapper;
 
-import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesDefaultResponseDto;
-import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesResponseDto;
-import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesInsertDto;
-import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesUpdateDto;
+import com.backend.portalroshkabackend.DTO.th.novedades.*;
 import com.backend.portalroshkabackend.Models.Novedades;
+import com.backend.portalroshkabackend.Models.Roles;
 import com.backend.portalroshkabackend.Models.Usuario;
 
 public class NovedadesMapper {
@@ -47,6 +45,24 @@ public class NovedadesMapper {
         dto.setActivo(novedad.getActivo());
         dto.setFechaExpiracion(novedad.getFechaExpiracion());
         dto.setPrioridad(novedad.getPrioridad());
+        dto.setUsuario(toUsuarioNovedadesDto(novedad.getUsuario()));
+        return dto;
+    }
+
+    public static UsuarioNovedadesDto toUsuarioNovedadesDto(Usuario usuario){
+        UsuarioNovedadesDto dto = new UsuarioNovedadesDto();
+        dto.setIdUsuario(usuario.getIdUsuario());
+        dto.setNombre(usuario.getNombre());
+        dto.setApellido(usuario.getApellido());
+        dto.setRol(toRolNovedadesDto(usuario));
+        return dto;
+    }
+
+    public static RolNovedadesDto toRolNovedadesDto(Usuario usuario){
+        RolNovedadesDto dto = new RolNovedadesDto();
+        Roles rol = usuario.getRol();
+        dto.setIdRol(rol.getIdRol());
+        dto.setNombre(rol.getNombre());
         return dto;
     }
 }
