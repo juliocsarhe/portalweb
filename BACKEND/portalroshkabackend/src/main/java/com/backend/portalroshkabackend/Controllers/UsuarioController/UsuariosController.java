@@ -70,7 +70,7 @@ public class UsuariosController {
         return ResponseEntity.ok(solicitudes);
     }
 
-    @PostMapping("/crearpermiso") // Endpoint para solcitar un Permiso para el usuario actual
+    @PostMapping("/crearpermiso") // Endpoint para solicitar un Permiso para el usuario actual
     public ResponseEntity<UserSolPermisoDto> crearPermisoUsuarioActual(@RequestBody UserSolPermisoDto solPermisoDto) {
         // System.out.println("\n \n Solicitud DTO Recibida en el Controller: \n\n" + solPermisoDto + "\n \n");
         solPermisoDto = userService.crearPermisoUsuarioActual(solPermisoDto);

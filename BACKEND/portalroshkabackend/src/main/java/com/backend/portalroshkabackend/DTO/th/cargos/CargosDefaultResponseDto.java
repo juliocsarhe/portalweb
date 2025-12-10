@@ -7,6 +7,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CargosDefaultResponseDto {
     private Integer idCargo;
-
     private String message;
 }
