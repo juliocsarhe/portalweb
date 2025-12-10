@@ -33,6 +33,7 @@ export default function HomePage() {
               Bienvenido de nuevo, {user?.nombre} {user?.apellido}
             </h2>
             <h3 className="text-gray-800 dark:text-white">Últimas Novedades</h3>
+            {/* aca ira el carrusel */}
           </div>
         </div>
       </div>
@@ -44,6 +45,7 @@ export default function HomePage() {
             <h2 className="text-2xl font-bold text-brand-blue dark:text-white mb-1">
               Avisos
             </h2>
+            {/* aca ira los avisos */}
           </div>
         </div>
       </div>

@@ -1,19 +1,30 @@
+// src/features/novedades/hooks/useCrearNovedades.ts
 import { useState } from 'react'
-import { InsertDto, NovedadesDefaultResponseDto } from '@/types'
+import { NovedadesInsertDto, NovedadesResponseDto } from '@/types'
 import { novedadesService } from '../services/novedadesService'
+import { useAuth } from '@/app/providers/AuthContext'
 
-export const useCrearNovedades = () => {
+export function useCrearNovedades() {
+  const { token } = useAuth()
+
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const create = async (dto: InsertDto): Promise<NovedadesDefaultResponseDto | null> => {
+  const create = async (
+    dto: NovedadesInsertDto
+  ): Promise<NovedadesResponseDto | null> => {
+    if (!token) {
+      setError('No hay token disponible')
+      return null
+    }
+
     setLoading(true)
     setError(null)
+
     try {
-      const res = await novedadesService.create(dto)
-      return res
+      return await novedadesService.create(dto, token)
     } catch (err: any) {
-      setError(err.message)
+      setError(err?.message || 'Error al crear la novedad')
       return null
     } finally {
       setLoading(false)

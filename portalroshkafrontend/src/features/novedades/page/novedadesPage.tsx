@@ -1,164 +1,135 @@
-import { useEffect, useState } from 'react'
-import { InsertDto, NovedadesResponseDto, NovedadesDefaultResponseDto } from '@/types'
+// src/features/novedades/pages/NovedadesPage.tsx
+import { useState, useEffect } from 'react'
+import { NovedadesInsertDto, NovedadesResponseDto } from '@/types'
+import { useGetNovedades } from '../hooks/useGetNovedades'
+import { useCrearNovedades } from '../hooks/useCrearNovedades'
 import PageLayout from '@/layouts/PageLayout'
 
 export default function NovedadesPage() {
-  const [novedades, setNovedades] = useState<NovedadesResponseDto[]>([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const { data, loading } = useGetNovedades()
+  const { create, loading: creating } = useCrearNovedades()
 
-  const [form, setForm] = useState<InsertDto>({
+  const [carrusel, setCarrusel] = useState<NovedadesResponseDto[]>([])
+  const [avisos, setAvisos] = useState<NovedadesResponseDto[]>([])
+
+  const [form, setForm] = useState<NovedadesInsertDto>({
     titulo: '',
     descripcion: '',
     imagenUrl: '',
     fechaExpiracion: new Date(),
-    categoria: '',
-    prioridad: '',
+    prioridad: false,
   })
 
-  // Traer todas las novedades
   useEffect(() => {
-    setLoading(true)
-    fetch('http://localhost:8080/api/v1/admin/th')
-      .then(res => {
-        if (!res.ok) throw new Error('Error al cargar novedades')
-        return res.json()
-      })
-      .then((data: NovedadesResponseDto[]) => setNovedades(data))
-      .catch(err => setError(err.message))
-      .finally(() => setLoading(false))
-  }, [])
+    setCarrusel(data.filter((n) => n.imagenUrl))
+    setAvisos(data.filter((n) => !n.imagenUrl))
+  }, [data])
 
-  // Crear novedad
-  const crearNovedad = () => {
-    setLoading(true)
-    fetch('http://localhost:8080/api/v1/admin/th/novedades', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form),
+  const submit = async () => {
+    const res = await create(form)
+    if (!res) return
+
+    if (res.imagenUrl) setCarrusel((p) => [...p, res])
+    else setAvisos((p) => [...p, res])
+
+    setForm({
+      titulo: '',
+      descripcion: '',
+      imagenUrl: '',
+      fechaExpiracion: new Date(),
+      prioridad: false,
     })
-      .then(res => {
-        if (!res.ok) throw new Error('Error al crear novedad')
-        return res.json()
-      })
-      .then((newNovedad: NovedadesDefaultResponseDto) => {
-        setNovedades(prev => [
-          ...prev,
-          { ...form, idNovedades: newNovedad.id, activo: true } as NovedadesResponseDto,
-        ])
-        // Reset form
-        setForm({
-          titulo: '',
-          descripcion: '',
-          imagenUrl: '',
-          fechaExpiracion: new Date(),
-          categoria: '',
-          prioridad: '',
-        })
-      })
-      .catch(err => setError(err.message))
-      .finally(() => setLoading(false))
   }
 
   return (
     <PageLayout>
-    <div className="p-6 bg-gray-50 dark:bg-gray-950 min-h-screen">
-      <h1 className="text-2xl font-bold text-black dark:text-gray-200 mb-6">Novedades</h1>
+      <div className="p-6">
+        <h1 className="text-2xl font-bold mb-4">Novedades</h1>
 
-      {/* Formulario */}
-      <form
-        onSubmit={e => {
-          e.preventDefault()
-          crearNovedad()
-        }}
-        className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-md space-y-4 mb-8"
-      >
-        <input
-          type="text"
-          placeholder="Título"
-          value={form.titulo}
-          onChange={e => setForm({ ...form, titulo: e.target.value })}
-          className="w-full border border-gray-300 dark:border-gray-700 p-2 rounded"
-          required
-        />
-        <textarea
-          placeholder="Descripción"
-          value={form.descripcion}
-          onChange={e => setForm({ ...form, descripcion: e.target.value })}
-          className="w-full border border-gray-300 dark:border-gray-700 p-2 rounded"
-          required
-        />
-        <input
-          type="text"
-          placeholder="URL de la imagen"
-          value={form.imagenUrl}
-          onChange={e => setForm({ ...form, imagenUrl: e.target.value })}
-          className="w-full border border-gray-300 dark:border-gray-700 p-2 rounded"
-        />
-        <input
-          type="date"
-          value={form.fechaExpiracion.toISOString().slice(0, 10)}
-          onChange={e => setForm({ ...form, fechaExpiracion: new Date(e.target.value) })}
-          className="w-full border border-gray-300 dark:border-gray-700 p-2 rounded"
-          required
-        />
-        <select
-          value={form.categoria}
-          onChange={e => setForm({ ...form, categoria: e.target.value })}
-          className="w-full border border-gray-300 dark:border-gray-700 p-2 rounded"
-          required
+        {/* FORM */}
+        <form
+          className="bg-white p-4 rounded shadow mb-6"
+          onSubmit={(e) => {
+            e.preventDefault()
+            submit()
+          }}
         >
-          <option value="">Seleccione categoría</option>
-          <option value="TH">TH</option>
-          <option value="OP">OP</option>
-          <option value="TL">TL</option>
-        </select>
-        <select
-          value={form.prioridad}
-          onChange={e => setForm({ ...form, prioridad: e.target.value })}
-          className="w-full border border-gray-300 dark:border-gray-700 p-2 rounded"
-          required
-        >
-          <option value="">Seleccione prioridad</option>
-          <option value="ALTA">ALTA</option>
-          <option value="MEDIA">MEDIA</option>
-          <option value="BAJA">BAJA</option>
-        </select>
-        <button
-          type="submit"
-          className="bg-[#ECB22E] hover:bg-yellow-500 text-black px-4 py-2 rounded font-semibold"
-        >
-          Crear Novedad
-        </button>
-      </form>
+          <input
+            className="border p-2 w-full mb-2"
+            placeholder="Título"
+            value={form.titulo}
+            onChange={(e) => setForm({ ...form, titulo: e.target.value })}
+            required
+          />
 
-      {/* Lista de novedades */}
-      {loading && <p className="text-black dark:text-gray-200">Cargando...</p>}
-      {error && <p className="text-red-500">{error}</p>}
+          <textarea
+            className="border p-2 w-full mb-2"
+            placeholder="Descripción"
+            value={form.descripcion}
+            onChange={(e) => setForm({ ...form, descripcion: e.target.value })}
+            required
+          />
 
-      <ul className="space-y-4">
-        {novedades.map(n => (
-          <li key={n.idNovedades} className="bg-white dark:bg-gray-900 p-4 rounded-xl shadow-md flex flex-col md:flex-row md:items-center md:justify-between space-y-2 md:space-y-0">
-            <div>
-              <h3 className="font-semibold text-black dark:text-gray-200">{n.titulo}</h3>
-              <p className="text-gray-700 dark:text-gray-400">{n.descripcion}</p>
-              <p className="text-sm text-gray-500 dark:text-gray-500">
-                Expira: {new Date(n.fechaExpiracion).toLocaleDateString()}
-              </p>
-              <p className="text-sm text-gray-500 dark:text-gray-500">Categoría: {n.categoria}</p>
-              <p className="text-sm text-gray-500 dark:text-gray-500">Prioridad: {n.prioridad}</p>
-            </div>
-            {n.imagenUrl && (
-              <img
-                src={n.imagenUrl}
-                alt={n.titulo}
-                className="w-32 h-32 object-cover rounded"
-              />
-            )}
-          </li>
-        ))}
-      </ul>
-    </div>
+          <input
+            className="border p-2 w-full mb-2"
+            placeholder="URL Imagen (opcional)"
+            value={form.imagenUrl}
+            onChange={(e) => setForm({ ...form, imagenUrl: e.target.value })}
+          />
+
+          <input
+            type="date"
+            className="border p-2 w-full mb-2"
+            value={form.fechaExpiracion.toISOString().slice(0, 10)}
+            onChange={(e) =>
+              setForm({ ...form, fechaExpiracion: new Date(e.target.value) })
+            }
+          />
+
+          <select
+            className="border p-2 w-full mb-2"
+            value={form.prioridad ? 'true' : 'false'}
+            onChange={(e) =>
+              setForm({ ...form, prioridad: e.target.value === 'true' })
+            }
+          >
+            <option value="false">Prioridad: No</option>
+            <option value="true">Prioridad: Sí</option>
+          </select>
+
+          <button className="bg-[#ECB22E] px-4 py-2 rounded font-semibold">
+            {creating ? 'Creando...' : 'Crear'}
+          </button>
+        </form>
+
+        {/* LISTAS */}
+        <h2 className="font-semibold text-lg mb-1">Carrusel</h2>
+        <ul className="space-y-2 mb-6">
+          {carrusel.map((n) => (
+            <li key={n.idNovedades} className="bg-white p-4 rounded shadow">
+              <h3>{n.titulo}</h3>
+              <p>{n.descripcion}</p>
+              {n.imagenUrl && (
+                <img
+                  src={n.imagenUrl}
+                  className="w-32 h-32 object-cover mt-2 rounded"
+                />
+              )}
+            </li>
+          ))}
+        </ul>
+
+        <h2 className="font-semibold text-lg mb-1">Avisos</h2>
+        <ul className="space-y-2">
+          {avisos.map((n) => (
+            <li key={n.idNovedades} className="bg-white p-4 rounded shadow">
+              <h3>{n.titulo}</h3>
+              <p>{n.descripcion}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
     </PageLayout>
   )
 }
+
