@@ -26,16 +26,16 @@ public class MetaDatasMapper {
                 tecnologia.getDescripcion(),
                 null //
         );
-    }
+    }}
 
-    public UsuarioisResponseDto toUsuarioDto(Usuario usuario) {
-        return new UsuarioisResponseDto(
-                usuario.getIdUsuario(),
-                usuario.getNombre(),
-                usuario.getApellido(),
-                usuario.getCorreo(),
-                usuario.getDisponibilidad()
-        );
-    }
-}
+//    public UsuarioisResponseDto toUsuarioDto(Usuario usuario) {
+//        return new UsuarioisResponseDto(
+//                usuario.getIdUsuario(),
+//                usuario.getNombre(),
+//                usuario.getApellido(),
+//                usuario.getCorreo(),
+//                usuario.getDisponibilidad()
+//        );
+//    }
+//}
 

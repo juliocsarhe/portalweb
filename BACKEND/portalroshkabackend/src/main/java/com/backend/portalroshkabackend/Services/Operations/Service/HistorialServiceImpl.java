@@ -74,8 +74,8 @@ public class HistorialServiceImpl implements IHistorialService {
             Proyecto proyecto = proyectoRepository.findByLiderEquipo(actual)
                     .orElseThrow(() -> new RuntimeException("No lideras ningún proyecto."));
 
-            boolean pertenece = proyecto.getEquipoAsignado()
-                    .stream()
+            boolean pertenece = proyecto.getEquipos()
+                    .getUsuarios().stream()
                     .anyMatch(u -> u.getIdUsuario().equals(idUsuarioHistorial));
 
             if (!pertenece && !actual.getIdUsuario().equals(idUsuarioHistorial)) {
@@ -106,17 +106,18 @@ public class HistorialServiceImpl implements IHistorialService {
 
             if (liderado.isPresent()) {
                 boolean pertenecePorLiderazgo = liderado.get()
-                        .getEquipoAsignado()
+                        .getEquipos()
+                        .getUsuarios()
                         .stream()
                         .anyMatch(u -> u.getIdUsuario().equals(idUsuario));
 
                 if (pertenecePorLiderazgo) autorizado = true;
             }
 
-            List<Proyecto> misProyectos = proyectoRepository.findByEquipoAsignado_IdUsuario(actual.getIdUsuario());
+            List<Proyecto> misProyectos = proyectoRepository.findByEquipos_Usuarios_IdUsuario(actual.getIdUsuario());
 
             boolean perteneceComoMiembro = misProyectos.stream()
-                    .flatMap(p -> p.getEquipoAsignado().stream())
+                    .flatMap(p -> p.getEquipos().getUsuarios().stream())
                     .anyMatch(u -> u.getIdUsuario().equals(idUsuario));
 
             if (perteneceComoMiembro) autorizado = true;

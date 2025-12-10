@@ -1,30 +1,20 @@
 package com.backend.portalroshkabackend.Services.Operations.Interface;
 
-import com.backend.portalroshkabackend.DTO.Operationes.ProyectoDTO;
-import org.springframework.transaction.annotation.Transactional;
+import com.backend.portalroshkabackend.DTO.Operationes.ProyectoRequestDto;
+import com.backend.portalroshkabackend.DTO.Operationes.ProyectoResponseDto;
 
 import java.util.List;
 
 public interface IProyectoService {
 
-    ProyectoDTO crearProyecto(ProyectoDTO dto);
+    ProyectoResponseDto crearProyecto(ProyectoRequestDto proyectoRequestDto);
 
-    ProyectoDTO obtenerProyectoPorId(Integer idProyecto);
+    ProyectoResponseDto obtenerProyectoPorId(Integer idProyecto);
 
-    List<ProyectoDTO> listarProyectos();
+    List<ProyectoResponseDto> listarProyectos();
 
-    ProyectoDTO actualizarProyecto(Integer idProyecto, ProyectoDTO dto);
-
-    // para asignar nuevo miembro a un proyecto
-    ProyectoDTO agregarAlEquipo(Integer idProyecto, List<Integer> usuarioId);
-
-    //para eliminar miembro de equipo
-    @Transactional
-    ProyectoDTO eliminarUsuarioEquipo(Integer idProyecto, List<Integer> usuarioIds);
+    ProyectoResponseDto actualizarProyectos(Integer idProyecto, ProyectoRequestDto proyectoRequestDto);
 
     void eliminarProyecto(Integer idProyecto);
-
-
-
 
 }

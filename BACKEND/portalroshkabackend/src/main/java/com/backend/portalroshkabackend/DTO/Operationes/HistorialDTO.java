@@ -2,10 +2,12 @@ package com.backend.portalroshkabackend.DTO.Operationes;
 
 import com.backend.portalroshkabackend.Models.HistorialTrabajo;
 import com.backend.portalroshkabackend.Models.Proyecto;
+import com.backend.portalroshkabackend.Models.Tecnologias;
 import com.backend.portalroshkabackend.Models.Usuario;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 public class HistorialDTO {
@@ -17,7 +19,7 @@ public class HistorialDTO {
 
     private  String nombreProyecto;
     private String nombreLider;
-    private String tecnologias;
+    private List<String> tecnologias;
 
     private LocalDate fechaInicial;
     private LocalDate fechaLimite;
@@ -35,7 +37,10 @@ public class HistorialDTO {
 
         dto.setNombreProyecto(h.getProyecto().getNombre());
         dto.setNombreLider(h.getProyecto().getLiderEquipo().getNombre());
-        dto.setTecnologias(h.getProyecto().getTecnologias());
+        dto.setTecnologias(h.getProyecto().getTecnologias()
+                .stream().map(Tecnologias::getNombre)
+                        .toList()
+                );
 
         dto.setFechaInicial(h.getFechaInicio());
         dto.setFechaLimite(h.getFechaLimite());

@@ -15,7 +15,7 @@ import com.backend.portalroshkabackend.Models.TecnologiasEquipos;
 import com.backend.portalroshkabackend.Repositories.OP.TecnologiaRepository;
 import com.backend.portalroshkabackend.Repositories.OP.TecnologiasEquiposRepository;
 import com.backend.portalroshkabackend.Services.Operations.Interface.ITecnologiaEquiposService;
-
+@Deprecated
 @Service
 public class TecnologiasEquiposServiceImpl implements ITecnologiaEquiposService {
 

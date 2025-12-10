@@ -15,55 +15,53 @@ import java.util.Set;
 @NoArgsConstructor
 public class Proyecto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_proyecto")
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column(name = "id_proyecto")
+        private Integer idProyecto;
 
-    private Integer idProyecto;
+        @Column(nullable = false)
+        private String nombre;
 
-    @Column(nullable = false)
-    private String nombre;
-        //Debemos relacionar proyecto con usuario para estirar como lider a un usuario existente
-       //Que no sea solo texto
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "id_lider_equipo", nullable = false)
         private Usuario liderEquipo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_equipo_asignado", nullable = true)
-    private Equipos equipoAsignado;
 
-    @ManyToMany
-    @JoinTable(
-            name = "proyecto_usuarios",
-            joinColumns = @JoinColumn(name = "id_proyecto"),
-            inverseJoinColumns = @JoinColumn(name = "id_usuario")
-    )
-    private Set<Usuario> usuariosAsignados = new HashSet<>();
+        @OneToOne
+        @JoinColumn(name="id_cliente",unique = true)
+        private Clientes clientes;
 
+        @OneToOne
+        @JoinColumn(name="id_equipos", unique = true)
+        private Equipos equipos;
 
-    @Column(columnDefinition = "TEXT")
-    private String tecnologias;
+        @ManyToMany
+        @JoinTable(
+                name = "proyecto_tecnologias", joinColumns = @JoinColumn(name = "id_proyecto"),
+                inverseJoinColumns = @JoinColumn(name = "id_tecnologia")
+        )
+        private Set<Tecnologias> tecnologias = new HashSet<>();
 
-    @Column(columnDefinition = "TEXT")
-    private String descripcion;
+        @Column(columnDefinition = "TEXT")
+        private String descripcion;
 
-    @Column(name = "fecha_inicio")
-    private LocalDate fechaInicio;
+        @Column(name = "fecha_inicio")
+        private LocalDate fechaInicio;
 
-    @Column(name = "fecha_limite")
-    private LocalDate fechaLimite;
+        @Column(name = "fecha_limite")
+        private LocalDate fechaLimite;
 
-    public enum EstadoProyectoEnum {
-        ACTIVO,
-        PAUSADO,
-        FINALIZADO
-    } // ACTIVO, FINALIZADO, PAUSADO
+        public enum EstadoProyectoEnum {
+            ACTIVO,
+            PAUSADO,
+            FINALIZADO
+        } // ACTIVO, FINALIZADO, PAUSADO
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "estado", nullable = false)
-    private EstadoProyectoEnum estado = EstadoProyectoEnum.ACTIVO;
+        @Enumerated(EnumType.STRING)
+        @Column(name = "estado", nullable = false)
+        private EstadoProyectoEnum estado = EstadoProyectoEnum.ACTIVO;
 
-    @Column(nullable = false)
-    private Boolean activo = true;
+        @Column(nullable = false)
+        private Boolean activo = true;
 }

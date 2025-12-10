@@ -27,7 +27,7 @@ public class Tecnologias {
     @Column(name = "id_tecnologia")
     private Integer idTecnologia;
 
-    @Column(name = "nombre")
+    @Column(name = "nombre", nullable = false)
     private String nombre;
 
     @Column(name = "descripcion")
