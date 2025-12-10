@@ -422,3 +422,37 @@ export interface TecnologiasPageResponse {
   totalItems: number
   totalPages: number
 }
+// GET NOVEDADES (para th y admin)
+// eslint-disable-next-line import-x/no-unused-modules
+export interface NovedadesDefaultResponseDto {
+  id: number
+  titulo: string
+  message: string
+}
+export interface InsertDto {
+  titulo: string
+  descripcion: string
+  imagenUrl: string
+  fechaExpiracion: Date
+  categoria: string
+  prioridad: string
+}
+export interface NovedadesResponseDto {
+  titulo: string
+  idNovedades: number
+  descripcion: string
+  imagenUrl: string
+  fechaExpiracion: Date
+  activo: boolean
+  categoria: string
+  prioridad: string
+}
+export interface NovedadesUpdateDto {
+  id: number
+  titulo: string
+  descripcion: string
+  imagenUrl: string
+  fechaExpiracion: string
+  categoria: string
+  prioridad: string
+}
