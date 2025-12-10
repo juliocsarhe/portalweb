@@ -14,7 +14,6 @@ export default function HomePage() {
   if (!user) return <p>Cargando...</p>
 
   return (
-
     <div className="h-full flex flex-col overflow-hidden">
       {/* Fondo */}
       <div
@@ -29,32 +28,18 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-brand-blue/40"></div>
       </div>
 
-      {/* Contenedor de Bienvenido de nuevo */}
+      {/* Contenedor de Bienvenido de nuevo + Botón de notificaciones */}
       <div className="relative z-20 flex flex-col h-120 p-3">
-        <div className="bg-white/50 dark:bg-gray-900/70 backdrop-blur-xs rounded-2xl shadow-lg flex flex-col h-full overflow-hidden">
+        <div className="bg-white/50 dark:bg-gray-900/70 backdrop-blur-xs rounded-2xl shadow-lg flex flex-col h-full overflow-visible">
+
           {/* Header */}
           <div className="p-6 border-b border-gray-200 dark:border-gray-700 shrink-0">
             <h2 className="text-[30px] font-bold text-brand-blue dark:text-white mb-1">
               Bienvenido de nuevo, {user?.nombre} {user?.apellido}
             </h2>
             <h3 className="text-gray-800 dark:text-white">Últimas Novedades</h3>
-          </div>
-        </div>
-      </div>
-      { /* contenedor para el de aviso */ }
-      <div className="relative z-20 flex flex-col h-120 p-4">
-        <div className="bg-white/50 dark:bg-gray-900/70 backdrop-blur-xs rounded-2xl shadow-lg flex flex-col h-full overflow-hidden">
-          {/* Header */}
-          <div className="p-6 border-b border-gray-200 dark:border-gray-700 shrink-0">
-            <h2 className="text-2xl font-bold text-brand-blue dark:text-white mb-1">
-              ¡Bienvenido de nuevo! 👋    
-            </h2>
-            <p className="text-gray-700 dark:text-gray-200 text-lg">
-              {user?.nombre} {user?.apellido}
-            </p>
-            <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">{user?.correo}</p>
 
-         {/* Botón de notificaciones */}
+            {/* Botón de notificaciones */}
             <div className="absolute top-6 right-6">
               <button
                 onClick={toggleOpen}
@@ -83,10 +68,24 @@ export default function HomePage() {
                 </div>
               )}
             </div>
+          </div>
+        </div>
+      </div>
 
+      {/* Contenedor para el de aviso */}
+      <div className="relative z-20 flex flex-col h-120 p-4">
+        <div className="bg-white/50 dark:bg-gray-900/70 backdrop-blur-xs rounded-2xl shadow-lg flex flex-col h-full overflow-hidden">
+          {/* Header */}
+          <div className="p-6 border-b border-gray-200 dark:border-gray-700 shrink-0">
+            <h2 className="text-2xl font-bold text-brand-blue dark:text-white mb-1">
+              ¡Bienvenido de nuevo! 👋    
+            </h2>
+            <p className="text-gray-700 dark:text-gray-200 text-lg">
+              {user?.nombre} {user?.apellido}
+            </p>
+            <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">{user?.correo}</p>
           </div>
 
-        
           {/* Cards */}
           <div className="flex-1 overflow-auto p-6">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -129,11 +128,10 @@ export default function HomePage() {
                 color=""
               />
             </div>
-              Avisos
-            
+            Avisos
           </div>
         </div>
       </div>
-      </div>
+    </div>
   )
 }
