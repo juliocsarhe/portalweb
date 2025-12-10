@@ -1,7 +1,8 @@
 package com.backend.portalroshkabackend.Controllers.SYSADMIN;
 
-import java.util.List;
-
+import com.backend.portalroshkabackend.notification.NotificationService;
+import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSolicitudAprobadaEvent;
+import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSolicitudRechazadaEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,9 +30,14 @@ public class RequestDeviceController {
     @Autowired
     private final DeviceRequest deviceRequest;
 
-    RequestDeviceController(SysAdminService sysAdminService, DeviceRequest deviceRequest) {
+    @Autowired
+    private final NotificationService notificationService;
+
+
+    RequestDeviceController(SysAdminService sysAdminService, DeviceRequest deviceRequest, NotificationService notificationService) {
         this.sysAdminService = sysAdminService;
         this.deviceRequest = deviceRequest;
+        this.notificationService = notificationService;
     }
 
 
@@ -62,6 +68,10 @@ public class RequestDeviceController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Solicitud no encontrada");
         }
 
+        NotificarSolicitudAprobadaEvent event = new NotificarSolicitudAprobadaEvent();
+        notificationService.sendEvent(event);
+
+
         return ResponseEntity.ok(updatedRequest);
     }
 
@@ -75,9 +85,10 @@ public class RequestDeviceController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Solicitud no encontrada");
         }
 
+        NotificarSolicitudRechazadaEvent event =  new NotificarSolicitudRechazadaEvent();
+
+        notificationService.sendEvent(event);
+
         return ResponseEntity.ok(updatedRequest);
     }
-
-
-    
 }

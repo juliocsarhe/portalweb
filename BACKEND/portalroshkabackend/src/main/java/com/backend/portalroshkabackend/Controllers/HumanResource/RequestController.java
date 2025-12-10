@@ -3,9 +3,11 @@ package com.backend.portalroshkabackend.Controllers.HumanResource;
 
 import com.backend.portalroshkabackend.DTO.th.*;
 import com.backend.portalroshkabackend.DTO.th.request.RequestResponseDto;
-import com.backend.portalroshkabackend.Models.Enum.EstadoSolicitudEnum;
 import com.backend.portalroshkabackend.Models.Enum.SolicitudesEnum;
 import com.backend.portalroshkabackend.Services.HumanResource.IRequestService;
+import com.backend.portalroshkabackend.notification.NotificationService;
+import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSolicitudAprobadaEvent;
+import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSolicitudRechazadaEvent;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,8 +25,12 @@ public class RequestController {
     private final IRequestService requestService;
 
     @Autowired
-    public RequestController(IRequestService requestService){
+    private final NotificationService notificationService;
+
+    @Autowired
+    public RequestController(IRequestService requestService, NotificationService notificationService){
         this.requestService = requestService;
+        this.notificationService = notificationService;
     }
 
     @GetMapping("/th/users/requests/sortby")
@@ -79,14 +85,19 @@ public class RequestController {
 
         RequestResponseDto response = requestService.acceptRequest(idRequest);
 
-        return ResponseEntity.ok(response);
+        NotificarSolicitudAprobadaEvent event = new NotificarSolicitudAprobadaEvent();
+        notificationService.sendEvent(event);
 
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/th/users/requests/{idRequest}/reject")
     public ResponseEntity<RequestResponseDto> rejectRequest(@PathVariable int idRequest){
 
         RequestResponseDto response  = requestService.rejectRequest(idRequest);
+
+        NotificarSolicitudRechazadaEvent event = new NotificarSolicitudRechazadaEvent();
+        notificationService.sendEvent(event);
 
         return ResponseEntity.ok(response);
     }
@@ -97,6 +108,4 @@ public class RequestController {
         // TODO: Implementar cuando la base de datos tenga tipo de solicitudes
         return ResponseEntity.ok("agregar nuevo tipo de request") ;
     }
-
-
 }

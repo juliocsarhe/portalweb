@@ -38,4 +38,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     Optional<Usuario> findByCorreo(String correo);
 
     List<Usuario> findByIdUsuarioNotIn(List<Integer> list);//
+
+    List<Usuario> findAllByRol_IdRol(Integer roleId);
 }

@@ -6,6 +6,7 @@ import com.backend.portalroshkabackend.DTO.common.UserUpdateDto;
 import com.backend.portalroshkabackend.Models.Usuario;
 import com.backend.portalroshkabackend.Repositories.TH.UserRepository;
 
+import jakarta.validation.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UsuariosService {
@@ -139,5 +141,13 @@ public class UsuariosService {
         return dto;
     }
 
+    public List<String> getEmailsByRole(Integer idRole) {
+        List<Usuario> usuarios = UsuarioRepository.findAllByRol_IdRol(idRole);
+
+
+        return usuarios.stream()
+                .map(Usuario::getCorreo)
+                .collect(Collectors.toList());
+    }
 
 }

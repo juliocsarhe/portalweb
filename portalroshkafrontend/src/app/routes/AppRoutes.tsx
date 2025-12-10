@@ -27,7 +27,7 @@ import SolicitudDispositivoPage from '../../features/dispositivos/pages/Solicitu
 //import SolicitudDispositivoFormPage from "../features/dispositivos/SolicitudDispositivoFormPage.tsx";
 
 // pagina de novedades
-import novedadesPage from '../features/novedades/page/novedadesPage.tsx'
+import NovedadesPage from "../../features/novedades/page/NovedadesPage.tsx";
 import UserFormPage from '../../features/user/pages/UserFormPage.tsx'
 import UserSearchPage from '../../features/user/pages/UserSearchPage.tsx'
 import DeviceAssignmentFormPage from '../../features/dispositivos/pages/DeviceAssignmentFormPage'
@@ -84,7 +84,7 @@ export default function AppRoutes() {
           <Route path="/solicitudesTH/:id/evaluar" element={<RequestViewPage />} />
 
           {/* CREACION DE LAS NOVEDADES (para TH) */}
-          <Route path="/crear-novedadesTH" element={<novedadesPage />} />
+          <Route path="/crear-novedadesTH" element={<NovedadesPage />} />
           {/* Usuarios */}
           <Route path="/usuarios" element={<UsuariosPage />} />
           <Route path="/usuarios/buscar" element={<UserSearchPage />} />
