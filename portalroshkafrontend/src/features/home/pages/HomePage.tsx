@@ -42,7 +42,7 @@ export default function HomePage() {
             </p>
             <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">{user?.correo}</p>
 
-         {/* 🔔 Botón de notificaciones */}
+         {/* Botón de notificaciones */}
             <div className="absolute top-6 right-6">
               <button
                 onClick={toggleOpen}
@@ -61,7 +61,7 @@ export default function HomePage() {
               {/* Panel de notificaciones */}
               {open && (
                 <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-gray-800 shadow-xl rounded-xl p-4">
-                  <h3 className="font-bold mb-2">Notificaciones</h3>
+                  <h3 className="font-bold mb-2 text-white">Notificaciones</h3>
 
                   {notifications.map((n, i) => (
                     <p key={i} className="text-sm text-gray-700 dark:text-gray-200 py-1">
