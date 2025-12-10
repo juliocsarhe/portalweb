@@ -13,6 +13,7 @@ public class EquiposMapper {
         dto.setIdEquipo(e.getIdEquipo());
         dto.setNombre(e.getNombre());
         dto.setFechaCreacion(e.getFechaCreacion());
+        dto.setEstado(e.getEstado());
 
         if (e.getLider() != null) {
             dto.setLider(UsuarioisResponseDto.fromEntity(e.getLider()));

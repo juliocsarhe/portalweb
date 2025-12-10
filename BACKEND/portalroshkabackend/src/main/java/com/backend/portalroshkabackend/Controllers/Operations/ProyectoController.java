@@ -1,9 +1,9 @@
 package com.backend.portalroshkabackend.Controllers.Operations;
 
-import com.backend.portalroshkabackend.DTO.Operationes.ProyectoDTO;
+import com.backend.portalroshkabackend.DTO.Operationes.ProyectoRequestDto;
+import com.backend.portalroshkabackend.DTO.Operationes.ProyectoResponseDto;
 import com.backend.portalroshkabackend.Services.Operations.Interface.IProyectoService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,30 +17,27 @@ public class ProyectoController {
     private final IProyectoService proyectoService;
 
     @PostMapping
-    public ResponseEntity<ProyectoDTO> crearProyecto(@RequestBody ProyectoDTO dto){
-        ProyectoDTO creado = proyectoService.crearProyecto(dto);
-        return  ResponseEntity.status(HttpStatus.CREATED).body(creado);
+    public ResponseEntity<ProyectoResponseDto> crearProyecto(@RequestBody ProyectoRequestDto requestDto){
+        return  ResponseEntity.ok(proyectoService.crearProyecto(requestDto));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProyectoDTO> obtenerProyecto(@PathVariable Integer id){
-        ProyectoDTO dto = proyectoService.obtenerProyectoPorId(id);
-        return  ResponseEntity.ok(dto);
+    public ResponseEntity<ProyectoResponseDto> obtenerProyecto(@PathVariable Integer id){
+        return  ResponseEntity.ok(proyectoService.obtenerProyectoPorId(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<ProyectoDTO>> listarProyectos() {
-        List<ProyectoDTO> lista = proyectoService.listarProyectos();
-        return ResponseEntity.ok(lista);
+    public ResponseEntity<List<ProyectoResponseDto>> listarProyectos() {
+        return ResponseEntity.ok(proyectoService.listarProyectos());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProyectoDTO> actualizarProyecto(
+    public ResponseEntity<ProyectoResponseDto> actualizarProyectos(
             @PathVariable Integer id,
-            @RequestBody ProyectoDTO dto
+            @RequestBody ProyectoRequestDto dto
     ) {
-        ProyectoDTO actualizado = proyectoService.actualizarProyecto(id, dto);
-        return ResponseEntity.ok(actualizado);
+
+        return ResponseEntity.ok(proyectoService.actualizarProyectos(id, dto));
     }
 
     @DeleteMapping("/{id}")
@@ -48,23 +45,6 @@ public class ProyectoController {
         proyectoService.eliminarProyecto(id);
         return ResponseEntity.noContent().build();
     }
-
-    @PostMapping("/{idProyecto}/equipo/agregar")
-    public ResponseEntity<ProyectoDTO> agregarMiembros(@PathVariable Integer idProyecto, @RequestBody
-                                                       List<Integer> usuarioIds){
-        ProyectoDTO proyectoDTO = proyectoService.agregarAlEquipo(idProyecto, usuarioIds);
-        return ResponseEntity.ok(proyectoDTO);
-    }
-
-    @DeleteMapping("/{idProyecto}/equipo/eliminar")
-    public ResponseEntity<ProyectoDTO> eliminarMiembros(
-            @PathVariable Integer idProyecto,
-            @RequestBody List<Integer> usuarioIds
-    ){
-        ProyectoDTO proyectoDTO = proyectoService.eliminarUsuarioEquipo(idProyecto, usuarioIds);
-        return ResponseEntity.ok(proyectoDTO);
-    }
-
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> manejarErrores(RuntimeException ex) {
