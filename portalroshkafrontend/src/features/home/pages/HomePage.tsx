@@ -80,55 +80,6 @@ export default function HomePage() {
             <h2 className="text-2xl font-bold text-brand-blue dark:text-white mb-1">
               ¡Bienvenido de nuevo! 👋    
             </h2>
-            <p className="text-gray-700 dark:text-gray-200 text-lg">
-              {user?.nombre} {user?.apellido}
-            </p>
-            <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">{user?.correo}</p>
-          </div>
-
-          {/* Cards */}
-          <div className="flex-1 overflow-auto p-6">
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <ProfileCard
-                title="Mi Perfil"
-                icon="👤"
-                description="Visualiza tu información personal"
-                onClick={() => navigate('/profile')}
-                borderClass="border-blue-600"
-                buttonClass="bg-blue-600 hover:bg-blue-700"
-                color=""
-              />
-
-              <ProfileCard
-                title="Solicitudes"
-                icon="📝"
-                description="Crea y revisa tus solicitudes"
-                onClick={() => navigate('/requests')}
-                borderClass="border-blue-600"
-                buttonClass="bg-blue-600 hover:bg-blue-700"
-                color=""
-              />
-
-              <ProfileCard
-                title="Solicitar Dispositivos"
-                icon="📱"
-                description="Crea y revisa tus peticiones de dispositivos"
-                onClick={() => navigate('/requests')}
-                borderClass="border-blue-600"
-                buttonClass="bg-blue-600 hover:bg-blue-700"
-                color=""
-              />
-              <ProfileCard
-                title="Beneficios"
-                icon="🎁"
-                description="Explora y accede a tus beneficios"
-                onClick={() => navigate('/benefits')}
-                borderClass="border-blue-600"
-                buttonClass="bg-blue-600 hover:bg-blue-700"
-                color=""
-              />
-            </div>
-            Avisos
           </div>
         </div>
       </div>
