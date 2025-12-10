@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // src/features/novedades/hooks/useGetNovedades.ts
 import { useEffect, useState } from 'react'
 import { NovedadesResponseDto } from '@/types'
@@ -6,11 +7,19 @@ import { useAuth } from '@/app/providers/AuthContext'
 
 export function useGetNovedades() {
   const { token } = useAuth()
+=======
+import { useEffect, useState } from 'react'
+import { NovedadesResponseDto } from '@/types'
+import { novedadesService } from '../services/novedadesService'
+
+export const useGetNovedades = () => {
+>>>>>>> feature/novedades-innovation
   const [data, setData] = useState<NovedadesResponseDto[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+<<<<<<< HEAD
     if (!token) {
       setError('No hay token disponible')
       setLoading(false)
@@ -24,5 +33,13 @@ export function useGetNovedades() {
       .finally(() => setLoading(false))
   }, [token])
 
+=======
+    novedadesService
+      .getAll()
+      .then(setData)
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false))
+  }, [])
+>>>>>>> feature/novedades-innovation
   return { data, loading, error }
 }

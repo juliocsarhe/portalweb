@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
 @import 'tailwindcss';
 
 @custom-variant dark (&:is(.dark *));
@@ -42,5 +43,8 @@
 @layer base {
   h1 {
     @apply text-3xl font-bold leading-tight;
+  }
+  html {
+    font-family: 'Montserrat', sans-serif; /* agregue el montserrat */
   }
 }

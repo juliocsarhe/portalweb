@@ -1,353 +1,164 @@
-// src/features/novedades/pages/NovedadesPage.tsx
-import React, { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { InsertDto, NovedadesResponseDto, NovedadesDefaultResponseDto } from '@/types'
 import PageLayout from '@/layouts/PageLayout'
-import { NovedadesInsertDto, NovedadesResponseDto, NovedadesUpdateDto } from '@/types'
-import { useGetNovedades } from '../hooks/useGetNovedades'
-import { useCrearNovedades } from '../hooks/useCrearNovedades'
-import { useUpdateNovedades } from '../hooks/useUpdateNovedades'
-import { useDeleteNovedades } from '../hooks/useDeleteNovedades'
-import UploadImageButton from '../../../shared/ui/components/UploadImageButton'
-
-// -------------------------
-// Helpers
-// -------------------------
-const toDisplayDate = (dateStr: string) => {
-  const d = new Date(dateStr)
-  if (isNaN(d.getTime())) return ''
-  return d.toLocaleDateString('es-ES') // dd/mm/yyyy
-}
-
-const fromDisplayToISO = (displayDate: string) => {
-  const [dia, mes, anio] = displayDate.split('/')
-  if (!dia || !mes || !anio) return null
-  return `${anio}-${mes}-${dia}`
-}
 
 export default function NovedadesPage() {
-  const { data, loading, error } = useGetNovedades()
-  const { create, loading: creating, error: createError } = useCrearNovedades()
-  const { update, loading: updating, error: updateError } = useUpdateNovedades()
-  const { remove, loading: deleting, error: deleteError } = useDeleteNovedades()
+  const [novedades, setNovedades] = useState<NovedadesResponseDto[]>([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const [carrusel, setCarrusel] = useState<NovedadesResponseDto[]>([])
-  const [avisos, setAvisos] = useState<NovedadesResponseDto[]>([])
-
-  // FILTRO FECHA EN FORMATO dd/mm/yyyy
-  const [filterDate, setFilterDate] = useState<string>('')
-
-  const [form, setForm] = useState<NovedadesInsertDto>({
+  const [form, setForm] = useState<InsertDto>({
     titulo: '',
     descripcion: '',
     imagenUrl: '',
     fechaExpiracion: new Date(),
-    prioridad: false,
+    categoria: '',
+    prioridad: '',
   })
 
-  const [editId, setEditId] = useState<number | null>(null)
-  const [imageUploading, setImageUploading] = useState(false)
-  const [imageError, setImageError] = useState<string | null>(null)
-
-  // -------------------------
-  // EFECTO PARA CARGAR Y FILTRAR
-  // -------------------------
+  // Traer todas las novedades
   useEffect(() => {
-    if (!data) return
-
-    // IDs eliminados guardados localmente
-    const deletedIds: number[] = JSON.parse(localStorage.getItem("deletedNovedades") || "[]")
-
-    // Ocultar los eliminados
-    let visible = data.filter((n) => !deletedIds.includes(n.idNovedades))
-
-    // Filtro de fecha dd/mm/yyyy -> ISO
-    if (filterDate) {
-      const iso = fromDisplayToISO(filterDate)
-      if (iso) {
-        visible = visible.filter((n) => n.fechaExpiracion.slice(0, 10) === iso)
-      }
-    }
-
-    setCarrusel(visible.filter((n) => n.imagenUrl))
-    setAvisos(visible.filter((n) => !n.imagenUrl))
-  }, [data, filterDate])
-
-  // -------------------------
-  // SUBMIT CREAR / EDITAR
-  // -------------------------
-  const submit = async () => {
-    try {
-      if (editId !== null) {
-        const dto: NovedadesUpdateDto = {
-          id: editId,
-          titulo: form.titulo,
-          descripcion: form.descripcion,
-          imagenUrl: form.imagenUrl,
-          fechaExpiracion: form.fechaExpiracion.toISOString(),
-          prioridad: form.prioridad,
-        }
-
-        const res = await update(dto)
-        if (!res) return
-
-        setCarrusel((p) =>
-          [...p.filter((n) => n.idNovedades !== res.idNovedades), res]
-            .sort((a, b) => (b.prioridad ? 1 : -1))
-        )
-        setAvisos((p) => [...p.filter((n) => n.idNovedades !== res.idNovedades), res])
-
-        setEditId(null)
-      } else {
-        const res = await create(form)
-        if (!res) return
-
-        if (res.imagenUrl) setCarrusel((p) => [...p, res])
-        else setAvisos((p) => [...p, res])
-      }
-
-      setForm({
-        titulo: '',
-        descripcion: '',
-        imagenUrl: '',
-        fechaExpiracion: new Date(),
-        prioridad: false,
+    setLoading(true)
+    fetch('http://localhost:8080/api/v1/admin/th')
+      .then(res => {
+        if (!res.ok) throw new Error('Error al cargar novedades')
+        return res.json()
       })
+      .then((data: NovedadesResponseDto[]) => setNovedades(data))
+      .catch(err => setError(err.message))
+      .finally(() => setLoading(false))
+  }, [])
 
-      setImageError(null)
-    } catch (err) {
-      console.error(err)
-    }
-  }
-
-  // -------------------------
-  // EDITAR
-  // -------------------------
-  const startEdit = (n: NovedadesResponseDto) => {
-    setForm({
-      titulo: n.titulo,
-      descripcion: n.descripcion,
-      imagenUrl: n.imagenUrl,
-      fechaExpiracion: new Date(n.fechaExpiracion),
-      prioridad: n.prioridad,
+  // Crear novedad
+  const crearNovedad = () => {
+    setLoading(true)
+    fetch('http://localhost:8080/api/v1/admin/th/novedades', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(form),
     })
-    setEditId(n.idNovedades)
+      .then(res => {
+        if (!res.ok) throw new Error('Error al crear novedad')
+        return res.json()
+      })
+      .then((newNovedad: NovedadesDefaultResponseDto) => {
+        setNovedades(prev => [
+          ...prev,
+          { ...form, idNovedades: newNovedad.id, activo: true } as NovedadesResponseDto,
+        ])
+        // Reset form
+        setForm({
+          titulo: '',
+          descripcion: '',
+          imagenUrl: '',
+          fechaExpiracion: new Date(),
+          categoria: '',
+          prioridad: '',
+        })
+      })
+      .catch(err => setError(err.message))
+      .finally(() => setLoading(false))
   }
 
-  // -------------------------
-  // ELIMINAR + LOCALSTORAGE
-  // -------------------------
-  const handleDelete = async (id: number) => {
-    const res = await remove(id)
-    if (!res) return
-
-    // Guardar preferencia del usuario
-    const deleted = JSON.parse(localStorage.getItem("deletedNovedades") || "[]")
-
-    if (!deleted.includes(id)) {
-      deleted.push(id)
-      localStorage.setItem("deletedNovedades", JSON.stringify(deleted))
-    }
-
-    // Remover de UI
-    setCarrusel((p) => p.filter((n) => n.idNovedades !== id))
-    setAvisos((p) => p.filter((n) => n.idNovedades !== id))
-  }
-
-  // -------------------------
-  // SUBIDA DE IMAGEN
-  // -------------------------
-const handleImageSelect = async (file: File) => {
-  try {
-    setImageUploading(true)
-    setImageError(null)
-
-    const base64 = await new Promise<string>((resolve, reject) => {
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
-      reader.onload = () => resolve(reader.result as string)
-      reader.onerror = (err) => reject(err)
-    })
-    const cleanBase64 = base64.split(',')[1]
-
-    setForm({ ...form, imagenUrl: cleanBase64 })
-  } catch (err) {
-    setImageError('Error al subir la imagen')
-    console.error(err)
-  } finally {
-    setImageUploading(false)
-  }
-}
-
-  // -------------------------
-  // UI
-  // -------------------------
   return (
     <PageLayout>
-      <div className="p-6">
+    <div className="p-6 bg-gray-50 dark:bg-gray-950 min-h-screen">
+      <h1 className="text-2xl font-bold text-black dark:text-gray-200 mb-6">Novedades</h1>
 
-        <h1 className="text-2xl font-bold mb-4">Novedades</h1>
-
-        {/* FORM */}
-        <form
-          className="bg-gray-800 p-4 rounded shadow mb-6 text-white"
-          onSubmit={(e) => {
-            e.preventDefault()
-            submit()
-          }}
+      {/* Formulario */}
+      <form
+        onSubmit={e => {
+          e.preventDefault()
+          crearNovedad()
+        }}
+        className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-md space-y-4 mb-8"
+      >
+        <input
+          type="text"
+          placeholder="Título"
+          value={form.titulo}
+          onChange={e => setForm({ ...form, titulo: e.target.value })}
+          className="w-full border border-gray-300 dark:border-gray-700 p-2 rounded"
+          required
+        />
+        <textarea
+          placeholder="Descripción"
+          value={form.descripcion}
+          onChange={e => setForm({ ...form, descripcion: e.target.value })}
+          className="w-full border border-gray-300 dark:border-gray-700 p-2 rounded"
+          required
+        />
+        <input
+          type="text"
+          placeholder="URL de la imagen"
+          value={form.imagenUrl}
+          onChange={e => setForm({ ...form, imagenUrl: e.target.value })}
+          className="w-full border border-gray-300 dark:border-gray-700 p-2 rounded"
+        />
+        <input
+          type="date"
+          value={form.fechaExpiracion.toISOString().slice(0, 10)}
+          onChange={e => setForm({ ...form, fechaExpiracion: new Date(e.target.value) })}
+          className="w-full border border-gray-300 dark:border-gray-700 p-2 rounded"
+          required
+        />
+        <select
+          value={form.categoria}
+          onChange={e => setForm({ ...form, categoria: e.target.value })}
+          className="w-full border border-gray-300 dark:border-gray-700 p-2 rounded"
+          required
         >
-          <input
-            className="border p-2 w-full mb-2 bg-gray-900 text-white"
-            placeholder="Título"
-            value={form.titulo}
-            onChange={(e) => setForm({ ...form, titulo: e.target.value })}
-            required
-          />
+          <option value="">Seleccione categoría</option>
+          <option value="TH">TH</option>
+          <option value="OP">OP</option>
+          <option value="TL">TL</option>
+        </select>
+        <select
+          value={form.prioridad}
+          onChange={e => setForm({ ...form, prioridad: e.target.value })}
+          className="w-full border border-gray-300 dark:border-gray-700 p-2 rounded"
+          required
+        >
+          <option value="">Seleccione prioridad</option>
+          <option value="ALTA">ALTA</option>
+          <option value="MEDIA">MEDIA</option>
+          <option value="BAJA">BAJA</option>
+        </select>
+        <button
+          type="submit"
+          className="bg-[#ECB22E] hover:bg-yellow-500 text-black px-4 py-2 rounded font-semibold"
+        >
+          Crear Novedad
+        </button>
+      </form>
 
-          <textarea
-            className="border p-2 w-full mb-2 bg-gray-900 text-white"
-            placeholder="Descripción"
-            value={form.descripcion}
-            onChange={(e) => setForm({ ...form, descripcion: e.target.value })}
-            required
-          />
+      {/* Lista de novedades */}
+      {loading && <p className="text-black dark:text-gray-200">Cargando...</p>}
+      {error && <p className="text-red-500">{error}</p>}
 
-          <div className="flex items-center gap-2 mb-2">
-            <UploadImageButton onImageSelect={handleImageSelect} isUploading={imageUploading} />
-            {imageError && <span className="text-red-500">{imageError}</span>}
-          </div>
-
-          {/* FECHA */}
-          <input
-            type="text"
-            placeholder="dd/mm/yyyy"
-            className="border p-2 w-full mb-2 bg-gray-900 text-white"
-            value={form.fechaExpiracion.toLocaleDateString('es-ES')}
-            onChange={(e) => {
-              const parts = e.target.value.split('/')
-              if (parts.length === 3) {
-                const [d, m, y] = parts
-                const newDate = new Date(`${y}-${m}-${d}`)
-                if (!isNaN(newDate.getTime())) {
-                  setForm({ ...form, fechaExpiracion: newDate })
-                }
-              }
-            }}
-          />
-
-          {/* PRIORIDAD */}
-          <select
-            className="border p-2 w-full mb-2 bg-gray-900 text-white"
-            value={form.prioridad ? 'true' : 'false'}
-            onChange={(e) => setForm({ ...form, prioridad: e.target.value === 'true' })}
-          >
-            <option value="false">Prioridad: No</option>
-            <option value="true">Prioridad: Sí</option>
-          </select>
-
-          <button
-            type="submit"
-            className="px-4 py-2 rounded font-semibold"
-            style={{ backgroundColor: '#ECB22E', color: '#1A1F37' }}
-          >
-            {creating || updating ? 'Procesando...' : editId ? 'Actualizar' : 'Crear'}
-          </button>
-        </form>
-
-        {/* FILTRO */}
-        <div className="mb-4">
-          <label>Filtrar por fecha:</label>
-          <input
-            type="text"
-            placeholder="dd/mm/yyyy"
-            value={filterDate}
-            onChange={(e) => setFilterDate(e.target.value)}
-            className="border p-2 ml-2 bg-gray-900 text-white"
-          />
-        </div>
-
-        {(loading || creating || updating || deleting) && <p>Cargando...</p>}
-        {(error || createError || updateError || deleteError) && (
-          <p className="text-red-500 mb-2">
-            {error || createError || updateError || deleteError}
-          </p>
-        )}
-
-        {/* CARRUSEL */}
-        <h2 className="font-semibold text-lg mb-1">Carrusel</h2>
-        <ul className="space-y-2 mb-6">
-          {carrusel.map((n) => (
-            <li
-              key={n.idNovedades}
-              className="bg-gray-900 p-4 rounded shadow flex justify-between items-start text-white"
-            >
-              <div>
-                <h3>{n.titulo}</h3>
-                <p>{n.descripcion}</p>
-                <p className="text-sm text-gray-400">
-                  Expira: {toDisplayDate(n.fechaExpiracion)}
-                </p>
-                {n.imagenUrl && (
-                  <img src={n.imagenUrl} className="w-32 h-32 object-cover mt-2 rounded" />
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <button
-                  className="px-2 py-1 rounded font-semibold"
-                  style={{ backgroundColor: '#1A1F37', color: '#ECB22E' }}
-                  onClick={() => startEdit(n)}
-                >
-                  Editar
-                </button>
-
-                <button
-                  className="px-2 py-1 rounded font-semibold"
-                  style={{ backgroundColor: '#1A1F37', color: '#ECB22E' }}
-                  onClick={() => handleDelete(n.idNovedades)}
-                >
-                  Eliminar
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
-
-        {/* AVISOS */}
-        <h2 className="font-semibold text-lg mb-1">Avisos</h2>
-        <ul className="space-y-2">
-          {avisos.map((n) => (
-            <li
-              key={n.idNovedades}
-              className="bg-gray-900 p-4 rounded shadow flex justify-between items-start text-white"
-            >
-              <div>
-                <h3>{n.titulo}</h3>
-                <p>{n.descripcion}</p>
-                <p className="text-sm text-gray-400">
-                  Expira: {toDisplayDate(n.fechaExpiracion)}
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                <button
-                  className="px-2 py-1 rounded font-semibold"
-                  style={{ backgroundColor: '#1A1F37', color: '#ECB22E' }}
-                  onClick={() => startEdit(n)}
-                >
-                  Editar
-                </button>
-                <button
-                  className="px-2 py-1 rounded font-semibold"
-                  style={{ backgroundColor: '#1A1F37', color: '#ECB22E' }}
-                  onClick={() => handleDelete(n.idNovedades)}
-                >
-                  Eliminar
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
-
-      </div>
+      <ul className="space-y-4">
+        {novedades.map(n => (
+          <li key={n.idNovedades} className="bg-white dark:bg-gray-900 p-4 rounded-xl shadow-md flex flex-col md:flex-row md:items-center md:justify-between space-y-2 md:space-y-0">
+            <div>
+              <h3 className="font-semibold text-black dark:text-gray-200">{n.titulo}</h3>
+              <p className="text-gray-700 dark:text-gray-400">{n.descripcion}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-500">
+                Expira: {new Date(n.fechaExpiracion).toLocaleDateString()}
+              </p>
+              <p className="text-sm text-gray-500 dark:text-gray-500">Categoría: {n.categoria}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-500">Prioridad: {n.prioridad}</p>
+            </div>
+            {n.imagenUrl && (
+              <img
+                src={n.imagenUrl}
+                alt={n.titulo}
+                className="w-32 h-32 object-cover rounded"
+              />
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
     </PageLayout>
   )
 }
