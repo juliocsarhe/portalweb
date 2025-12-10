@@ -1,5 +1,8 @@
 package com.backend.portalroshkabackend.Controllers.TeamLeader;
 
+import com.backend.portalroshkabackend.notification.NotificationService;
+import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSolicitudAprobadaEvent;
+import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSolicitudRechazadaEvent;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,6 +31,9 @@ public class TeamLeaderController {
     @Autowired
     private TeamLeaderService teamLeaderService;
 
+    @Autowired
+    private NotificationService notificationService;
+
     @GetMapping("/users/requests/getall")
     public ResponseEntity<List<SolTeamLeaderDTO>> getSolicitudesLiderActual() {
         List<SolTeamLeaderDTO> solicitudes = teamLeaderService.getSolicitudesLiderActual();
@@ -39,6 +45,9 @@ public class TeamLeaderController {
 
         SolicitudRespuestaDto respuesta = teamLeaderService.acceptRequest(idSolicitud);
 
+        NotificarSolicitudAprobadaEvent event = new NotificarSolicitudAprobadaEvent();
+        notificationService.sendEvent(event);
+
         return ResponseEntity.ok(respuesta); // Placeholder response
     }
 
@@ -46,6 +55,9 @@ public class TeamLeaderController {
     public ResponseEntity<SolicitudRespuestaDto> rejectRequest(@PathVariable int idSolicitud) {
 
         SolicitudRespuestaDto respuesta = teamLeaderService.rejectRequest(idSolicitud);
+
+        NotificarSolicitudRechazadaEvent event = new NotificarSolicitudRechazadaEvent();
+        notificationService.sendEvent(event);
 
         return ResponseEntity.ok(respuesta); // Placeholder response
     }

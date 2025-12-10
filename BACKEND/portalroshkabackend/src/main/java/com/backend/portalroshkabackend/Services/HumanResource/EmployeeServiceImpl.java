@@ -10,15 +10,19 @@ import com.backend.portalroshkabackend.Models.Enum.EstadoActivoInactivo;
 import com.backend.portalroshkabackend.Models.Usuario;
 import com.backend.portalroshkabackend.Repositories.TH.UserRepository;
 import com.backend.portalroshkabackend.Repositories.TH.UsuarioSpecifications;
+import com.backend.portalroshkabackend.notification.NotificationService;
+import com.backend.portalroshkabackend.notification.aws.NotificacitionServiceAws;
 import com.backend.portalroshkabackend.tools.RepositoryService;
 import com.backend.portalroshkabackend.tools.errors.errorslist.user.UserNotFoundException;
 import com.backend.portalroshkabackend.tools.mapper.EmployeeMapper;
 import com.backend.portalroshkabackend.tools.validator.ValidatorStrategy;
+import org.hibernate.boot.archive.scan.spi.ScanOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.config.observation.SecurityObservationSettings;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,12 +37,20 @@ public class EmployeeServiceImpl implements IEmployeeService {
     private final ValidatorStrategy<Usuario> deleteValidator;
     private final ValidatorStrategy<UserUpdateDto> updateValidator;
 
+    private final NotificationService notificationService;
+    private final NotificacitionServiceAws notificacitionServiceAws;
+
     @Autowired
     public EmployeeServiceImpl(UserRepository userRepository,
                                RepositoryService repositoryService,
                                @Qualifier("employeeInsertValidator") ValidatorStrategy<UserInsertDto> insertValidator,
                                @Qualifier("employeeDeleteValidator") ValidatorStrategy<Usuario> deleteValidator,
-                               @Qualifier("employeeUpdateValidator") ValidatorStrategy<UserUpdateDto> updateValidator) {
+                               @Qualifier("employeeUpdateValidator") ValidatorStrategy<UserUpdateDto> updateValidator,
+                               NotificationService notificationService,
+                               NotificacitionServiceAws notificacitionServiceAws
+    ){
+        this.notificationService = notificationService;
+        this.notificacitionServiceAws = notificacitionServiceAws;
         this.userRepository = userRepository;
         this.repositoryService = repositoryService;
         this.insertValidator = insertValidator;
@@ -116,6 +128,10 @@ public class EmployeeServiceImpl implements IEmployeeService {
                 DATABASE_DEFAULT_ERROR
         );
 
+        //para subscribir los correos de los nuevos usuarios
+        notificacitionServiceAws.subscribeNewUserToTopic(savedUser.getCorreo());
+        System.out.println("CREANDO USUARIO NUEVO " + insertDto.getCorreo());
+
         return EmployeeMapper.toDefaultResponseDto(savedUser.getIdUsuario(), EMPLOYEE_CREATED_MESSAGE);
 
     }
@@ -138,6 +154,8 @@ public class EmployeeServiceImpl implements IEmployeeService {
                 user,
                 DATABASE_DEFAULT_ERROR
         );
+
+
 
         return EmployeeMapper.toDefaultResponseDto(updatedUser.getIdUsuario(), EMPLOYEE_UPDATED_MESSAGE);
 

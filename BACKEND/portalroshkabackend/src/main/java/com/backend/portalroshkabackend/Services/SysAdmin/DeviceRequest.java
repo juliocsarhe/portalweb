@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.backend.portalroshkabackend.notification.NotificationService;
 import com.backend.portalroshkabackend.tools.RepositoryService;
 import com.backend.portalroshkabackend.tools.errors.errorslist.solicitudDispositivos.AlreadyCheckedRequestException;
 import com.backend.portalroshkabackend.tools.errors.errorslist.solicitudDispositivos.CommentDRParsingException;
@@ -43,11 +44,15 @@ public class DeviceRequest {
     @Autowired 
     private DeviceRepository deviceRepository;
 
+    @Autowired
+    private NotificationService notificationService;
+
 
     DeviceRequest(DeviceRequestRepository deviceRequestRepository, RepositoryService repositoryService, DeviceRepository deviceRepository) {
         this.deviceRequestRepository = deviceRequestRepository;
         this.repositoryService = repositoryService;
         this.deviceRepository = deviceRepository;
+        this.notificationService = notificationService;
     }
 
 
@@ -96,6 +101,9 @@ public class DeviceRequest {
                 solicitud,
                 DATABASE_DEFAULT_ERROR
         );
+
+        notificationService.notifyUserses(solicitud, true);
+
         return convertToDto(solicitud);
 
     }
@@ -122,6 +130,9 @@ public class DeviceRequest {
                 solicitud,
                 DATABASE_DEFAULT_ERROR
         );
+
+        notificationService.notifyUserses(solicitud, false);
+
         return convertToDto(solicitud);
 
     }

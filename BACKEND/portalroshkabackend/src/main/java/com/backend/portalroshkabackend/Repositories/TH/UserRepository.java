@@ -63,4 +63,6 @@ public interface UserRepository extends JpaRepository<Usuario, Integer>, JpaSpec
     List<Usuario> findAllByCargo_IdCargo(int idCargo);
 
     List<Usuario> findAllByRol_IdRol(int idRol);
+
+
 }
