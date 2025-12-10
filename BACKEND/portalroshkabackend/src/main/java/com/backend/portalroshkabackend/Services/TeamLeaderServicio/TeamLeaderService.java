@@ -4,7 +4,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
+import com.backend.portalroshkabackend.notification.NotificationService;
+import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSolicitudAprobadaEvent;
+import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSolicitudRechazadaEvent;
+import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSolicitudThEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,6 +35,7 @@ import com.backend.portalroshkabackend.Repositories.UsuarioRepositories.TipoPerm
 import com.backend.portalroshkabackend.Repositories.UsuarioRepositories.UsuarioRepository;
 import com.backend.portalroshkabackend.Repositories.UsuarioRepositories.VacacAsignaRepository;
 
+
 @Service
 public class TeamLeaderService {
     @Autowired
@@ -53,6 +59,9 @@ public class TeamLeaderService {
     @Autowired
     private TipoDispositivosRepository tipoDispositivoRepository;
 
+    @Autowired
+    private NotificationService notificationService;
+
     // @Autowired
     // private 
 
@@ -69,11 +78,11 @@ public class TeamLeaderService {
     public TipoPermisos getTipoPermisoById(int idTipoPermiso) {
         Optional<TipoPermisos> tipoPermiso = tipoPermisosRepository.findById(idTipoPermiso);
         // Lógica para obtener el TipoPermisos por su ID
-        return tipoPermiso.orElse(null); 
+        return tipoPermiso.orElse(null);
     }
 
     public List<SolTeamLeaderDTO> getSolicitudesLiderActual() {
-    
+
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String correo;
         if (principal instanceof UserDetails) {
@@ -89,6 +98,11 @@ public class TeamLeaderService {
 
         // Obtener las solicitudes donde el usuario actual es el líder
         List<Solicitud> solicitudes = solicitudesTHRepository.findByLider(usuario);
+
+        //filtro de solicitudes
+        solicitudes = solicitudes.stream()
+                .filter(solicitud -> solicitud.getTipoSolicitud() == SolicitudesEnum.PERMISO || solicitud.getTipoSolicitud() == SolicitudesEnum.VACACIONES)
+                .toList();
 
         //TODO: Mostrar solo las solicitudes que esten en estado "P" (Pendiente)
 
@@ -111,9 +125,9 @@ public class TeamLeaderService {
             dto.setFechaCreacion(solicitud.getFechaCreacion());
 
             dto.setNombreUsuario(solicitud.getUsuario() != null ? solicitud.getUsuario().getNombre() + " " + solicitud.getUsuario().getApellido() : null);
-            
+
             Integer idSubtipoSolicitud = extraerIdSubtipoSolicitud(solicitud.getComentario());
-            
+
             // System.out.println("ID SUBTIPO SOLICITUD EXTRAIDO: " + idSubtipoSolicitud);
             String nombreSubtipo = null;
 
@@ -134,16 +148,13 @@ public class TeamLeaderService {
                 }
             }
             dto.setNombreSubTipoSolicitud(nombreSubtipo);
-        
-
 
             return dto;
         }).toList();
     }
 
+
     public SolicitudRespuestaDto acceptRequest(int idSolicitud) {
-
-
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String correo;
         if (principal instanceof UserDetails) {
@@ -166,23 +177,28 @@ public class TeamLeaderService {
         }
 
         if (solicitud.getLider().getIdUsuario() != usuario.getIdUsuario()) {
-            throw new RuntimeException("No tienes permiso para aceptar esta solicitud de" + solicitud.getTipoSolicitud() );
+            throw new RuntimeException("No tienes permiso para aceptar esta solicitud de" + solicitud.getTipoSolicitud());
         }
 
-
+        //redireccion a TH
+        if (solicitud.getTipoSolicitud() == SolicitudesEnum.BENEFICIO || solicitud.getTipoSolicitud() == SolicitudesEnum.DISPOSITIVO) {
+            //return new SolicitudRespuestaDto("Solicitud enviada a TH");
+        }
         switch (solicitud.getTipoSolicitud()) {
             case SolicitudesEnum.VACACIONES -> acceptSolicitudVacaciones(solicitud);
             case SolicitudesEnum.PERMISO -> acceptSolicitudPermiso(solicitud);
             default -> throw new IllegalArgumentException("Enum no manejado");
         }
-        
+
         SolicitudRespuestaDto respuesta = new SolicitudRespuestaDto();
         respuesta.setIdSolicitud(idSolicitud);
-        respuesta.setMessage("La solicitud de "+ solicitud.getTipoSolicitud() + " fue aceptada correctamente");
+        respuesta.setMessage("La solicitud de " + solicitud.getTipoSolicitud() + " fue aceptada correctamente");
 
-        
+        notificationService.alertTH(solicitud, true);
+
         return respuesta; // Placeholder response
     }
+
 
     public void acceptSolicitudVacaciones(Solicitud solicitud) {
         
@@ -208,6 +224,7 @@ public class TeamLeaderService {
         usuarioRepository.save(usuario);
         solicitudesTHRepository.save(solicitud);
         vacacAsignaRepository.save(vacacionesAsignadas);
+        notificationService.notifyUserses(solicitud, true);
 
 
     }
@@ -237,6 +254,7 @@ public class TeamLeaderService {
 
         asigPermSoliRepository.save(permisosAsignados);
         solicitudesTHRepository.save(solicitud);
+        notificationService.notifyUserses(solicitud, true);
     }
 
     private Integer extraerIdTipoPermiso(String comentario) {
@@ -282,13 +300,19 @@ public class TeamLeaderService {
             throw new RuntimeException("No tienes permiso para aceptar esta solicitud de" + solicitud.getTipoSolicitud() );
         }
 
-        solicitud.setEstado(EstadoSolicitudEnum.R); // Setea la solicitud como rechazada
-        
+        solicitud.setEstado(EstadoSolicitudEnum.R);// Setea la solicitud como rechazada
+
+        //notificationService.notifyUserFromTL(solicitud);
+
         SolicitudRespuestaDto respuesta = new SolicitudRespuestaDto();
         respuesta.setIdSolicitud(idSolicitud);
         respuesta.setMessage("Solicitud rechazada correctamente");
 
         solicitudesTHRepository.save(solicitud);
+        notificationService.notifyUserses(solicitud, false);
+        notificationService.alertTH(solicitud, false);
+
+        NotificarSolicitudRechazadaEvent event = new NotificarSolicitudRechazadaEvent();
 
         return respuesta; // Placeholder response
     }

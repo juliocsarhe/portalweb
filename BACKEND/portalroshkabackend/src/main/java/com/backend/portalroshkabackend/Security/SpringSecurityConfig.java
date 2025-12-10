@@ -65,6 +65,7 @@ public class SpringSecurityConfig {
         http
             .authorizeHttpRequests(auth -> auth
                 // Endpoints públicos primero
+                    .requestMatchers("/ws/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/usuarios/**").permitAll()
                 
                 // Reglas específicas ANTES de las generales - ORDEN IMPORTANTE
