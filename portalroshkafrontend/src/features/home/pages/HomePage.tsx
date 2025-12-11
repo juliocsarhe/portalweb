@@ -1,16 +1,10 @@
-import { useAuth } from '../../../app/providers/AuthContext'
-import { useGetNovedades } from '@/features/novedades/hooks/useGetNovedades'
-import CarruselNovedades from '@/features/novedades/components/CarruselNovedades'
-import AvisosList from '@/features/novedades/components/AvisosList'
+import CarruselNovedades from '@/features/novedades/components/CarruselNovedades';
+import AvisosList from '@/features/novedades/components/AvisosList';
+import { useGetCarruselPublic, useGetAvisosPublic } from '@/features/novedades/hooks/useGetNovedadesPublic';
 
 export default function HomePage() {
-  const { user } = useAuth()
-  const { data: novedades, loading } = useGetNovedades()
-
-  if (!user) return <p>Cargando...</p>
-
-  const carrusel = novedades.filter((n) => n.imagenUrl && n.imagenUrl.trim() !== '')
-  const avisos = novedades.filter((n) => !n.imagenUrl || n.imagenUrl.trim() === '')
+  const { data: carrusel, loading: loadingCarrusel } = useGetCarruselPublic();
+  const { data: avisos, loading: loadingAvisos } = useGetAvisosPublic();
 
   return (
     <div className="h-full flex flex-col overflow-hidden">
@@ -32,10 +26,9 @@ export default function HomePage() {
         <div className="bg-white/50 dark:bg-gray-900/70 backdrop-blur-xs rounded-2xl shadow-lg flex flex-col h-full overflow-hidden">
           <div className="p-6 border-b border-gray-200 dark:border-gray-700 shrink-0">
             <h2 className="text-[30px] font-bold text-brand-blue dark:text-white mb-1">
-              Bienvenido de nuevo, {user?.nombre} {user?.apellido}
+              Últimas Novedades
             </h2>
-            <h3 className="text-gray-800 dark:text-white mb-4">Últimas Novedades</h3>
-            {loading ? (
+            {loadingCarrusel ? (
               <p className="text-gray-700 dark:text-gray-300">Cargando...</p>
             ) : (
               <CarruselNovedades items={carrusel} />
@@ -51,7 +44,7 @@ export default function HomePage() {
             <h2 className="text-2xl font-bold text-brand-blue dark:text-white mb-3">
               Avisos
             </h2>
-            {loading ? (
+            {loadingAvisos ? (
               <p className="text-gray-700 dark:text-gray-300">Cargando...</p>
             ) : (
               <div className="max-h-80 overflow-y-scroll">
@@ -62,5 +55,5 @@ export default function HomePage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

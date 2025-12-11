@@ -90,7 +90,9 @@ export default function UbicacionPage({ embedded = false }: Props) {
   const newUbicacionButton = canEdit && (
     <IconButton
       label="Nueva ubicación"
-      icon={<span>➕</span>}
+      icon={<span className="material-symbols-outlined">
+add
+</span>}
       variant="primary"
       onClick={() => {
         setSelected(null)

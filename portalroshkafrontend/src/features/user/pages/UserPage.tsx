@@ -93,10 +93,10 @@ export default function UserPage() {
     const success = params.get('success')
 
     if (success === 'created') {
-      setToastMessage('✅ Usuario creado con éxito')
+      setToastMessage  ('Usuario creado con éxito')
       setToastType('success')
     } else if (success === 'updated') {
-      setToastMessage('✅ Usuario actualizado con éxito')
+      setToastMessage('Usuario actualizado con éxito')
       setToastType('success')
     }
   }, [location.search])
@@ -106,7 +106,7 @@ export default function UserPage() {
     return (
       <>
         <p>{error}</p>
-        <Toast message="❌ Error al cargar usuarios" type="error" onClose={() => {}} />
+        <Toast message="Error al cargar usuarios. Intente nuevamente" type="error" onClose={() => {}} />
       </>
     )
   }
@@ -118,7 +118,9 @@ export default function UserPage() {
         puedeEditarUsuarios && (
           <IconButton
             label="Crear Usuario"
-            icon={<span>➕</span>}
+            icon={<span className="material-symbols-outlined">
+add
+</span>}
             variant="primary"
             onClick={() => navigate('/usuarios/buscar')}
             className="h-10 text-sm px-4 flex items-center"

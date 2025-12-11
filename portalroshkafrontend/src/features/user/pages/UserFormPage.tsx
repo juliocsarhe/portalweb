@@ -84,7 +84,13 @@ export default function UserFormPage() {
             ? 'Modifica los campos necesarios'
             : 'Completá la información del nuevo usuario'
       }
-      icon={isEditing ? (readonly ? '👀' : '✏️') : '🧑‍💻'}
+      icon={isEditing ? (readonly ? <span className="material-symbols-outlined">
+visibility
+</span> : <span className="material-symbols-outlined">
+edit
+</span>) : <span className="material-symbols-outlined">
+deployed_code_account
+</span>}
       onCancel={() => navigate('/usuarios')}
       onSubmitLabel={readonly ? undefined : isEditing ? 'Guardar cambios' : 'Crear usuario'}
       onCancelLabel={readonly ? 'Volver' : 'Cancelar'}
