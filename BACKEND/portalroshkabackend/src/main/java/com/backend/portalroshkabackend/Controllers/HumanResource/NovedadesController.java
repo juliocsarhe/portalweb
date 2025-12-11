@@ -12,69 +12,82 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/admin/th/novedades")
 public class NovedadesController {
 
     private final INovedadesService novedadesService;
 
-    @PostMapping
+
+    //RUTAS PRIVADAS
+
+    @PostMapping ("/api/v1/admin/th/novedades")
     public ResponseEntity<NovedadesDefaultResponseDto> create(
             @RequestBody NovedadesInsertDto dto
     ){
         return ResponseEntity.ok(novedadesService.create(dto));
     }
 
-    @PutMapping
+    @PutMapping ("/api/v1/admin/th/novedades")
     public ResponseEntity<NovedadesDefaultResponseDto> update(
             @RequestBody NovedadesUpdateDto dto
     ){
         return ResponseEntity.ok(novedadesService.update(dto));
     }
 
-    //DELETE novedades
-    @DeleteMapping("/{id}")
+    //DELETE novedades ("/api/v1/admin/th/novedades/{id}")
+    @DeleteMapping("/api/v1/admin/th/novedades/{id}")
     public ResponseEntity<NovedadesDefaultResponseDto> delete(
             @PathVariable Integer id
     ){
         return ResponseEntity.ok(novedadesService.delete(id));
     }
 
+
+
+    //RUTAS PUBLICAS
+
     // GET ALL
-    @GetMapping
+
+    @GetMapping ("/api/v1/usuarios/novedades")
     public ResponseEntity<List<NovedadesResponseDto>> getAll(){
         return ResponseEntity.ok(novedadesService.getAll());
     }
 
     // GET ACTIVAS (solo las que están vigentes)
-    @GetMapping("/activas")
+
+    @GetMapping(("/api/v1/usuarios/novedades/activas"))
     public ResponseEntity<List<NovedadesResponseDto>> getActivas(){
         return ResponseEntity.ok(novedadesService.getActivas());
     }
 
     // GET POR PRIORIDAD
-    @GetMapping("/prioridad")
+
+    @GetMapping("/api/v1/usuarios/novedades/prioridad")
     public ResponseEntity<List<NovedadesResponseDto>> getByPrioridad(){
         return ResponseEntity.ok(novedadesService.getByPrioridad());
     }
 
     // GET CARRUSEL (solo con imagen)
-    @GetMapping("/carrusel")
+
+    @GetMapping("/api/v1/usuarios/novedades/carrusel")
     public ResponseEntity<List<NovedadesResponseDto>> getCarrusel(){
         return ResponseEntity.ok(novedadesService.getCarrusel());
     }
 
     // GET AVISOS (sin imagen)
-    @GetMapping("/avisos")
+
+    @GetMapping("/api/v1/usuarios/novedades/avisos")
     public ResponseEntity<List<NovedadesResponseDto>> getAvisos(){
         return ResponseEntity.ok(novedadesService.getAvisos());
     }
 
-    @GetMapping("/fecha/desc")
+
+    @GetMapping("/api/v1/usuarios/novedades/fecha/desc")
     public ResponseEntity<List<NovedadesResponseDto>> getOrdenadasPorFechaDesc() {
         return ResponseEntity.ok(novedadesService.getOrdenadasPorFechaDesc());
     }
 
-    @GetMapping("/fecha/asc")
+
+    @GetMapping("/api/v1/usuarios/novedades/fecha/asc")
     public ResponseEntity<List<NovedadesResponseDto>> getOrdenadasPorFechaAsc() {
         return ResponseEntity.ok(novedadesService.getOrdenadasPorFechaAsc());
     }
