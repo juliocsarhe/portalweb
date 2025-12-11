@@ -28,7 +28,7 @@ export default function HomePage() {
       </div>
 
       {/* Contenedor Carrusel */}
-      <div className="relative z-20 flex flex-col h-120 p-3">
+      <div className="relative z-20 flex flex-col h-250 p-1.5">
         <div className="bg-white/50 dark:bg-gray-900/70 backdrop-blur-xs rounded-2xl shadow-lg flex flex-col h-full overflow-hidden">
           <div className="p-6 border-b border-gray-200 dark:border-gray-700 shrink-0">
             <h2 className="text-[30px] font-bold text-brand-blue dark:text-white mb-1">

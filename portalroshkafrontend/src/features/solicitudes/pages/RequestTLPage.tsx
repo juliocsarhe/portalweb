@@ -157,7 +157,9 @@ export default function RequestTLPage() {
               />
               <IconButton
                 label="Limpiar filtros"
-                icon={<span>🧹</span>}
+                icon={<span className="material-symbols-outlined">
+cleaning_services
+</span>}
                 variant="secondary"
                 onClick={limpiarFiltros}
                 className="h-10 text-sm px-4"

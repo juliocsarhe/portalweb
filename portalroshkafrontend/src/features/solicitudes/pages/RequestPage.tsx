@@ -119,21 +119,21 @@ export default function RequestPage() {
               <div className="flex gap-2">
                 <IconButton
                   label="Solicitar Permiso"
-                  icon={<span>➕</span>}
+                  icon={<span className="material-symbols-outlined">add_box</span>}
                   variant="primary"
                   onClick={() => navigate('/requests/permiso')}
                   className="h-10 text-sm px-4"
                 />
                 <IconButton
                   label="Solicitar Beneficio"
-                  icon={<span>➕</span>}
+                  icon={<span className="material-symbols-outlined">add_box</span>}
                   variant="primary"
                   onClick={() => navigate('/requests/beneficio')}
                   className="h-10 text-sm px-4"
                 />
                 <IconButton
                   label="Solicitar Vacaciones"
-                  icon={<span>➕</span>}
+                  icon={<span className="material-symbols-outlined">add_box</span>}
                   variant="primary"
                   onClick={() => navigate('/request/vacaciones')}
                   className="h-10 text-sm px-4 flex items-center"
@@ -171,7 +171,7 @@ export default function RequestPage() {
               />
               <IconButton
                 label="Limpiar filtros"
-                icon={<span>🧹</span>}
+                icon={<span className="material-symbols-outlined">cleaning_services</span>}
                 variant="secondary"
                 onClick={limpiarFiltros}
                 className="h-10 text-sm px-4"

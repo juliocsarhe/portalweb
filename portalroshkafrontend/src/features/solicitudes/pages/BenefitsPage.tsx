@@ -2,6 +2,9 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 
+// pagina de beneficios
+
+
 import PaginationFooter from '../../../shared/ui/components/PaginationFooter'
 // Carga masiva de imágenes desde src/assets/*.png
 const images = import.meta.glob('/src/assets/*.png', {

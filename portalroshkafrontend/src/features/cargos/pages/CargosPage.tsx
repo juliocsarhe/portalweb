@@ -91,7 +91,7 @@ export default function CargosPage({ embedded = false }: Props) {
   const newCargoButton = canEdit && (
     <IconButton
       label="Nuevo Cargo"
-      icon={<span>➕</span>}
+      icon={<span className="material-symbols-outlined">add</span>}
       variant="primary"
       onClick={() => {
         setSelected(null)

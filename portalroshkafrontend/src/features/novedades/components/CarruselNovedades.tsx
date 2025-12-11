@@ -14,7 +14,6 @@ export default function CarruselNovedades({ items }: { items: NovedadesResponseD
   }, [items.length, paused])
 
   useEffect(() => {
-    // make sure index is within bounds if items change
     if (index >= items.length && items.length > 0) setIndex(0)
   }, [items.length, index])
 
@@ -24,7 +23,7 @@ export default function CarruselNovedades({ items }: { items: NovedadesResponseD
 
   return (
     <div
-      className="relative w-full h-56 rounded-xl overflow-hidden shadow-md"
+      className="relative w-full h-70 rounded-xl overflow-hidden shadow-md"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
