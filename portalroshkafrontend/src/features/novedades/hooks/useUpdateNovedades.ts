@@ -1,4 +1,3 @@
-// src/features/novedades/hooks/useUpdateNovedades.ts
 import { useState } from 'react'
 import { NovedadesUpdateDto, NovedadesDefaultResponseDto } from '@/types'
 import { novedadesService } from '../services/novedadesService'
@@ -6,7 +5,6 @@ import { useAuth } from '@/app/providers/AuthContext'
 
 export function useUpdateNovedades() {
   const { token } = useAuth()
-
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -14,7 +12,7 @@ export function useUpdateNovedades() {
     dto: NovedadesUpdateDto
   ): Promise<NovedadesDefaultResponseDto | null> => {
     if (!token) {
-      setError('No token disponible')
+      setError('No hay token disponible')
       return null
     }
 

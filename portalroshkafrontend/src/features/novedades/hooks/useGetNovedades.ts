@@ -1,4 +1,3 @@
-// src/features/novedades/hooks/useGetNovedades.ts
 import { useEffect, useState } from 'react'
 import { NovedadesResponseDto } from '@/types'
 import { novedadesService } from '../services/novedadesService'
@@ -6,7 +5,6 @@ import { useAuth } from '@/app/providers/AuthContext'
 
 export function useGetNovedades() {
   const { token } = useAuth()
-
   const [data, setData] = useState<NovedadesResponseDto[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -27,4 +25,3 @@ export function useGetNovedades() {
 
   return { data, loading, error }
 }
-
