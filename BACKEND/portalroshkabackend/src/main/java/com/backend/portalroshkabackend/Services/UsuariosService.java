@@ -149,5 +149,4 @@ public class UsuariosService {
                 .map(Usuario::getCorreo)
                 .collect(Collectors.toList());
     }
-
 }

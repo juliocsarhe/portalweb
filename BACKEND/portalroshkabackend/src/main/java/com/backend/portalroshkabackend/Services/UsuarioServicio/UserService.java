@@ -67,10 +67,11 @@ public class UserService {
     private SolicitudesTHRepository solicitudesTHRepository;
 
     @Autowired
-    private ProyectoRepository proyectoRepository;
+    private NotificationService notificationService;
 
     @Autowired
-    private NotificationService notificationService;
+    private ProyectoRepository proyectoRepository;
+
 
     // @Autowired
     // private BeneficiosAsignadosRepository beneficiosAsignadosRepository;
