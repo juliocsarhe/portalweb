@@ -9,19 +9,29 @@ export function useGetNovedades() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
+  const fetchData = async () => {
     if (!token) {
       setError('No hay token disponible')
       setLoading(false)
       return
     }
 
-    novedadesService
-      .getAll(token)
-      .then(setData)
-      .catch((err) => setError(err?.message || 'Error al obtener novedades'))
-      .finally(() => setLoading(false))
+    setLoading(true)
+    try {
+      const res = await novedadesService.getAll(token)
+      setData(res)
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'Error al obtener novedades'
+      setError(errorMessage)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchData()
   }, [token])
 
-  return { data, loading, error }
+  return { data, loading, error, refetch: fetchData }
 }

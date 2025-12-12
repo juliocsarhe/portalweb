@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { NovedadesInsertDto, NovedadesResponseDto } from '@/types'
+import { NovedadesDefaultResponseDto, NovedadesInsertDto, NovedadesResponseDto } from '@/types'
 import { novedadesService } from '../services/novedadesService'
 import { useAuth } from '@/app/providers/AuthContext'
 
@@ -10,7 +10,7 @@ export function useCrearNovedades() {
 
   const create = async (
     dto: NovedadesInsertDto
-  ): Promise<NovedadesResponseDto | null> => {
+  ): Promise<NovedadesDefaultResponseDto | null> => {
     if (!token) {
       setError('No hay token disponible')
       return null

@@ -24,10 +24,8 @@ export const novedadesService = {
     return res.json()
   },
 
-  async create(
-    dto: NovedadesInsertDto,
-    token: string
-  ): Promise<NovedadesResponseDto> {
+async create(dto: NovedadesInsertDto, token: string): Promise<NovedadesDefaultResponseDto>
+ {
     const res = await fetch(API_URL, {
       method: 'POST',
       headers: authHeaders(token),
