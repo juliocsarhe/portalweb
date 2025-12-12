@@ -104,7 +104,7 @@ export default function NovedadesPage() {
           Administrar Novedades
         </h1>
 
-        {/* Formulario de creación */}
+        {/* Formulario */}
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
           <h2 className="text-xl font-semibold mb-4 text-brand-blue dark:text-white">
             Crear Nueva Novedad
@@ -211,32 +211,7 @@ export default function NovedadesPage() {
           </form>
         </div>
 
-        {/* Carrusel */}
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-6">
-          <h2 className="text-xl font-semibold mb-4 text-brand-blue dark:text-white">
-            Carrusel (con imagen)
-          </h2>
-          {carrusel.length > 0 ? (
-            <>
-              <CarruselNovedades items={carrusel} />
-              <div className="mt-4">
-                <AvisosList items={carrusel} onEdit={setEditItem} onDelete={handleDelete} />
-              </div>
-            </>
-          ) : (
-            <p className="text-gray-600 dark:text-gray-300">No hay novedades con imagen</p>
-          )}
-        </div>
-
-        {/* Avisos */}
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
-          <h2 className="text-xl font-semibold mb-4 text-brand-blue dark:text-white">
-            Avisos (sin imagen)
-          </h2>
-          <AvisosList items={avisos} onEdit={setEditItem} onDelete={handleDelete} />
-        </div>
-
-        {/* Modal de edición */}
+        {/*modal de edicion*/}
         <ModalNovedad
           open={!!editItem}
           onClose={() => setEditItem(null)}
