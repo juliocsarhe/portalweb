@@ -2,6 +2,8 @@ package com.backend.portalroshkabackend.Controllers.Operations;
 
 import com.backend.portalroshkabackend.DTO.Operationes.ProyectoRequestDto;
 import com.backend.portalroshkabackend.DTO.Operationes.ProyectoResponseDto;
+import com.backend.portalroshkabackend.Models.Clientes;
+import com.backend.portalroshkabackend.Models.Equipos;
 import com.backend.portalroshkabackend.Services.Operations.Interface.IProyectoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
