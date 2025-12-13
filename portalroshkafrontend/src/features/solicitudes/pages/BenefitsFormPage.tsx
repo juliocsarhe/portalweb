@@ -32,7 +32,6 @@ export default function BeneficioFormPage() {
         fullWidth: true,
       },
     ]
-
     switch (tipo) {
       case 'prestamo':
         fields.push(

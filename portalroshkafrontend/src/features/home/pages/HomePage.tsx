@@ -14,14 +14,14 @@ export default function HomePage() {
 
   return (
     <PageLayout>
-      <div className="relative min-h-screen p-6 space-y-6 overflow-x-hidden">
+      <div className="relative min-h-screen space-y-6 overflow-x-hidden">
         {/* Bienvenida */}
-        <div className="bg-white/50 dark:bg-gray-900/70 backdrop-blur-xs rounded-2xl shadow-lg p-6">
+        <div className="">
           <h2 className="text-[30px] font-bold text-brand-blue dark:text-white">
             Bienvenido de nuevo, {user?.nombre} {user?.apellido}
           </h2>
           <p className="text-gray-800 dark:text-gray-200">
-            Estas son las últimas novedades
+            Últimas Novedades
           </p>
         </div>
 

@@ -2,7 +2,7 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
 
-// pagina de beneficios
+// pagina de beneficios, cambiar luego
 
 
 import PaginationFooter from '../../../shared/ui/components/PaginationFooter'
