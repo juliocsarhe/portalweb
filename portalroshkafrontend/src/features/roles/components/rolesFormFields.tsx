@@ -4,7 +4,9 @@ export function buildRolSections(): FormSection[] {
   return [
     {
       title: 'Datos del rol',
-      icon: '🧩',
+      icon: <span className="material-symbols-outlined">
+cases
+</span>,
       fields: [
         {
           name: 'nombre',

@@ -88,7 +88,7 @@ export default function UserFormPage() {
 visibility
 </span> : <span className="material-symbols-outlined">
 edit
-</span>) : <span className="material-symbols-outlined">
+</span>) : <span className="material-symbols-outlined text-black dark:text-white">
 deployed_code_account
 </span>}
       onCancel={() => navigate('/usuarios')}

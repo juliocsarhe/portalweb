@@ -4,7 +4,7 @@ export function buildCargoSections(): FormSection[] {
   return [
     {
       title: 'Datos del cargo',
-      icon: '🛠️',
+      icon: <span className="material-symbols-outlined">interactive_space</span>,
       fields: [
         {
           name: 'nombre',

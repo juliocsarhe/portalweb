@@ -34,7 +34,7 @@ export default function RolesModal({
     onSaved: () => onSaved?.(),
   })
 
-  // 🔑 Estado LOCAL para el detalle (kill switch)
+  // Estado LOCAL para el detalle (kill switch)
   const [detail, setDetail] = useState<{ idRol: number; nombre: string } | null>(null)
   const [detailLoading, setDetailLoading] = useState(false)
   const [detailError, setDetailError] = useState<string | undefined>(undefined)

@@ -177,9 +177,9 @@ export default function RequestFormPage() {
     }
 
     const iconMap = {
-      PERMISO: <span className="material-symbols-outlined">content_paste</span>,
-      BENEFICIO: <span className="material-symbols-outlined">local_florist</span>,
-      VACACIONES: <span className="material-symbols-outlined">chair_umbrella</span>,
+      PERMISO: <span className="material-symbols-outlined text-gray-800 dark:text-gray-100">content_paste</span>,
+      BENEFICIO: <span className="material-symbols-outlined text-gray-800 dark:text-gray-100">local_florist</span>,
+      VACACIONES: <span className="material-symbols-outlined text-gray-800 dark:text-gray-100">chair_umbrella</span>,
     }
 
     return [
@@ -220,11 +220,11 @@ export default function RequestFormPage() {
       subtitle={`Completa la información de tu solicitud de ${titleMap[tipo].toLowerCase()}`}
       icon={
         tipo === 'PERMISO' ? (
-          <span className="material-symbols-outlined">content_paste</span>
+          <span className="material-symbols-outlined text-gray-800 dark:text-gray-100">content_paste</span>
         ) : tipo === 'BENEFICIO' ? (
-          <span className="material-symbols-outlined">hand_package</span>
+          <span className="material-symbols-outlined text-gray-800 dark:text-gray-100">hand_package</span>
         ) : (
-          <span className="material-symbols-outlined">chair_umbrella</span>
+          <span className="material-symbols-outlined text-gray-800 dark:text-gray-100">chair_umbrella</span>
         )
       }
       onCancel={() => navigate(-1)}
