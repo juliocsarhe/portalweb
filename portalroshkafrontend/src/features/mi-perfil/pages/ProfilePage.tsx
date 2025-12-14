@@ -3,6 +3,8 @@ import { useState } from 'react'
 import { useAuth } from '../../../app/providers/AuthContext'
 import EditableField from '../../../shared/ui/components/EditableField'
 import UploadImageButton from '../../../shared/ui/components/UploadImageButton'
+import ProfileHistory from '@/shared/ui/components/ProfileHistory'
+import { ProfileHistoryItem } from '@/types/profileHistory.types'
 
 function formatDate(d?: string | Date) {
   if (!d) return ''
@@ -62,6 +64,27 @@ export default function ProfilePage() {
   const joinedAt = user?.fechaIngreso
   const diasVac = user?.diasVacaciones
   const diasVacRest = user?.diasVacacionesRestante
+  const totalDias = (diasVac ?? 0) + (diasVacRest ?? 0);
+
+  const mockHistory: ProfileHistoryItem[] = [//Para maquetado de tabla en perfil
+  {
+    id: '1',
+    proyecto: { id: 'p1', nombre: 'Portal Web' },
+    equipo: { id: 'e1', nombre: 'Frontend Team' },
+    tareasRealizadas: 'Desarrollador Frontend',
+    tecnologias: ['React', 'TypeScript', 'Tailwind'],
+    fechaInicio: '2024-01-10',
+    fechaFin: '2024-05-30',
+  },
+  {
+    id: '2',
+    proyecto: { id: 'p2', nombre: 'Sistema Interno' },
+    equipo: { id: 'e2', nombre: 'Backend Team' },
+    tareasRealizadas: 'Integración API',
+    tecnologias: ['Spring Boot', 'PostgreSQL'],
+    fechaInicio: '2024-06-01',
+  },
+]
 
   const handleImageChange = async (file: File) => {
     try {
@@ -112,6 +135,7 @@ export default function ProfilePage() {
   }
 
   return (
+    <>
     <div className="h-full flex flex-col overflow-hidden">
       {/* Fondo */}
       <div
@@ -127,31 +151,32 @@ export default function ProfilePage() {
       </div>
 
       {/* Contenedor principal */}
-      <div className="relative z-10 flex flex-col h-full p-4">
-        <div className="bg-white/45 dark:bg-gray-900/70 backdrop-blur-xs rounded-2xl shadow-lg flex flex-col h-full overflow-hidden">
-          {/* Header */}
-          <div className="p-4 md:p-6 border-b border-gray-200 dark:border-gray-700 shrink-0">
-            <h1 className="text-xl md:text-2xl font-bold text-brand-blue dark:text-white">
-              Perfil
-            </h1>
-          </div>
+      <div className="relative z-10 flex flex-col  p-4">
+        
+          
 
           {/* Contenido */}
           <div className="flex-1 overflow-auto p-4 md:p-6">
-            <div className="overflow-hidden rounded-2xl border border-white/40 dark:border-gray-700 bg-white/50 dark:bg-gray-800/70 backdrop-blur-xs shadow-xs">
-              {/* Encabezado responsive */}
-              <div className="p-4 md:p-6 flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-                <div className="flex items-center gap-4 min-w-0">
-                  {/* {user.fotoBase64 } */}
+            <div className="overflow-hidden rounded-2xl border border-white/40 dark:border-gray-700 bg-white/50 dark:bg-gray-800/70 
+            backdrop-blur-xs shadow-xs">
 
+
+              <div className="p-6 flex flex-row gap-8 w-full items-start">
+
+              {/* Encabezado responsive */}
+              <div className="w-1/3 flex flex-col gap-4">
+                <div className="flex items-center gap-4 min-w-0">
+
+                  {/* {user.fotoBase64 } */}
                   {user.urlPerfil ? (
                     <img
                       src={`data:image/png;base64,${user.urlPerfil}`}
                       alt={fullName}
-                      className="h-16 w-16 md:h-20 md:w-20 rounded-2xl object-cover shrink-0 shadow-sm"
+                      className="h-16 w-16 md:h-20 md:w-20 rounded-full object-cover shrink-0 shadow-sm"
                     />
                   ) : (
-                    <div className="h-16 w-16 md:h-20 md:w-20 rounded-2xl bg-linear-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white font-bold text-2xl shrink-0 shadow-sm">
+                    <div className="h-16 w-16 md:h-20 md:w-20 rounded-full bg-linear-to-br from-blue-400 to-purple-500 flex
+                                   items-center justify-center text-white font-bold text-2xl shrink-0 shadow-sm">
                       {fullName.charAt(0).toUpperCase()}
                     </div>
                   )}
@@ -164,14 +189,16 @@ export default function ProfilePage() {
                     {/* Pills: rol + email */}
                     <div className="mt-1 flex flex-wrap items-center gap-2 text-xs md:text-sm text-gray-600 dark:text-gray-400">
                       {rolNombre && (
-                        <span className="inline-flex items-center rounded-full border border-gray-300 dark:border-gray-600 bg-white/60 dark:bg-gray-700/70 px-2 py-0.5 text-gray-700 dark:text-gray-200">
+                        <span className="inline-flex items-center rounded-full border border-gray-300 dark:border-gray-600 bg-white/60 
+                        dark:bg-gray-700/70 px-2 py-0.5 text-gray-700 dark:text-gray-200">
                           {rolNombre}
                         </span>
                       )}
                       {email && (
                         <a
                           href={`mailto:${email}`}
-                          className="inline-flex items-center rounded-full border border-gray-300 dark:border-gray-600 bg-white/60 dark:bg-gray-700/70 px-2 py-0.5 text-gray-700 dark:text-gray-200 hover:underline max-w-full md:max-w-[360px] truncate"
+                          className="inline-flex items-center rounded-full border border-gray-300 dark:border-gray-600 bg-white/60
+                           dark:bg-gray-700/70 px-2 py-0.5 text-gray-700 dark:text-gray-200 hover:underline max-w-full md:max-w-[360px] truncate"
                           title={email}
                         >
                           {email}
@@ -182,7 +209,7 @@ export default function ProfilePage() {
                 </div>
 
                 {/* Botón arriba a la derecha */}
-                <div className="flex justify-end">
+                <div>
                   <UploadImageButton
                     onImageSelect={handleImageChange}
                     isUploading={isUploading}
@@ -190,28 +217,20 @@ export default function ProfilePage() {
                   />
                 </div>
               </div>
-
-              {/* Línea divisoria */}
-              <div className="h-px w-full bg-gray-200 dark:bg-gray-700" />
-
-              {/* Grids responsivas */}
-              <div className="grid gap-4 md:gap-6 p-4 md:p-6 md:grid-cols-3">
-                {/* Columna izquierda (Contacto) */}
-                <div className="md:col-span-2">
-                  <h2 className="mb-3 text-sm font-medium text-gray-600 dark:text-gray-400">
-                    Contacto
-                  </h2>
-                  <div className="grid gap-3 sm:grid-cols-1">
+               
+                                     <div className="w-1/3 flex flex-col gap-3">
                     {/* Cargos */}
                     {cargoNombre && (
-                      <div className="flex items-center justify-between rounded-xl border border-gray-300 dark:border-gray-600 bg-white/60 dark:bg-gray-700/70 backdrop-blur-xs p-3 min-w-0">
+                      <div className="flex items-center justify-between rounded-xl  p-3 min-w-0">
+
                         <div className="flex items-center gap-3 shrink-0">
-                          <span className="text-gray-600 dark:text-gray-400">🧩</span>
+                          
                           <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
                             Cargo
                           </span>
                         </div>
-                        <span className="inline-flex items-center rounded-full border border-gray-300 dark:border-gray-600 bg-white/70 dark:bg-gray-800/80 px-2 py-0.5 text-xs text-gray-700 dark:text-gray-200">
+                        <span className="inline-flex items-center rounded-full border border-gray-300 dark:border-gray-600 bg-white/70 
+                                          dark:bg-gray-800/80 px-2 py-0.5 text-xs text-gray-700 dark:text-gray-200">
                           {cargoNombre}
                         </span>
                       </div>
@@ -219,15 +238,18 @@ export default function ProfilePage() {
 
                     {/* Equipos */}
                     {getEquipos.length > 0 && (
-                      <div className="flex items-center justify-between rounded-xl border border-gray-300 dark:border-gray-600 bg-white/60 dark:bg-gray-700/70 backdrop-blur-xs p-3 min-w-0">
+                      <div className="flex items-center justify-between rounded-xl border border-gray-300 dark:border-gray-600 bg-white/60 
+                                      dark:bg-gray-700/70 backdrop-blur-xs p-3 min-w-0">
+
                         <div className="flex items-center gap-3 shrink-0">
-                          <span className="text-gray-600 dark:text-gray-400">👥</span>
+                          
                           <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
                             Equipos
                           </span>
                         </div>
                         <span
-                          className="inline-flex items-center rounded-full border border-gray-300 dark:border-gray-600 bg-white/70 dark:bg-gray-800/80 px-2 py-0.5 text-xs text-gray-700 dark:text-gray-200 truncate max-w-[180px]"
+                          className="inline-flex items-center rounded-full border border-gray-300 dark:border-gray-600 bg-white/70 
+                                    dark:bg-gray-800/80px-2 py-0.5 text-xs text-gray-700 dark:text-gray-200 truncate max-w-[180px]"
                           title={namesFrom(getEquipos).join(', ')} // tooltip
                         >
                           {namesFrom(getEquipos).join(', ')}
@@ -237,7 +259,7 @@ export default function ProfilePage() {
 
                     {/* Teléfono */}
                     <EditableField
-                      label="📞 Teléfono"
+                      label=" Teléfono"
                       value={phoneLocal}
                       placeholder="No definido"
                       onSave={async (newPhone) => {
@@ -267,9 +289,9 @@ export default function ProfilePage() {
 
                     {/* Fecha de ingreso */}
                     {joinedAt && (
-                      <div className="flex items-center justify-between rounded-xl border border-gray-300 dark:border-gray-600 bg-white/60 dark:bg-gray-700/70 backdrop-blur-xs p-3">
+                      <div className="flex items-center justify-between rounded-xl  dark:border-gray-600 p-3">
                         <div className="flex items-center gap-3">
-                          <span className="text-gray-600 dark:text-gray-400">📅</span>
+                        
                           <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
                             Fecha de ingreso
                           </span>
@@ -280,23 +302,22 @@ export default function ProfilePage() {
                       </div>
                     )}
                   </div>
-                </div>
-
+                
+                    
                 {/* Columna derecha (Resumen) */}
-                <div className="md:col-span-1">
-                  <h2 className="mb-3 text-sm font-medium text-gray-600 dark:text-gray-400">
-                    Resumen
-                  </h2>
-                  <div className="grid grid-cols-2 gap-3">
+                <div className="w-1/3 flex flex-col gap-3">
+                 
+                  <div className="grid grid-cols-3 gap-3">
                     {typeof diasVac !== 'undefined' && (
-                      <div className="rounded-2xl border border-gray-300 dark:border-gray-600 bg-white/60 dark:bg-gray-800/70 backdrop-blur-xs shadow-xs overflow-hidden w-full">
-                        <div className="p-4 text-center bg-white/80 dark:bg-gray-800">
+                      <div className="rounded-2xl overflow-hidden w-full">
+
+                        <div className="p-4 text-center">
                           <div className="text-2xl font-bold text-gray-900 dark:text-gray-100 tabular-nums">
                             {diasVac}
                           </div>
                         </div>
-                        <div className="h-px bg-gray-400/60 dark:bg-gray-600 w-full" />
-                        <div className="p-3 text-center bg-white/80 dark:bg-gray-800">
+                        <div/>
+                        <div className="p-3 text-center">
                           <div className="text-sm font-semibold text-gray-800 dark:text-gray-200">
                             Días vacaciones
                           </div>
@@ -304,16 +325,31 @@ export default function ProfilePage() {
                       </div>
                     )}
                     {typeof diasVacRest !== 'undefined' && (
-                      <div className="rounded-2xl border border-gray-300 dark:border-gray-600 bg-white/60 dark:bg-gray-800/70 backdrop-blur-xs shadow-xs overflow-hidden w-full">
-                        <div className="p-4 text-center bg-white/80 dark:bg-gray-800">
-                          <div className="text-2xl font-bold text-gray-900 dark:text-gray-100 tabular-nums">
+                      <div className="rounded-2xl  overflow-hidden w-full">
+                        <div className="p-4 text-center ">
+                          <div className="text-2xl font-bold text-gray-800 dark:text-gray-100 tabular-nums">
                             {diasVacRest}
                           </div>
                         </div>
-                        <div className="h-px bg-gray-400/60 dark:bg-gray-600 w-full" />
-                        <div className="p-3 text-center bg-white/80 dark:bg-gray-800">
+                        <div className="h-px w-full" />
+                        <div className="p-3 text-center">
                           <div className="text-sm font-semibold text-gray-800 dark:text-gray-200">
                             Días restantes
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    {typeof totalDias !== 'undefined' && (
+                      <div className="rounded-2xl  overflow-hidden w-full">
+                        <div className="p-4 text-center">
+                          <div className="text-2xl font-bold text-gray-900 dark:text-gray-100 tabular-nums">
+                            {totalDias}
+                          </div>
+                        </div>
+                        <div className="h-px w-full" />
+                        <div className="p-3 text-center">
+                          <div className="text-sm font-semibold text-gray-800 dark:text-gray-200">
+                            Días<br/>totales
                           </div>
                         </div>
                       </div>
@@ -322,11 +358,18 @@ export default function ProfilePage() {
                 </div>
               </div>
             </div>
+            <div className='relative z-10 p-4'>
+        <ProfileHistory data={mockHistory}/>
+              </div>
+          </div>
           </div>
         </div>
-      </div>
-    </div>
+
+                    {/*Tabla de perfil para prueba, modificar componente y conectar con Api*/}
+              
+        </>
   )
+  
 }
 
 // function setUser(arg0: (prev: any) => any) {
