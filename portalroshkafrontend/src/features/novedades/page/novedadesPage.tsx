@@ -21,6 +21,12 @@ export default function NovedadesPage() {
   const [avisos, setAvisos] = useState<NovedadesResponseDto[]>([])
   const [isUploading, setIsUploading] = useState(false)
   const [editItem, setEditItem] = useState<NovedadesResponseDto | null>(null)
+  
+  // Estados para búsqueda
+  const [searchTerm, setSearchTerm] = useState('')
+  const [searchDate, setSearchDate] = useState('')
+  const [filteredCarrusel, setFilteredCarrusel] = useState<NovedadesResponseDto[]>([])
+  const [filteredAvisos, setFilteredAvisos] = useState<NovedadesResponseDto[]>([])
 
   const [form, setForm] = useState<NovedadesInsertDto>({
     titulo: '',
@@ -35,6 +41,40 @@ export default function NovedadesPage() {
     setCarrusel(data.filter((n) => n.imagenUrl && n.imagenUrl.trim() !== ''))
     setAvisos(data.filter((n) => !n.imagenUrl || n.imagenUrl.trim() === ''))
   }, [data])
+
+  // Filtrar por búsqueda
+  useEffect(() => {
+    let filteredC = carrusel
+    let filteredA = avisos
+
+    // Filtrar por título
+    if (searchTerm) {
+      filteredC = filteredC.filter(n => 
+        n.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        n.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+      filteredA = filteredA.filter(n => 
+        n.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        n.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    }
+
+    // Filtrar por fecha
+    if (searchDate) {
+      const targetDate = new Date(searchDate).toISOString().split('T')[0]
+      filteredC = filteredC.filter(n => {
+        const createdDate = new Date(n.fechaCreacion).toISOString().split('T')[0]
+        return createdDate === targetDate
+      })
+      filteredA = filteredA.filter(n => {
+        const createdDate = new Date(n.fechaCreacion).toISOString().split('T')[0]
+        return createdDate === targetDate
+      })
+    }
+
+    setFilteredCarrusel(filteredC)
+    setFilteredAvisos(filteredA)
+  }, [carrusel, avisos, searchTerm, searchDate])
 
   // Subir imagen a Cloudinary con validación
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,7 +108,7 @@ export default function NovedadesPage() {
         const width = img.width
         const height = img.height
 
-        console.log(`Dimensiones: ${width}x${height}px`)
+        console.log(`📐 Dimensiones: ${width}x${height}px`)
 
         // Advertir si es muy pequeña
         if (width < 800 || height < 600) {
@@ -88,8 +128,8 @@ export default function NovedadesPage() {
 
         try {
           const url = await uploadImageToCloudinary(file)
-          console.log('URL de Cloudinary:', url)
-          console.log('Esta novedad irá al CARRUSEL')
+          console.log('✅ URL de Cloudinary:', url)
+          console.log('🎯 Esta novedad irá al CARRUSEL')
           setForm({ ...form, imagenUrl: url })
         } catch (err) {
           console.error('Error al subir imagen:', err)
@@ -134,12 +174,12 @@ export default function NovedadesPage() {
       // Preparar el DTO - SI NO TIENE IMAGEN, ENVIAR STRING VACÍO
       const dto: NovedadesInsertDto = {
         ...form,
-        imagenUrl: tieneImagen ? form.imagenUrl.trim() : '',
+        imagenUrl: tieneImagen ? form.imagenUrl.trim() : '', // ← ESTO ES CLAVE
         fechaExpiracion: form.fechaExpiracion,
       }
 
-      console.log('Enviando al backend:', dto)
-      console.log(`Destino: ${tieneImagen ? 'CARRUSEL (con imagen)' : 'AVISOS (sin imagen)'}`)
+      console.log('📤 Enviando al backend:', dto)
+      console.log(`🎯 Destino: ${tieneImagen ? '🖼️ CARRUSEL (con imagen)' : '📋 AVISOS (sin imagen)'}`)
 
       // Confirmar si es aviso sin imagen
       if (!tieneImagen) {
@@ -159,7 +199,7 @@ export default function NovedadesPage() {
         return
       }
 
-      console.log('Respuesta del backend:', res)
+      console.log('✅ Respuesta del backend:', res)
 
       // Refrescar lista
       await refetch()
@@ -175,9 +215,9 @@ export default function NovedadesPage() {
 
       // Mensaje diferenciado
       if (tieneImagen) {
-        console.log('NOVEDAD CREADA y agregada al CARRUSEL')
+        console.log('✅ NOVEDAD CREADA y agregada al CARRUSEL')
       } else {
-        console.log('AVISO CREADO y agregado a la sección de AVISOS')
+        console.log('✅ AVISO CREADO y agregado a la sección de AVISOS')
       }
     } catch (err) {
       console.error('Error completo:', err)
@@ -257,7 +297,7 @@ export default function NovedadesPage() {
                 {form.imagenUrl && !isUploading && (
                   <>
                     <span className="text-sm text-green-600 dark:text-green-400 font-medium">
-                      ✓ Imagen cargada exitosamente
+                      ✓ Imagen cargada → Irá al CARRUSEL
                     </span>
                     <button
                       type="button"
@@ -275,8 +315,8 @@ export default function NovedadesPage() {
               </div>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                 {form.imagenUrl 
-                  ? 'Esta novedad aparecerá en el CARRUSEL (con imagen)' 
-                  : 'Sin imagen, esta novedad aparecerá solo en AVISOS'}
+                  ? '🖼️ Esta novedad aparecerá en el CARRUSEL (con imagen)' 
+                  : '📋 Sin imagen, esta novedad aparecerá solo en AVISOS'}
                 <br />
                 Dimensiones recomendadas: mínimo 800x600px | Máximo: 5MB
               </p>
@@ -315,22 +355,80 @@ export default function NovedadesPage() {
           </form>
         </div>
 
+        {/* Buscador */}
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
+          <h2 className="text-xl font-semibold mb-4 text-brand-blue dark:text-white">
+            Buscar Novedades
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-1 dark:text-gray-200">
+                Buscar por título o descripción
+              </label>
+              <input
+                type="text"
+                placeholder="Escribe aquí..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="border border-gray-300 dark:border-gray-600 p-2 w-full rounded dark:bg-gray-700 dark:text-white"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1 dark:text-gray-200">
+                Buscar por fecha de creación
+              </label>
+              <input
+                type="date"
+                value={searchDate}
+                onChange={(e) => setSearchDate(e.target.value)}
+                className="border border-gray-300 dark:border-gray-600 p-2 w-full rounded dark:bg-gray-700 dark:text-white"
+              />
+            </div>
+          </div>
+          {(searchTerm || searchDate) && (
+            <button
+              onClick={() => {
+                setSearchTerm('')
+                setSearchDate('')
+              }}
+              className="mt-3 text-sm text-red-600 hover:underline"
+            >
+              Limpiar filtros
+            </button>
+          )}
+        </div>
+
         {/* Carrusel preview */}
-        {carrusel.length > 0 && (
+        {filteredCarrusel.length > 0 && (
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-6">
-            <h2 className="text-xl font-semibold mb-4">Carrusel (con imagen)</h2>
-            <CarruselNovedades items={carrusel} />
+            <h2 className="text-xl font-semibold mb-4">
+              Carrusel (con imagen) 
+              {(searchTerm || searchDate) && ` - ${filteredCarrusel.length} resultado(s)`}
+            </h2>
+            <CarruselNovedades items={filteredCarrusel} />
             <div className="mt-4">
-              <AvisosList items={carrusel} onEdit={setEditItem} onDelete={handleDelete} />
+              <AvisosList items={filteredCarrusel} onEdit={setEditItem} onDelete={handleDelete} />
             </div>
           </div>
         )}
 
         {/* Avisos preview */}
-        {avisos.length > 0 && (
+        {filteredAvisos.length > 0 && (
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
-            <h2 className="text-xl font-semibold mb-4">Avisos (sin imagen)</h2>
-            <AvisosList items={avisos} onEdit={setEditItem} onDelete={handleDelete} />
+            <h2 className="text-xl font-semibold mb-4">
+              Avisos (sin imagen)
+              {(searchTerm || searchDate) && ` - ${filteredAvisos.length} resultado(s)`}
+            </h2>
+            <AvisosList items={filteredAvisos} onEdit={setEditItem} onDelete={handleDelete} />
+          </div>
+        )}
+
+        {/* Mensaje si no hay resultados */}
+        {(searchTerm || searchDate) && filteredCarrusel.length === 0 && filteredAvisos.length === 0 && (
+          <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg text-center">
+            <p className="text-gray-600 dark:text-gray-400">
+              No se encontraron novedades con los filtros aplicados
+            </p>
           </div>
         )}
 
