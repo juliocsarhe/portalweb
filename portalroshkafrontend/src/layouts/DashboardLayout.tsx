@@ -1,4 +1,4 @@
-import { NavLink, Outlet } from 'react-router'
+import { NavLink, Outlet } from 'react-router-dom'
 import { useAuth } from '../app/providers/AuthContext'
 import { Roles } from '../types/roles'
 import '../shared/ui/styles/scrollbar.css'
@@ -47,7 +47,24 @@ export default function DashboardLayout() {
     { id: '/catalogo-th', label: <span className="font-semibold text-[15px]">Cargos y Roles</span>, icon: <span className="material-symbols-outlined">groups</span>, available: disponiblePara(Roles.TALENTO_HUMANO) },
     { id: '/usuarios', label: <span className="font-semibold text-[15px]">Funcionarios</span>, icon: <span className="material-symbols-outlined">groups</span>, available: disponiblePara(Roles.TALENTO_HUMANO) },
     { id: '/catalogo-op', label: <span className="font-semibold text-[15px]">Clientes y Tecnologías</span>, icon: <span className="material-symbols-outlined">apartment</span>, available: disponiblePara(Roles.OPERACIONES) },
-    { id: '/operations', label: <span className="font-semibold text-[15px]">Gestión de Equipos</span>, icon: <span className="material-symbols-outlined">engineering</span>, available: disponiblePara(Roles.OPERACIONES) },
+{
+  id: 'operaciones',
+  label: <span className="font-semibold text-[15px]">Operaciones</span>,
+  icon: <span className="material-symbols-outlined">precision_manufacturing</span>,
+  available: disponiblePara(Roles.OPERACIONES),
+  children: [
+    {
+      id: '/operations/equipos',
+      label: <span className="font-semibold text-[14px]">Gestionar Equipos</span>,
+      available: disponiblePara(Roles.OPERACIONES),
+    },
+    {
+      id: '/operations/proyectos',
+      label: <span className="font-semibold text-[14px]">Gestionar Proyectos</span>,
+      available: disponiblePara(Roles.OPERACIONES),
+    },
+  ],
+},
     { id: '/benefits', label: <span className="font-semibold text-[15px]">Beneficios</span>, icon: <span className="material-symbols-outlined">redeem</span>, available: true },
     { id: '/crear-novedadesTH', label: <span className="font-semibold text-[15px]">Crear Novedades</span>, icon: <span className="material-symbols-outlined">newspaper</span>, available: disponiblePara(Roles.ADMINISTRADOR_DEL_SISTEMA, Roles.TALENTO_HUMANO) },
   ].filter((opt) => opt.available)

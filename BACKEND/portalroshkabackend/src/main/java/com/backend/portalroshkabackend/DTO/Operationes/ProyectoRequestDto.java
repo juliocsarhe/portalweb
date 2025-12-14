@@ -13,7 +13,7 @@ public class ProyectoRequestDto {
 
     private String nombre;
 
-    private Integer idLiderEquipo;
+    //private Integer idLiderEquipo;
 
     private Integer idEquipo;
 

@@ -53,6 +53,12 @@ public class EquiposController {
     public ResponseEntity<EquiposResponseDto> obtenerPorId(@PathVariable Integer id) {
         return ResponseEntity.ok(equiposService.obtenerPorId(id));
     }
+        //Obtiene lideres disponibles
+    @GetMapping("/lideres")
+    public ResponseEntity<List<UsuarioisResponseDto>> getLideres() {
+        List<UsuarioisResponseDto> lideres = equiposService.obtenerLideres();
+        return ResponseEntity.ok(lideres);
+    }
             //Crea un equipo
     @PostMapping
     public ResponseEntity<EquiposResponseDto> crearEquipo(
@@ -78,6 +84,15 @@ public class EquiposController {
     public ResponseEntity<Void> toggleEquipo(@PathVariable Integer id) {
         equiposService.toggleEquipo(id);
         return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{idEquipo}/usuarios/{idUsuario}")
+    public ResponseEntity<Void> eliminarUsuarioDelEquipo(
+            @PathVariable Integer idEquipo,
+            @PathVariable Integer idUsuario
+    ) {
+        equiposService.eliminarUsuarioDelEquipo(idEquipo, idUsuario);
+        return ResponseEntity.noContent().build();
     }
 
 /*

@@ -37,23 +37,24 @@ public class ProyectoServiceImpl implements IProyectoService {
         }
 
         // Valida que el líder exista
-        Usuario lider = usuarioRepository.findById(requestDto.getIdLiderEquipo())
+       /* Usuario lider = usuarioRepository.findById(requestDto.getIdLiderEquipo())
                 .orElseThrow(() -> new RuntimeException("El líder no existe."));
 
 
         //validar que el lider tenga rol team lider
         if (lider.getRol().getIdRol()!=6){
             throw new RuntimeException("Solo usuarios con Rol Team Leader pueden ser lideres");
-        }
+        }*/
 
         // Crea el proyecto
         Proyecto proyecto = ProyectoMapper.toEntity(requestDto);
-        proyecto.setLiderEquipo(lider);
+        //proyecto.setLiderEquipo(lider);
 
         //verificacion de equipo
         Equipos equipos = equiposRepository.findById(requestDto.getIdEquipo())
                 .orElseThrow(()-> new RuntimeException("Equipo no encontrado"));
         proyecto.setEquipos(equipos);
+        proyecto.setLiderEquipo(equipos.getLider());
 
         //verificacion de clientes
         Clientes clientes = clientesRepository.findById(requestDto.getIdCliente())
@@ -97,25 +98,19 @@ public class ProyectoServiceImpl implements IProyectoService {
                 .orElseThrow(() -> new RuntimeException("Proyecto no encontrado"));
 
 
-        Usuario lider = usuarioRepository.findById(requestDto.getIdLiderEquipo())
-                .orElseThrow(() -> new RuntimeException("El líder no existe."));
-
-        //verificacion para los TeamLeader
-        if (lider.getRol().getIdRol()!=6) {
-            throw new RuntimeException("Solo usuarios con Rol Team Leader pueden ser lideres");
-        }
 
         proyecto.setNombre(requestDto.getNombre());
         proyecto.setDescripcion(requestDto.getDescripcion());
         proyecto.setFechaInicio(requestDto.getFechaInicio());
         proyecto.setFechaLimite(requestDto.getFechaLimite());
         proyecto.setEstado(requestDto.getEstado());
-        proyecto.setLiderEquipo(lider);
+
 
 
         Equipos equipos = equiposRepository.findById(requestDto.getIdEquipo())
                         .orElseThrow(()-> new RuntimeException("Equipo no encontrado"));
         proyecto.setEquipos(equipos);
+        proyecto.setLiderEquipo(equipos.getLider());
 
         Clientes clientes = clientesRepository.findById(requestDto.getIdCliente())
                         .orElseThrow(()-> new RuntimeException("Cliente no encontrado"));

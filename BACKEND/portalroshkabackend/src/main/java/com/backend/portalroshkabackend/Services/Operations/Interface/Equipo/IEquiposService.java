@@ -1,5 +1,6 @@
 package com.backend.portalroshkabackend.Services.Operations.Interface.Equipo;
 
+import com.backend.portalroshkabackend.DTO.Operationes.UsuarioisResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -14,11 +15,16 @@ public interface IEquiposService {
 
     List<EquiposResponseDto> listarEquipos();
 
+    List<UsuarioisResponseDto> obtenerLideres();
+
     EquiposResponseDto obtenerPorId(Integer id);
 
     EquiposResponseDto editarEquipo(Integer id, EquiposRequestDto dto);
 
     void toggleEquipo(Integer idEquipo);
+
+    void eliminarUsuarioDelEquipo(Integer idEquipo, Integer idUsuario);
+
 
     /*EquiposResponseDto getTeamById(Integer idEquipo);
 
