@@ -1,38 +1,35 @@
-package com.backend.portalroshkabackend.DTO.TeamLeaderDTO;
+package com.backend.portalroshkabackend.DTO.TeamLeader.request;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
-import com.backend.portalroshkabackend.Models.Enum.EstadoSolicitudEnum;
-import com.backend.portalroshkabackend.Models.Enum.SolicitudesEnum;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class SolTeamLeaderDTO {
-
+public class TeamLeaderRequestResponseDto {
     private Integer idSolicitud;
 
     private Integer idUsuario;
 
     private String nombreUsuario;
 
-    private SolicitudesEnum tipoSolicitud;
+    private String documentoAdjunto;
+
+    private String tipoSolicitud;
 
     private String comentario;
 
-    private EstadoSolicitudEnum estado;
+    private String estado;
 
     private LocalDate fechaInicio;
 
-    private Integer cantDias;
-
     private LocalDate fechaFin;
+
+    private Integer cantDias;
 
     private LocalDateTime fechaCreacion;
 
-    private String nombreSubTipoSolicitud;
 
 }

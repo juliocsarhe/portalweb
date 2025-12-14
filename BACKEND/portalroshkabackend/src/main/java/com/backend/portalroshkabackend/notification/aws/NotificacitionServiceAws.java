@@ -3,10 +3,12 @@ package com.backend.portalroshkabackend.notification.aws;
 import com.backend.portalroshkabackend.Models.Solicitud;
 import com.backend.portalroshkabackend.Repositories.UsuarioRepositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.sns.SnsClient;
 
-import static org.springframework.boot.availability.AvailabilityChangeEvent.publish;
+
+@Profile("prod")
 @Service
 public class NotificacitionServiceAws {
 

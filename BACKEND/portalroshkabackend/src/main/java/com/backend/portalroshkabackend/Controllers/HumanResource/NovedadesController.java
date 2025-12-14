@@ -5,6 +5,7 @@ import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesResponseDto;
 import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesInsertDto;
 import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesUpdateDto;
 import com.backend.portalroshkabackend.Services.HumanResource.subservices.INovedadesService;
+import com.backend.portalroshkabackend.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import java.util.List;
 public class NovedadesController {
 
     private final INovedadesService novedadesService;
+    private final NotificationService notificationService;
 
     @PostMapping
     public ResponseEntity<NovedadesDefaultResponseDto> create(
@@ -79,9 +81,6 @@ public class NovedadesController {
         return ResponseEntity.ok(novedadesService.getOrdenadasPorFechaAsc());
     }
 
-
-    //TODO: consultar validez de obtener por buscar por idRol
-    //TODO: consultar sobre rutas correctas
 
 }
 

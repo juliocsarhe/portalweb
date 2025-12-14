@@ -7,6 +7,7 @@ import com.backend.portalroshkabackend.notification.webSocket.events.Notificatio
 import com.backend.portalroshkabackend.notification.ses.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Profile;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -26,10 +27,10 @@ public class NotificationService {
     @Autowired
     private SimpMessagingTemplate template; // WebSocket
 
-    @Autowired
+    @Autowired(required = false)
     private NotificacitionServiceAws snsService; // SNS
 
-    @Autowired
+    @Autowired(required = false)
     private EmailService emailService;
 
     public void sendNotificationToTeamLeader(Solicitud solicitud, String correo) {
@@ -39,7 +40,9 @@ public class NotificationService {
 
         System.out.println("ENVIANDO CORREO AL LIDER");
 
-        emailService.sendEmailToUser(correo, "NUEVA SOLICITUD RECIBIDA", message);
+        if (emailService != null) {
+            emailService.sendEmailToUser(correo, "NUEVA SOLICITUD RECIBIDA", message);
+        }
 
 
 
@@ -51,7 +54,9 @@ public class NotificationService {
         String username = solicitud.getUsuario().getNombre() + " " + solicitud.getUsuario().getApellido();
         String message = username + " realizo una solicitud: " + solicitud.getTipoSolicitud().toString().toLowerCase();
 
-        emailService.sendEmailToUser(correo, "NUEVA SOLICITUD", message);
+        if (emailService != null) {
+            emailService.sendEmailToUser(correo, "NUEVA SOLICITUD", message);
+        }
     }
 
     public void sendNotificationToSys (Solicitud  solicitud) {
@@ -59,7 +64,9 @@ public class NotificationService {
         String username = solicitud.getUsuario().getNombre() + " " + solicitud.getUsuario().getApellido();
         String message = username + " realizo una solicitud: " + solicitud.getTipoSolicitud().toString().toLowerCase();
 
-        emailService.sendEmailToUser(correo, "NUEVA SOLICITUD", message);
+        if (emailService != null) {
+            emailService.sendEmailToUser(correo, "NUEVA SOLICITUD", message);
+        }
 
     }
 
@@ -70,7 +77,9 @@ public class NotificationService {
         String message = aprobado ? "Al usuario " + username + " se la ha aprobado la solicitud " + solicitud.getTipoSolicitud().toString().toLowerCase()
                 : "Al usuario " + username + " se la ha rechazado la solicitud " + solicitud.getTipoSolicitud().toString().toLowerCase();
 
-        emailService.sendEmailToUser("elias.benittz@gmail.com", "Solicitud aprobada por un Team Lider", message );
+        if (emailService != null) {
+            emailService.sendEmailToUser("elias.benittz@gmail.com", "Solicitud aprobada por un Team Lider", message );
+        }
     }
 
     public void notifyUser(Solicitud solicitud, boolean aprobado) {
@@ -78,7 +87,11 @@ public class NotificationService {
         String usuarioCorreo = solicitud.getUsuario().getCorreo();
 
         template.convertAndSendToUser(usuarioCorreo, "/topic/notification", message); //WebSocket
-        snsService.sendSolicitudNotification(message); //SNS
+
+        if(snsService != null) {
+            snsService.sendSolicitudNotification(message); //SNS
+
+        }
     }
 
     public void notifyUserses(Solicitud solicitud, boolean aprobado) {
@@ -90,7 +103,9 @@ public class NotificationService {
 
         System.out.println("ENVIANDO CORREO...");
 
-        emailService.sendEmailToUser(usuarioCorreo, "Estado de solicitud de " + tipoSolicitud, message);
+        if (emailService != null) {
+            emailService.sendEmailToUser(usuarioCorreo, "Estado de solicitud de " + tipoSolicitud, message);
+        }
     }
 }
 
