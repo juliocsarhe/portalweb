@@ -72,7 +72,6 @@ public class RequestQueryServiceImpl implements IRequestQueryService {
 
         validateLeaderScope(request, leader); // validar que en realidad el lider pertenece a ese equipo
 
-
         return requestMapper.toTeamLeaderRequestByIdDto(request);
 
     }
