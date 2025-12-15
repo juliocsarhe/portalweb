@@ -6,6 +6,7 @@ import com.backend.portalroshkabackend.notification.aws.NotificacitionServiceAws
 import com.backend.portalroshkabackend.notification.webSocket.events.Notification;
 import com.backend.portalroshkabackend.notification.ses.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,12 @@ public class NotificationService {
     @Autowired
     private EmailService emailService;
 
+    @Value("${correo.th}")
+    private String correoTH;
+
+    @Value("${correo.sa}")
+    private String correoSA;
+
     public void sendNotificationToTeamLeader(Solicitud solicitud, String correo) {
 
         String username = solicitud.getUsuario().getNombre() + " " + solicitud.getUsuario().getApellido();
@@ -41,30 +48,26 @@ public class NotificationService {
 
         emailService.sendEmailToUser(correo, "NUEVA SOLICITUD RECIBIDA", message);
 
-
-
     }
 
     public void sendNotificationToTH(Solicitud solicitud) {
 
-        String correo = "elias.benittz@gmail.com";
         String username = solicitud.getUsuario().getNombre() + " " + solicitud.getUsuario().getApellido();
         String message = username + " realizo una solicitud: " + solicitud.getTipoSolicitud().toString().toLowerCase();
 
-        emailService.sendEmailToUser(correo, "NUEVA SOLICITUD", message);
+        emailService.sendEmailToUser(correoTH, "NUEVA SOLICITUD", message);
     }
 
     public void sendNotificationToSys (Solicitud  solicitud) {
-        String correo = "elias.benittz@gmail.com";
+
         String username = solicitud.getUsuario().getNombre() + " " + solicitud.getUsuario().getApellido();
         String message = username + " realizo una solicitud: " + solicitud.getTipoSolicitud().toString().toLowerCase();
 
-        emailService.sendEmailToUser(correo, "NUEVA SOLICITUD", message);
+        emailService.sendEmailToUser(correoSA, "NUEVA SOLICITUD", message);
 
     }
 
     public void alertTH (Solicitud solicitud, boolean aprobado ) {
-
 
         String username = solicitud.getUsuario().getNombre() + " " + solicitud.getUsuario().getApellido();
         String message = aprobado ? "Al usuario " + username + " se la ha aprobado la solicitud " + solicitud.getTipoSolicitud().toString().toLowerCase()
@@ -85,8 +88,6 @@ public class NotificationService {
         String usuarioCorreo = solicitud.getUsuario().getCorreo();
         String message = aprobado ? "Tu solicitud ha sido aprobada." : "Tu solicitud ha sido rechazada.";
         String tipoSolicitud = solicitud.getTipoSolicitud().toString().toLowerCase();
-
-        //emailService.sendEmailToUser("aguilaroviedojoseariel31@gmail.com", "PRUEBA123", "SOLO A JOSEE");
 
         System.out.println("ENVIANDO CORREO...");
 
