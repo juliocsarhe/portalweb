@@ -1,27 +1,53 @@
-import { useState } from "react";
+import { Client } from '@stomp/stompjs';
+import { useEffect, useState } from 'react';
 
-export function useNotifications() {
+export function useNotifications(userEmail: string) {
+    const [notifications, setNotifications] = useState<string[]>([]);
     const [open, setOpen] = useState(false);
-    const[notifications,setNotifications] = useState([
-            "Nuevo mensaje recibido",
-    "Se aprobó tu solicitud",
-    "Actualización disponible",
-    "Recordatorio de reunión",
-    "Nuevo comentario en tu publicación",
-        "Tu perfil ha sido visto 10 veces",
-        "Tienes una nueva solicitud de amistad",
-        "Tu contraseña será expirada pronto",
-        "Se ha asignado una nueva tarea",
-        "Tu suscripción se ha renovado exitosamente",
-    ]);
 
+    const toggleOpen = () => setOpen(o => !o);
 
-    const toggleOpen = () => setOpen(!open);
+    useEffect(() => {
+    if (!userEmail) return;
 
+    const client = new Client({
+        brokerURL: 'ws://localhost:8080/ws',
+        reconnectDelay: 5000,
+        
+        onConnect: () => {
+        console.log('Conectado a WebSocket para:', userEmail);
+
+        //  ESTO ES LO QUE ENVÍA TU BACKEND (línea 66 de NotificationService.java)
+        // template.convertAndSendToUser(usuarioCorreo, "/topic/notification", message);
+        client.subscribe(`/user/${userEmail}/topic/notification`, msg => {
+            console.log('📬 Notificación recibida:', msg.body);
+            setNotifications(prev => [...prev, msg.body]);
+        });
+
+        //  Notificaciones broadcast (por si las usan después)
+        client.subscribe('/topic/notification', msg => {
+            console.log(' Broadcast recibido:', msg.body);
+            setNotifications(prev => [...prev, msg.body]);
+        });
+        },
+        
+    onStompError: (frame) => {
+        console.error('Error STOMP:', frame);
+        console.error('Detalles:', frame.headers['message']);
+    },
+        
+        onWebSocketError: (error) => {
+        console.error(' Error de WebSocket:', error);
+        },
+    });
+
+    client.activate();
     
-    return { 
-        open,
-        toggleOpen,
-        notifications
-        };
+    return () => {
+        console.log(' Desconectando WebSocket');
+        client.deactivate();
+    };
+    }, [userEmail]);
+
+    return { notifications, open, toggleOpen };
 }

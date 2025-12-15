@@ -1,25 +1,34 @@
-interface Props {
-    notifications: string[];
-}
-
-export default function NotificationPanel({ notifications }: Props) {
+export default function NotificationPanel({ notifications, isOpen }: Props) {
     return (
-    <div className="absolute right-0 mt-4 w-80 bg-white shadow-lg border p-4 rounded-md z-50">
-        <h3 className="text-lg font-semibold mb-2">Notificaciones</h3>
+    <div
+        className={`
+        absolute right-0 mt-2 w-64
+        bg-white/50 dark:bg-gray-900/100
+        backdrop-blur-lg shadow-xl rounded-xl p-4
+        border border-black/20 dark:border-white/10
+        transition-all duration-300 ease-out
+        origin-top-right
+        ${
+            isOpen
+            ? 'opacity-100 scale-100 translate-y-0'
+            : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'
+        }
+        `}
+    >
+        <h3 className="font-bold mb-2 text-gray-900 dark:text-white text-center">
+        Notificaciones
+        </h3>
 
         {notifications.length === 0 ? (
-        <p className="text-gray-500">No hay notificaciones.</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
+            No hay notificaciones
+        </p>
         ) : (
-        <ul className="space-y-2">
-            {notifications.map((noti, index) => (
-            <li
-                key={index}
-                className="p-3 bg-gray-100 rounded-md border border-gray-200"
-            >
-                {noti}
-            </li>
-            ))}
-        </ul>
+        notifications.map((n, i) => (
+            <p key={i} className="text-sm text-gray-900 dark:text-white py-1">
+            • {n}
+            </p>
+        ))
         )}
     </div>
     );

@@ -1,19 +1,14 @@
-interface Props {
-    toggleOpen: () => void;
-    count: number;
-}
-
-export default function NotificationBell({ toggleOpen, count }: Props) {
+export default function NotificationBell({ notificationCount, onClick }: Props) {
     return (
     <button
-        onClick={toggleOpen}
-        className="relative bg-blue-600 text-white px-4 py-2 rounded-md"
+        onClick={onClick}
+    className={`relative text-2xl p-3 rounded-full transition-colors hover:bg-gray-200 dark:hover:bg-gray-700 
+        ${notificationCount > 0 ? 'animate-bell' : ''}`}
     >
-        🔔 Notificaciones
-
-        {count > 0 && (
-        <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full px-2 py-1">
-            {count}
+        🔔
+        {notificationCount > 0 && (
+        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center animate-pulse">
+            {notificationCount}
         </span>
         )}
     </button>
