@@ -1,171 +1,160 @@
 import { NavLink, Outlet } from 'react-router'
-
 import { useAuth } from '../app/providers/AuthContext'
 import { Roles } from '../types/roles'
 import '../shared/ui/styles/scrollbar.css'
+import { useState } from 'react'
 import { tieneRol } from '../shared/utils/permisos'
+
+
 
 export default function DashboardLayout() {
   const { user, logout } = useAuth()
+  const [openMenu, setOpenMenu] = useState<string | null>(null)
 
-  // Permisos usando tieneRol
-  const talentoHumano = tieneRol(user, Roles.TALENTO_HUMANO, Roles.DIRECTIVO)
-  const operaciones = tieneRol(user, Roles.OPERACIONES, Roles.DIRECTIVO)
-  const sysadmin = tieneRol(user, Roles.ADMINISTRADOR_DEL_SISTEMA, Roles.DIRECTIVO)
-  const leader = tieneRol(user, Roles.TEAM_LEADER, Roles.DIRECTIVO)
+  // Función para simplificar la comprobación de roles
+  const disponiblePara = (...roles: Roles[]) => tieneRol(user, ...roles)
 
   const menuOptions = [
     {
       id: '/',
-      label: 'Inicio',
-      icon: '🏠',
-      available: true,
-      end: true as const,
-    },
-    { id: '/profile', label: 'Mi Perfil', icon: '👤', available: true },
-    { id: '/requests', label: 'Solicitudes', icon: '📩', available: true },
-    {
-      id: '/solicitud-dispositivo',
-      label: 'Solicitar Dispositivos',
-      icon: '📱',
+      label: <span className="font-semibold text-[15px]">Inicio</span>,
+      icon: <span className="material-symbols-outlined">home</span>,
       available: true,
     },
-    { id: '/benefits', label: 'Beneficios', icon: '🎁', available: true },
     {
-      id: '/catalogo-th',
-      label: 'Cargos',
-      icon: '👥',
-      available: talentoHumano,
-    },
-    {
-      id: '/usuarios',
-      label: 'Funcionarios',
-      icon: '🧑‍💼',
-      available: talentoHumano,
-    },
-    {
-      id: '/catalogo-sys',
-      label: 'Tipos de Disp. y Ubicaciones',
-      icon: '📚',
-      available: sysadmin,
-    },
-    {
-      id: '/dispositivos',
-      label: 'Dispositivos',
-      icon: '🖥️',
-      available: sysadmin,
-    },
-    {
-      id: '/gestion-dispositivos',
-      label: 'Gestión de Dispositivos',
-      icon: '💻',
-      available: sysadmin,
-    },
-    {
-      id: '/catalogo-op',
-      label: 'Clientes y Tecnologías',
-      icon: '🏢',
-      available: operaciones,
-    },
-    {
-      id: '/operations',
-      label: 'Gestión de Equipos',
-      icon: '🛠️',
-      available: operaciones,
-    },
-    {
-      id: '/seleccion-solicitudesTH',
-      label: 'Gestión de Solicitudes',
-      icon: '📤',
-      available: talentoHumano,
-    },
-    // { id: "/vacaciones", label: "Vacaciones", icon: "🏖️", available: true },
-
-    {
-      id: '/solicitudesTL',
-      label: 'Solicitudes de Equipo',
-      icon: '📬',
-      available: leader,
-    },
-    {
-      id: '/configuracion',
-      label: 'Configuración',
-      icon: '⚙️',
+      id: 'gestiones',
+      label: <span className="font-semibold text-[15px]">Gestiones</span>,
+      icon: <span className="material-symbols-outlined">folder</span>,
       available: true,
+      children: [
+        { id: '/requests', label: <span className="font-semibold text-[14px]">Solicitudes</span>, available: true },
+        { id: '/solicitudesTH/permisos', label: <span className="font-semibold text-[14px]">Ver Permisos</span>, available: true },
+        { id: '/solicitudesTH/beneficios', label: <span className="font-semibold text-[14px]">Ver Beneficios</span>, available: true },
+        { id: '/solicitudesTH/vacaciones', label: <span className="font-semibold text-[14px]">Ver Vacaciones</span>, available: true },
+        { id: '/solicitudesTL', label: <span className="font-semibold text-[14px]">Solicitudes de Equipo</span>, available: disponiblePara(Roles.TEAM_LEADER) },
+      ],
     },
-  ].filter((o) => o.available)
+    {
+      id: 'dispositivos',
+      label: <span className="font-semibold text-[15px]">Dispositivos</span>,
+      icon: <span className="material-symbols-outlined">devices</span>,
+      available: true,
+      children: [
+        { id: '/solicitud-dispositivo', label: <span className="font-semibold text-[14px]">Solicitar Dispositivo</span>, available: true },
+        { id: '/dispositivos', label: <span className="font-semibold text-[14px]">Ver Dispositivos</span>, available: disponiblePara(Roles.ADMINISTRADOR_DEL_SISTEMA) },
+        { id: '/catalogo-sys', label: <span className="font-semibold text-[14px]">Tipos de Dispositivos y Ubicaciones</span>, available: disponiblePara(Roles.ADMINISTRADOR_DEL_SISTEMA) },
+        { id: '/gestion-dispositivos', label: <span className="font-semibold text-[14px]">Gestión de Dispositivos</span>, available: disponiblePara(Roles.ADMINISTRADOR_DEL_SISTEMA) },
+      ],
+    },
+    { id: '/catalogo-th', label: <span className="font-semibold text-[15px]">Cargos y Roles</span>, icon: <span className="material-symbols-outlined">groups</span>, available: disponiblePara(Roles.TALENTO_HUMANO) },
+    { id: '/usuarios', label: <span className="font-semibold text-[15px]">Funcionarios</span>, icon: <span className="material-symbols-outlined">groups</span>, available: disponiblePara(Roles.TALENTO_HUMANO) },
+    { id: '/catalogo-op', label: <span className="font-semibold text-[15px]">Clientes y Tecnologías</span>, icon: <span className="material-symbols-outlined">apartment</span>, available: disponiblePara(Roles.OPERACIONES) },
+    { id: '/operations', label: <span className="font-semibold text-[15px]">Gestión de Equipos</span>, icon: <span className="material-symbols-outlined">engineering</span>, available: disponiblePara(Roles.OPERACIONES) },
+    { id: '/benefits', label: <span className="font-semibold text-[15px]">Beneficios</span>, icon: <span className="material-symbols-outlined">redeem</span>, available: true },
+    { id: '/crear-novedadesTH', label: <span className="font-semibold text-[15px]">Crear Novedades</span>, icon: <span className="material-symbols-outlined">newspaper</span>, available: disponiblePara(Roles.ADMINISTRADOR_DEL_SISTEMA, Roles.TALENTO_HUMANO) },
+  ].filter((opt) => opt.available)
 
   return (
     <div className="h-screen bg-gray-50 dark:bg-gray-950 flex overflow-hidden">
-      {/* Sidebar */}
-      <aside className="w-64 bg-white dark:bg-gray-900 shadow-xl border-r border-gray-200 dark:border-gray-800 flex flex-col">
-        {/* Perfil compacto */}
-        <div className="p-6 border-b border-gray-200 dark:border-gray-800 shrink-0">
-          <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 rounded-full flex items-center justify-center overflow-hidden">
+      <aside
+        className="w-64 shadow-xl border-r border-gray-200 dark:border-gray-800 flex flex-col
+                   bg-white/70 dark:bg-gray-900/70 backdrop-blur-xs
+                   dark:bg-[linear-gradient(270deg,rgba(11,14,94,0.9),rgba(0,1,37,0.8)80%)]
+                   text-black dark:text-gray-200"
+        style={{ WebkitBackdropFilter: 'blur(10px)', backdropFilter: 'blur(10px)' }}
+      >
+        {/* Perfil */}
+        <div className="p-6 border-b-2 border-black dark:border-gray-800 shrink-0">
+          <NavLink to="/profile" className="flex items-center space-x-3 cursor-pointer hover:opacity-80 transition">
+            <div className="w-24 h-20 rounded-full overflow-hidden flex items-center justify-center">
               {user?.urlPerfil ? (
-                <img
-                  src={`data:image/png;base64,${user.urlPerfil}`}
-                  alt={user?.nombre}
-                  className="w-full h-full object-cover"
-                />
+                <img src={`data:image/png;base64,${user.urlPerfil}`} className="w-full h-full object-cover" />
               ) : (
-                <div className="w-full h-full bg-linear-to-r from-blue-600 to-blue-800 flex items-center justify-center text-white font-bold text-lg">
-                  👤
-                </div>
+                <span className="material-symbols-outlined text-6xl text-white">account_circle</span>
               )}
             </div>
-
             <div>
-              <p className="font-semibold text-gray-800 dark:text-gray-100 line-clamp-1">
-                {user?.nombre}
-              </p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">{user?.rol?.nombre}</p>
+              <p className="font-semibold text-black dark:text-gray-100 line-clamp-1">{user?.nombre}</p>
+              <p className="text-sm text-gray-700 dark:text-gray-400">{user?.rol?.nombre}</p>
             </div>
-          </div>
+          </NavLink>
         </div>
 
-        {/* Menú con scroll personalizado */}
-        <nav
-          className="flex-1 overflow-y-auto mt-6 custom-scrollbar"
-          style={{
-            scrollbarWidth: 'thin',
-            scrollbarColor: 'rgb(209 213 219) transparent',
-          }}
-        >
-          {menuOptions.map((opt) => (
-            <NavLink
-              key={opt.id}
-              to={opt.id}
-              end={opt.end}
-              className={({ isActive }) =>
-                [
-                  'w-full text-left px-6 py-3 flex items-center space-x-3 transition-colors',
-                  isActive
-                    ? 'bg-blue-50 dark:bg-blue-900/30 border-r-2 border-blue-600 text-blue-700 dark:text-blue-200'
-                    : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800',
-                ].join(' ')
-              }
-            >
-              <span className="text-xl">{opt.icon}</span>
-              <span className="font-medium">{opt.label}</span>
-            </NavLink>
-          ))}
+        {/* Menú */}
+        <nav className="flex-1 overflow-y-auto mt-6 custom-scrollbar">
+          {menuOptions.map((opt) =>
+            opt.children ? (
+              <div key={opt.id} className="flex flex-col">
+                <button
+                  onClick={() => setOpenMenu(openMenu === opt.id ? null : opt.id)}
+                  className="w-full text-left px-6 py-3 flex items-center justify-between
+                             text-black hover:text-blue-500 dark:text-gray-200 dark:hover:text-[#ECB22E]"
+                >
+                  <span className="flex items-center space-x-3">
+                    {opt.icon && <span className="text-xl">{opt.icon}</span>}
+                    <span className="font-medium">{opt.label}</span>
+                  </span>
+                  <span className="material-symbols-outlined">
+                    {openMenu === opt.id ? 'expand_less' : 'expand_more'}
+                  </span>
+                </button>
+                {openMenu === opt.id &&
+                  opt.children.map((child) => child.available && (
+                    <NavLink
+                      key={child.id}
+                      to={child.id}
+                      className={({ isActive }) =>
+                        [
+                          'w-full text-left px-12 py-2 flex items-center space-x-3 transition-colors text-sm',
+                          isActive
+                            ? 'bg-[#ECB22E] text-white border-r-2 border-[#ECB22E]'
+                            : 'text-black hover:text-blue-500 dark:text-gray-200 dark:hover:text-[#ECB22E]',
+                        ].join(' ')
+                      }
+                    >
+                      <span className="font-medium">{child.label}</span>
+                    </NavLink>
+                  ))}
+              </div>
+            ) : (
+              <NavLink
+                key={opt.id}
+                to={opt.id}
+                className={({ isActive }) =>
+                  [
+                    'w-full text-left px-6 py-3 flex items-center space-x-3 transition-colors',
+                    isActive
+                      ? 'bg-[#ECB22E] text-white border-r-2 border-[#ECB22E]'
+                      : 'text-black hover:text-blue-500 dark:text-gray-200 dark:hover:text-[#ECB22E]',
+                  ].join(' ')
+                }
+              >
+                <span className="text-xl">{opt.icon}</span>
+                <span className="font-medium">{opt.label}</span>
+              </NavLink>
+            )
+          )}
         </nav>
 
-        {/* Logout */}
-        <div className="p-6 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shrink-0">
+        {/* Configuración + Logout */}
+        <div className="p-6 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
+          <NavLink
+            to="/configuracion"
+            className="w-full flex items-center justify-between px-4 py-2 text-black dark:text-white hover:text-blue-500 dark:hover:text-[#ECB22E]"
+          >
+            <span className="font-semibold text-[15px]">Configuración</span>
+            <span className="material-symbols-outlined">settings</span>
+          </NavLink>
+
           <button
             onClick={logout}
-            className="w-full flex items-center space-x-3 px-4 py-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+            className="w-full flex items-center px-4 py-2 text-red-600 hover:text-red-700 dark:text-red-300 dark:hover:text-red-400 mt-3"
           >
-            <span className="text-xl">🚪</span>
-            <span className="font-medium">Cerrar sesión</span>
+            <span className="font-semibold text-[15px]">Cerrar Sesión</span>
           </button>
         </div>
       </aside>
 
-      {/* Contenido principal */}
       <main className="flex-1 overflow-hidden relative">
         <Outlet />
       </main>

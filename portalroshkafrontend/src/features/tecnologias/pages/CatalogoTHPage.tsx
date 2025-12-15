@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { useMemo } from 'react'
 import { useSearchParams } from 'react-router'
 
@@ -33,7 +34,7 @@ export default function CatalogoTHPage() {
 
   return (
     <PageLayout
-      title="Gestión TH"
+      title="Gestion Talento Humano"
       actions={
         <div className="flex gap-2">
           <button
