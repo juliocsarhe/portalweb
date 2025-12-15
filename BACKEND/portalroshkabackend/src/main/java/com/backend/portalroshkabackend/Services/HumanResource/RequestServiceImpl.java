@@ -9,6 +9,8 @@ import com.backend.portalroshkabackend.Repositories.TH.SolicitudRepository;
 import com.backend.portalroshkabackend.Services.HumanResource.subservices.IAcceptRequestService;
 import com.backend.portalroshkabackend.notification.NotificationService;
 import com.backend.portalroshkabackend.notification.aws.NotificacitionServiceAws;
+import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSolicitudAprobadaEvent;
+import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSolicitudRechazadaEvent;
 import com.backend.portalroshkabackend.tools.RepositoryService;
 import com.backend.portalroshkabackend.tools.errors.errorslist.solicitudes.RequestNotFoundException;
 import com.backend.portalroshkabackend.tools.mapper.RequestMapper;
@@ -125,7 +127,8 @@ public class RequestServiceImpl implements IRequestService{
         );
 
        notificationService.notifyUserses(acceptedRequest, true);
-        //notificationService.notifyUser(acceptedRequest, true);
+       NotificarSolicitudAprobadaEvent event = new NotificarSolicitudAprobadaEvent(acceptedRequest.getUsuario().getIdUsuario());
+       notificationService.sendEvent(event);
 
         return requestMapper.toRequestResponseDto(acceptedRequest.getIdSolicitud(), REQUEST_ACCEPTED_MESSAGE);
     }
@@ -149,8 +152,10 @@ public class RequestServiceImpl implements IRequestService{
                 DATABASE_DEFAULT_ERROR
         );
 
-       // notificationService.notifyUser(rejectedRequest, false);
         notificationService.notifyUserses(rejectedRequest, false);
+        NotificarSolicitudRechazadaEvent event = new NotificarSolicitudRechazadaEvent(rejectedRequest.getUsuario().getIdUsuario());
+        notificationService.sendEvent(event);
+
 
         return requestMapper.toRequestResponseDto(rejectedRequest.getIdSolicitud(), REQUEST_REJECTED_MESSAGE);
 

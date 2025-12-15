@@ -312,7 +312,6 @@ public class TeamLeaderService {
         notificationService.notifyUserses(solicitud, false);
         notificationService.alertTH(solicitud, false);
 
-        NotificarSolicitudRechazadaEvent event = new NotificarSolicitudRechazadaEvent();
 
         return respuesta; // Placeholder response
     }

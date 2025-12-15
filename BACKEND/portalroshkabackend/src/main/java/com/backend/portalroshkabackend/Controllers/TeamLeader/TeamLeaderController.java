@@ -45,8 +45,6 @@ public class TeamLeaderController {
 
         SolicitudRespuestaDto respuesta = teamLeaderService.acceptRequest(idSolicitud);
 
-        NotificarSolicitudAprobadaEvent event = new NotificarSolicitudAprobadaEvent();
-        notificationService.sendEvent(event);
 
         return ResponseEntity.ok(respuesta); // Placeholder response
     }
@@ -56,8 +54,6 @@ public class TeamLeaderController {
 
         SolicitudRespuestaDto respuesta = teamLeaderService.rejectRequest(idSolicitud);
 
-        NotificarSolicitudRechazadaEvent event = new NotificarSolicitudRechazadaEvent();
-        notificationService.sendEvent(event);
 
         return ResponseEntity.ok(respuesta); // Placeholder response
     }

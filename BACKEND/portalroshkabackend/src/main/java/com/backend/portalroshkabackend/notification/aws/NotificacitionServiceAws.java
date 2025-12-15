@@ -2,7 +2,10 @@ package com.backend.portalroshkabackend.notification.aws;
 
 import com.backend.portalroshkabackend.Models.Solicitud;
 import com.backend.portalroshkabackend.Repositories.UsuarioRepositories.UsuarioRepository;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.sns.SnsClient;
 
@@ -16,9 +19,12 @@ public class NotificacitionServiceAws {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    private final String TOPIC_SOLICITUD = "arn:aws:sns:sa-east-1:681721397478:portal-solicitud";
-    private final String TOPIC_NOTIFICACION = "arn:aws:sns:sa-east-1:681721397478:portal-notificacion";
 
+    @Value("${topic.solicitud}")
+    private String TOPIC_SOLICITUD;
+
+    @Value("${TOPIC.notificacion}")
+    private String TOPIC_NOTIFICACION;
 
     private void subscribeEmailToTopic(String correo) {
 
@@ -55,4 +61,6 @@ public class NotificacitionServiceAws {
                 .topicArn(TOPIC_NOTIFICACION)
                 .message(message));
     }
+
+
 }
