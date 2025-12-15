@@ -1,11 +1,14 @@
-import { useEffect, useState } from "react"; 
-import { useNavigate } from 'react-router'
-import { useAuth } from '../../../app/providers/AuthContext'
-import type { IEquipo } from '../interfaces/IEquipo'
+    import { useEffect, useState } from "react"
+    import { useNavigate } from "react-router"
+    import { useAuth } from "../../../app/providers/AuthContext"
+    import type { IEquipo } from "../interfaces/IEquipo"
 
-const BASE_URL = 'http://localhost:8080/api/v1/admin/operations/equipos'
+    import GlassCard from "@/shared/ui/components/GlassCard"
+    import DataTable from "@/shared/ui/components/DataTable"
 
-export default function EquiposPage(){
+    const BASE_URL = "http://localhost:8080/api/v1/admin/operations/equipos"
+
+    export default function EquiposPage() {
     const navigate = useNavigate()
     const { token } = useAuth()
 
@@ -17,78 +20,59 @@ export default function EquiposPage(){
     const [detalleLoading, setDetalleLoading] = useState(false)
     const [detalleError, setDetalleError] = useState<string | null>(null)
 
-    //Cargar lista de equipos
-
     useEffect(() => {
-    const ac = new AbortController()
+        if (!token) return
 
-        ;(async () => {
+        const fetchEquipos = async () => {
         try {
             setLoading(true)
             setError(null)
 
             const res = await fetch(BASE_URL, {
             headers: {
-                Accept: 'application/json',
-                ...(token ? { Authorization: `Bearer ${token}` } : {}),
+                Accept: "application/json",
+                Authorization: `Bearer ${token}`,
             },
-            credentials: 'include',
-            signal: ac.signal,
             })
 
-            if (!res.ok) {
-            const txt = await res.text()
-            throw new Error(`${res.status} ${res.statusText} — ${txt.slice(0, 200)}`)
-            }
+            if (!res.ok) throw new Error("Error al cargar equipos")
 
-            const data: IEquipo[] = await res.json()
+            const data = await res.json()
             setEquipos(Array.isArray(data) ? data : [])
         } catch (e: any) {
-            if (e?.name !== 'AbortError') {
-            setError(e.message || 'Error al cargar equipos')
-            }
+            setError(e?.message ?? "Error inesperado")
         } finally {
             setLoading(false)
         }
-        })()
-
-        return () => ac.abort()
-    }, [token])
-
-        //Cambiar Estado
-
-            const handleToggleEstado = async (equipo: IEquipo) => {
-        try {
-        const res = await fetch(`${BASE_URL}/${equipo.idEquipo}/toggle`, {
-            method: 'PATCH',
-            headers: {
-            Accept: 'application/json',
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
-            },
-            credentials: 'include',
-        })
-
-        if (!res.ok) {
-            const txt = await res.text()
-            throw new Error(`${res.status} ${res.statusText} — ${txt.slice(0, 200)}`)
         }
 
-        // Actualizar estado en memoria
+        fetchEquipos()
+    }, [token])
+
+    const toggleEstado = async (equipo: IEquipo) => {
+        try {
+        const res = await fetch(`${BASE_URL}/${equipo.idEquipo}/toggle`, {
+            method: "PATCH",
+            headers: {
+            Authorization: `Bearer ${token}`,
+            },
+        })
+
+        if (!res.ok) throw new Error("No se pudo cambiar el estado")
+
         setEquipos((prev) =>
             prev.map((e) =>
             e.idEquipo === equipo.idEquipo
-                ? { ...e, estado: e.estado === 'A' ? 'I' : 'A' }
+                ? { ...e, estado: e.estado === "A" ? "I" : "A" }
                 : e
             )
         )
         } catch (e: any) {
-        setError(e.message || 'Error al cambiar estado del equipo')
+        alert(e?.message ?? "Error cambiando estado")
         }
     }
 
-        //Ver detalle
-
-            const abrirDetalle = async (idEquipo: number) => {
+    const abrirDetalle = async (idEquipo: number) => {
         setDetalle(null)
         setDetalleError(null)
         setDetalleLoading(true)
@@ -96,21 +80,17 @@ export default function EquiposPage(){
         try {
         const res = await fetch(`${BASE_URL}/${idEquipo}`, {
             headers: {
-            Accept: 'application/json',
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
             },
-            credentials: 'include',
         })
 
-        if (!res.ok) {
-            const txt = await res.text()
-            throw new Error(`${res.status} ${res.statusText} — ${txt.slice(0, 200)}`)
-        }
+        if (!res.ok) throw new Error("Error al cargar detalle")
 
         const data: IEquipo = await res.json()
         setDetalle(data)
         } catch (e: any) {
-        setDetalleError(e.message || 'Error al cargar detalle del equipo')
+        setDetalleError(e?.message ?? "Error al cargar detalle")
         } finally {
         setDetalleLoading(false)
         }
@@ -121,163 +101,108 @@ export default function EquiposPage(){
         setDetalleError(null)
     }
 
-    // Helpers
-
-        const formatFecha = (iso: string | null | undefined) => {
-        if (!iso) return '—'
-        const d = new Date(iso)
-        if (Number.isNaN(d.getTime())) return iso
-        return d.toLocaleString()
-    }
-
-    const getEstadoLabel = (estado: 'A' | 'I') => (estado === 'A' ? 'Activo' : 'Inactivo')
-
-    const getEstadoClasses = (estado: 'A' | 'I') =>
-        estado === 'A'
-        ? 'px-2 py-0.5 text-xs rounded-full bg-green-100 text-green-700'
-        : 'px-2 py-0.5 text-xs rounded-full bg-red-100 text-red-700'
-
-          // Render
-
-            return (
-        <div className="h-full flex flex-col overflow-hidden">
-        {/* Fondo como en otras páginas */}
+    return (
+        <div className="h-full w-full relative overflow-hidden">
         <div
-            className="absolute inset-0 bg-brand-blue"
+            className="absolute inset-0"
             style={{
             backgroundImage: "url('/src/assets/ilustracion-herov3.svg')",
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
+            backgroundSize: "cover",
+            backgroundPosition: "center",
             }}
-        >
-            <div className="absolute inset-0 bg-brand-blue/40" />
-        </div>
+        />
+        <div className="absolute inset-0 bg-[#085394]/55" />
 
-        <div className="relative z-10 flex flex-col h-full p-4">
-            <div className="bg-white/60 dark:bg-white/10 backdrop-blur-md rounded-2xl shadow-xl flex flex-col h-full overflow-hidden">
-            {/* Header */}
-            <div className="p-6 border-b border-gray-200 dark:border-gray-700 shrink-0">
-                <div className="flex items-center justify-between mb-4">
-                <h2 className="text-2xl font-bold text-brand-blue dark:text-blue-200">
-                    Equipos
-                </h2>
+        <div className="relative z-10 h-full w-full p-4">
+            <GlassCard className="h-full w-full p-6">
+            <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-[#083b6a]">Equipos</h2>
 
-                    <button
-                        className="inline-flex items-center gap-1 px-4 py-2 rounded-lg bg-[#085394] text-white font-medium shadow hover:bg-[#064579] transition"
-                        onClick={() => navigate('/operations/equipos/nuevo')}
+                <button
+                onClick={() => navigate("/operations/equipos/nuevo")}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition"
+                >
+                <span className="material-symbols-outlined">add</span>
+                Nuevo Equipo
+                </button>
+            </div>
+
+            {loading && <div>Cargando equipos…</div>}
+            {error && <div className="text-red-600">{error}</div>}
+
+            {!loading && !error && (
+                <DataTable
+                data={equipos}
+                rowKey={(e) => e.idEquipo}
+                columns={[
+                    { key: "nombre", label: "Nombre" },
+                    {
+                    key: "lider",
+                    label: "Líder",
+                    render: (e) =>
+                        e.lider
+                        ? `${e.lider.nombre} ${e.lider.apellido}`
+                        : "—",
+                    },
+                    {
+                    key: "estado",
+                    label: "Estado",
+                    render: (e) => (
+                        <span
+                        className={`px-2 py-1 text-xs rounded-full font-medium ${
+                            e.estado === "A"
+                            ? "bg-green-100 text-green-700"
+                            : "bg-red-100 text-red-700"
+                        }`}
                         >
-                        <span className="material-symbols-outlined text-base">add</span>
-                        Nuevo Equipo
-                    </button>
-                </div>
-            </div>
-
-            {/* Contenido */}
-            <div className="flex-1 overflow-auto p-6">
-                {loading && (
-                <div className="text-sm text-gray-700 dark:text-gray-200">Cargando equipos…</div>
-                )}
-
-                {error && (
-                <div className="text-sm text-red-600 dark:text-red-400">
-                    Error: {error}
-                </div>
-                )}
-
-                {!loading && !error && equipos.length === 0 && (
-                <div className="text-sm text-gray-600 dark:text-gray-300">
-                    No hay equipos registrados.
-                </div>
-                )}
-
-                {!loading && !error && equipos.length > 0 && (
-                <div className="overflow-x-auto">
-                    <table className="min-w-full text-sm border-collapse">
-                    <thead>
-                        <tr className="bg-[#085394] text-white">
-                        <th className="px-3 py-2 text-left">Nombre</th>
-                        <th className="px-3 py-2 text-left">Lider</th>
-                        <th className="px-3 py-2 text-left">Estado</th>
-                        <th className="px-3 py-2 text-left">Fecha creacion</th>
-                        <th className="px-3 py-2 text-center">Miembros</th>
-                        <th className="px-3 py-2 text-center">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {equipos.map((eq) => {
-                        const liderNombre = eq.lider
-                            ? `${eq.lider.nombre} ${eq.lider.apellido}`.trim()
-                            : '—'
-                        const cantMiembros = eq.usuarios?.length ?? 0
-
-                        return (
-                            <tr
-                                key={eq.idEquipo}
-                                className="border-b border-white/10 
-                                            text-gray-900 dark:text-gray-100
-                                            hover:bg-white/10 dark:hover:bg-white/10
-                                            transition"
-                                >
-
-                            <td className="px-3 py-2 text-gray-900 dark:text-gray-100">
-                                {eq.nombre}
-                            </td>
-                            <td className="px-3 py-2">{liderNombre}</td>
-                            <td className="px-3 py-2">
-                                <span className={getEstadoClasses(eq.estado)}>
-                                {getEstadoLabel(eq.estado)}
-                                </span>
-                            </td>
-                            <td className="px-3 py-2">
-                                {formatFecha(eq.fechaCreacion)}
-                            </td>
-                            <td className="px-3 py-2 text-center">
-                                {cantMiembros}
-                            </td>
-                            <td className="px-3 py-2">
-                                <div className="flex justify-center gap-3">
-                                {/* Ver */}
-                                <button
-                                    onClick={() => abrirDetalle(eq.idEquipo)}
-                                    className="p-2 hover:bg-yellow-100 text-yellow-700 rounded-full transition"
-                                    title="Ver detalles"
-                                >
-                                    <span className="material-symbols-outlined">visibility</span>
-                                </button>
-
-                                {/* Editar */}
-                                <button
-                                    onClick={() => navigate(`/operations/equipos/${eq.idEquipo}/edit`)}
-                                    className="p-2 hover:bg-blue-100 text-blue-600 rounded-full transition"
-                                    title="Editar"
-                                >
-                                    <span className="material-symbols-outlined">edit</span>
-                                </button>
-
-                                {/* Cambiar estado */}
-                                <button
-                                    onClick={() => handleToggleEstado(eq)}
-                                    className="p-2 hover:bg-gray-200 text-gray-600 rounded-full transition"
-                                    title="Cambiar estado"
-                                >
-                                    <span className="material-symbols-outlined">autorenew</span>
-                                </button>
-
-                                </div>
-                            </td>
-                            </tr>
-                        )
-                        })}
-                    </tbody>
-                    </table>
-                </div>
-                )}
-            </div>
-            </div>
+                        {e.estado === "A" ? "Activo" : "Inactivo"}
+                        </span>
+                    ),
+                    },
+                    {
+                    key: "usuarios",
+                    label: "Miembros",
+                    render: (e) => e.usuarios?.length ?? 0,
+                    },
+                ]}
+                rowActions={[
+                    {
+                    key: "ver",
+                    label: "Ver",
+                    icon: (
+                        <span className="material-symbols-outlined">
+                        visibility
+                        </span>
+                    ),
+                    onClick: (row) => abrirDetalle(row.idEquipo),
+                    },
+                    {
+                    key: "editar",
+                    label: "Editar",
+                    icon: (
+                        <span className="material-symbols-outlined">edit</span>
+                    ),
+                    onClick: (row) =>
+                        navigate(`/operations/equipos/${row.idEquipo}/edit`),
+                    variant: "primary",
+                    },
+                    {
+                    key: "estado",
+                    label: "Cambiar estado",
+                    icon: (
+                        <span className="material-symbols-outlined">
+                        autorenew
+                        </span>
+                    ),
+                    onClick: (row) => toggleEstado(row),
+                    variant: "secondary",
+                    },
+                ]}
+                />
+            )}
+            </GlassCard>
         </div>
 
-        {/* Modal de Detalle */}
         {detalle && (
             <DetalleEquipoModal
             equipo={detalle}
@@ -286,152 +211,115 @@ export default function EquiposPage(){
             onClose={cerrarDetalle}
             />
         )}
-
-        {/* Si se está cargando el detalle pero aún no hay data, mostramos un modal simple */}
-        {!detalle && detalleLoading && (
-            <DetalleEquipoModal
-            equipo={null}
-            loading={detalleLoading}
-            error={detalleError}
-            onClose={cerrarDetalle}
-            />
-        )}
         </div>
     )
     }
 
-    // Modal Detalle
-
-        type DetalleProps = {
+    type DetalleProps = {
     equipo: IEquipo | null
     loading: boolean
     error: string | null
     onClose: () => void
     }
 
-    function DetalleEquipoModal({ equipo, loading, error, onClose }: DetalleProps) {
-    // Evitar mostrar modal vacío si no se pidió aún
+    function DetalleEquipoModal({
+    equipo,
+    loading,
+    error,
+    onClose,
+    }: DetalleProps) {
     if (!equipo && !loading && !error) return null
 
-    const formatFecha = (iso: string | null | undefined) => {
-        if (!iso) return '—'
-        const d = new Date(iso)
-        if (Number.isNaN(d.getTime())) return iso
-        return d.toLocaleString()
-    }
-
-    const estado = equipo?.estado ?? 'A'
-    const estadoLabel = estado === 'A' ? 'Activo' : 'Inactivo'
-    const estadoClasses =
-        estado === 'A'
-        ? 'px-2 py-0.5 text-xs rounded-full bg-green-100 text-green-700'
-        : 'px-2 py-0.5 text-xs rounded-full bg-red-100 text-red-700'
-
     const liderNombre = equipo?.lider
-        ? `${equipo.lider.nombre} ${equipo.lider.apellido}`.trim()
-        : '—'
+        ? `${equipo.lider.nombre} ${equipo.lider.apellido}`
+        : "—"
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
-        <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-        <div className="relative z-10 w-full max-w-3xl mx-4 rounded-2xl shadow-xl bg-white dark:bg-gray-900">
-            
-            <div className="flex items-start justify-between p-4 border-b bg-[#085394] text-white">
-                <div>
-                    <h3 className="text-lg font-bold">
-                        {equipo?.nombre ?? 'Equipo'}
-                    </h3>
+        <div
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            onClick={onClose}
+        />
 
-                    <div className="mt-2 flex flex-wrap items-center gap-2">
-                        <span className="px-2 py-0.5 text-xs rounded-full bg-white/20">
-                            {estadoLabel}
-                        </span>
-
-                        {equipo?.fechaCreacion && (
-                            <span className="px-2 py-0.5 text-xs rounded-full bg-white/20">
-                                Creado: {formatFecha(equipo.fechaCreacion)}
-                            </span>
-                        )}
-                    </div>
-                </div>
-
-                <button
-                    onClick={onClose}
-                    className="p-2 rounded-lg text-white hover:bg-white/20 transition"
-                    aria-label="Cerrar"
-                >
-                    ✕
-                </button>
+        <div className="relative z-10 w-full max-w-3xl mx-4 rounded-2xl shadow-2xl bg-white overflow-hidden">
+            <div className="flex items-start justify-between px-6 py-4 bg-[#085394] text-white">
+            <div>
+                <h3 className="text-xl font-bold">{equipo?.nombre}</h3>
+                <p className="text-sm opacity-90">Detalle del equipo</p>
             </div>
 
-            <div className="p-4 space-y-3 max-h-[70vh] overflow-auto">
-            {loading && (
-                <div className="text-sm text-gray-700 dark:text-gray-200">
-                Cargando detalles del equipo…
-                </div>
-            )}
+            <button
+                onClick={onClose}
+                className="p-2 rounded-lg hover:bg-white/20 transition"
+            >
+                ✕
+            </button>
+            </div>
 
-            {error && (
-                <div className="text-sm text-red-600 dark:text-red-400">
-                Error: {error}
-                </div>
-            )}
+            <div className="p-6 space-y-6 max-h-[70vh] overflow-auto">
+            {loading && <div>Cargando detalle…</div>}
+            {error && <div className="text-red-600">{error}</div>}
 
             {!loading && !error && equipo && (
                 <>
-                <div>
-                    <p className="text-xs font-semibold text-gray-600 dark:text-gray-300">
-                    Líder
-                    </p>
-                    <p className="text-sm text-gray-800 dark:text-gray-100">
-                    {liderNombre}
+                <section>
+                    <h4 className="text-sm font-semibold text-gray-500 mb-1">
+                    Líder del equipo
+                    </h4>
+                    <div className="p-4 rounded-lg bg-blue-50">
+                    <p className="font-medium text-gray-800">{liderNombre}</p>
                     {equipo.lider?.correo && (
-                        <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">
-                        ({equipo.lider.correo})
-                        </span>
+                        <p className="text-sm text-gray-600">
+                        {equipo.lider.correo}
+                        </p>
                     )}
-                    </p>
-                </div>
+                    </div>
+                </section>
 
-                <div>
-                    <p className="text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">
+                <section>
+                    <h4 className="text-sm font-semibold text-gray-500 mb-2">
                     Miembros del equipo
-                    </p>
-                    {equipo.usuarios && equipo.usuarios.length > 0 ? (
-                    <ul className="text-sm text-gray-800 dark:text-gray-100 list-disc pl-5 space-y-1">
+                    </h4>
+
+                    {equipo.usuarios?.length ? (
+                    <ul className="space-y-2">
                         {equipo.usuarios.map((u) => (
-                        <li key={u.idUsuario}>
-                            {u.nombre} {u.apellido}
+                        <li
+                            key={u.idUsuario}
+                            className="p-4 rounded-lg bg-gray-50 flex justify-between items-center"
+                        >
+                            <div>
+                            <p className="font-medium text-gray-800">
+                                {u.nombre} {u.apellido}
+                            </p>
                             {u.correo && (
-                            <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">
-                                ({u.correo})
-                            </span>
+                                <p className="text-sm text-gray-600">
+                                {u.correo}
+                                </p>
                             )}
+                            </div>
                         </li>
                         ))}
                     </ul>
                     ) : (
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                        No hay usuarios asignados a este equipo.
+                    <p className="text-sm text-gray-500">
+                        No hay miembros asignados.
                     </p>
                     )}
-                </div>
+                </section>
                 </>
             )}
             </div>
 
-            <div className="p-4 border-t border-gray-200 dark:border-gray-700 flex justify-end">
-                <button
-                    onClick={onClose}
-                    className="px-4 py-2 rounded-lg bg-[#085394] text-white font-medium shadow hover:bg-[#064579] transition"
-                >
-                    Cerrar
-                </button>
+            <div className="px-6 py-4 border-t flex justify-end">
+            <button
+                onClick={onClose}
+                className="px-4 py-2 rounded-lg bg-[#085394] text-white font-medium hover:bg-[#06406f] transition"
+            >
+                Cerrar
+            </button>
             </div>
         </div>
         </div>
     )
     }
-
-
-    

@@ -28,11 +28,8 @@
         estado: "ACTIVO",
     })
 
-    /* =========================================================
-        CARGAR CLIENTES
-    ========================================================= */
     useEffect(() => {
-    if (!token) return
+        if (!token) return
 
         fetch(API_CLIENTES, {
         headers: { Authorization: `Bearer ${token}` },
@@ -48,9 +45,6 @@
         .catch(() => setClientes([]))
     }, [token])
 
-    /* =========================================================
-        CARGAR EQUIPOS
-    ========================================================= */
     useEffect(() => {
         if (!token) return
 
@@ -65,9 +59,6 @@
         .catch(() => setEquipos([]))
     }, [token])
 
-    /* =========================================================
-        CARGAR PROYECTO (EDITAR)
-    ========================================================= */
     useEffect(() => {
         if (!editar || !token) return
 
@@ -92,9 +83,6 @@
         setForm({ ...form, [e.target.name]: e.target.value })
     }
 
-    /* =========================================================
-        GUARDAR
-    ========================================================= */
     const handleSubmit = async (e: any) => {
         e.preventDefault()
         setError(null)
@@ -118,14 +106,17 @@
         try {
         setSaving(true)
 
-        const res = await fetch(editar ? `${API_PROYECTOS}/${id}` : API_PROYECTOS, {
+        const res = await fetch(
+            editar ? `${API_PROYECTOS}/${id}` : API_PROYECTOS,
+            {
             method: editar ? "PUT" : "POST",
             headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify(payload),
-        })
+            }
+        )
 
         if (!res.ok) {
             const txt = await res.text()
@@ -140,12 +131,8 @@
         }
     }
 
-    /* =========================================================
-        UI
-    ========================================================= */
     return (
         <div className="h-full flex flex-col overflow-y-auto">
-        {/* FONDO */}
         <div
             className="absolute inset-0 bg-brand-blue"
             style={{
@@ -159,7 +146,6 @@
 
         <div className="relative z-10 flex flex-col h-full p-4">
             <div className="bg-white/60 backdrop-blur-md rounded-2xl shadow-xl p-6 max-w-3xl mx-auto w-full">
-
             <h2 className="text-2xl font-bold text-brand-blue mb-4">
                 {editar ? "Editar Proyecto" : "Crear Nuevo Proyecto"}
             </h2>
@@ -171,7 +157,6 @@
             )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
-
                 <div>
                 <label className="block font-semibold">Nombre del Proyecto</label>
                 <input
@@ -282,10 +267,10 @@
                     Volver
                 </button>
                 </div>
-
             </form>
             </div>
         </div>
         </div>
     )
     }
+        
