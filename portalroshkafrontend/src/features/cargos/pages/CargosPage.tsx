@@ -31,7 +31,6 @@ export default function CargosPage({ embedded = false }: Props) {
   const [selected, setSelected] = useState<CargoListItem | null>(null)
   const [showModal, setShowModal] = useState(false)
 
-  // 👇 estados para confirmación
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [rowToDelete, setRowToDelete] = useState<CargoListItem | null>(null)
 
@@ -54,7 +53,7 @@ export default function CargosPage({ embedded = false }: Props) {
     setShowModal(true)
   }
 
-  // 👇 ahora abrimos el modal en vez del confirm del navegador
+  // ahora abrimos el modal en vez del confirm del navegador
   const askDelete = (row: CargoListItem) => {
     setRowToDelete(row)
     setConfirmOpen(true)
@@ -81,7 +80,7 @@ export default function CargosPage({ embedded = false }: Props) {
           key: 'delete',
           label: 'Eliminar',
           icon: <MsIcon name="delete" />,
-          onClick: askDelete, // 👈 reemplazado
+          onClick: askDelete, 
           variant: 'danger',
           disabled: deleting,
         },
@@ -134,7 +133,6 @@ export default function CargosPage({ embedded = false }: Props) {
         />
       )}
 
-      {/* 👇 nuevo modal de confirmación */}
       <ConfirmModal
         show={confirmOpen}
         title="Eliminar Cargo"

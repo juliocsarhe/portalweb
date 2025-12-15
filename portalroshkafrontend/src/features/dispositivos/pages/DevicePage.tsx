@@ -25,8 +25,8 @@ export default function DevicePage() {
   const navigate = useNavigate()
 
   // 🔒 permisos
-  const puedeVer = tieneRol(user, Roles.ADMINISTRADOR_DEL_SISTEMA, Roles.OPERACIONES)
-  const puedeEditar = tieneRol(user, Roles.ADMINISTRADOR_DEL_SISTEMA)
+  const puedeVer = tieneRol(user, Roles.ADMINISTRADOR_DEL_SISTEMA, Roles.OPERACIONES, Roles.DIRECTIVO)
+  const puedeEditar = tieneRol(user, Roles.ADMINISTRADOR_DEL_SISTEMA, Roles.DIRECTIVO)
 
   // Filtros
   const [categoria, setCategoria] = useState('')

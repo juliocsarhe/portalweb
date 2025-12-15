@@ -39,6 +39,7 @@ export default function BeneficioFormPage() {
           { name: 'comentario', label: 'Motivo', type: 'textarea', required: true }
         )
         break
+        
       case 'capacitacion':
         fields.push(
           { name: 'fecha', label: 'Fecha', type: 'date', required: false },

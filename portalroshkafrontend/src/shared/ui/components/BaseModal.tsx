@@ -39,7 +39,7 @@ const BaseModal: React.FC<BaseModalProps> = ({
         )}
 
         {/* Body */}
-        <div className="overflow-y-auto max-h-[70vh]">{children}</div>
+        <div className="overflow-y-auto max-h-[70vh] text-black dark:text-white">{children}</div>
 
         {/* Footer */}
         {footer && <div className="mt-4 flex justify-end gap-2">{footer}</div>}

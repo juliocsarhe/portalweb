@@ -1,141 +1,128 @@
-import { useEffect, useState } from 'react'
-import { NovedadesResponseDto } from '@/types'
+import { useState, useEffect } from 'react'
 
-// imagenes de prueba por si no hay nada que mostrar en algun momento, a edicion
-const DEFAULT_IMAGES = [
+const DEFAULT_ITEMS = [
   {
     id: 'default-1',
-    imagenUrl: 'src\assets\roshka.jpg',
-    titulo: 'Bienvenido',
-    descripcion: 'La Vanguardia es así'
+    imagenUrl: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800',
+    titulo: 'Título de ejemplo 1',
+    descripcion: 'Descripción corta de ejemplo 1. Esta es una descripción más larga que se puede expandir para mostrar todo el contenido cuando el usuario hace clic en "Ver más".',
+    contenido: 'Contenido completo del aviso 1 con <a href="https://example.com" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300">link de ejemplo</a>',
   },
   {
     id: 'default-2',
-    imagenUrl: 'src\assets\roshka.jpg',
-    titulo: 'Colaboración',
-    descripcion: 'Trabajamos juntos para alcanzar nuestros objetivos'
+    imagenUrl: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800',
+    titulo: 'Título de ejemplo 2',
+    descripcion: 'Descripción corta de ejemplo 2. Aquí hay más texto que se mostrará cuando expandas.',
+    contenido: 'Contenido completo del aviso 2 con <a href="https://google.com" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300">otro enlace</a>',
   },
-  {
-    id: 'default-3',
-    imagenUrl: 'src\assets\roshka.jpg',
-    titulo: 'Innovación',
-    descripcion: 'Siempre buscando nuevas formas de mejorar'
-  }
 ]
 
-export default function CarruselNovedades({ items }: { items: NovedadesResponseDto[] }) {
+export default function CarruselNovedades({ items }) {
+  const displayItems = items && items.length > 0 ? items : DEFAULT_ITEMS
   const [index, setIndex] = useState(0)
+  const [showFull, setShowFull] = useState(false)
   const [paused, setPaused] = useState(false)
 
-  // Usar imágenes por defecto si no hay items
-  const displayItems = items.length > 0 ? items : DEFAULT_IMAGES
+  const currentItem = displayItems[index]
 
+  // Cambio automático cada 5 segundos
   useEffect(() => {
-    if (!displayItems.length) return
+    if (paused) return
     const interval = setInterval(() => {
-      if (!paused) setIndex((prev) => (prev + 1) % displayItems.length)
+      setIndex((prev) => (prev + 1) % displayItems.length)
+      setShowFull(false)
     }, 5000)
     return () => clearInterval(interval)
   }, [displayItems.length, paused])
 
-  useEffect(() => {
-    if (index >= displayItems.length && displayItems.length > 0) setIndex(0)
-  }, [displayItems.length, index])
-
-  if (!displayItems.length) {
-    return <p className="text-gray-600 dark:text-gray-300">No hay novedades disponibles.</p>
+  const prevSlide = () => {
+    setIndex((i) => (i - 1 + displayItems.length) % displayItems.length)
+    setShowFull(false)
   }
 
-  // Calcular índices para mostrar 3 imágenes
-  const prevIndex = (index - 1 + displayItems.length) % displayItems.length
-  const nextIndex = (index + 1) % displayItems.length
-
-  const getItem = (idx: number) => displayItems[idx]
+  const nextSlide = () => {
+    setIndex((i) => (i + 1) % displayItems.length)
+    setShowFull(false)
+  }
 
   return (
     <div
-      className="relative w-full py-8 px-4"
+      className="relative w-full bg-white dark:bg-gray-900/70 rounded-2xl shadow-lg border border-white/20 p-6 pb-16 flex flex-col md:flex-row items-center gap-6"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {/* contenedor de las 3 fotos */}
-      <div className="flex items-center justify-center gap-4 md:gap-6">
-        {/* imagen izquierda */}
-        <div className="relative w-1/4 md:w-1/5 transition-all duration-700 ease-out opacity-60 scale-90">
-          <div className="aspect-[3/4] rounded-lg overflow-hidden shadow-md">
-            <img
-              src={getItem(prevIndex).imagenUrl}
-              alt={getItem(prevIndex).titulo}
-              className="w-full h-full object-cover"
-            />
-          </div>
-        </div>
-
-        {/* la imagen del medio */}
-        <div className="relative w-2/4 md:w-2/5 transition-all duration-700 ease-out z-10">
-          <div className="aspect-[3/4] rounded-xl overflow-hidden shadow-2xl">
-            <img
-              src={getItem(index).imagenUrl}
-              alt={getItem(index).titulo}
-              className="w-full h-full object-cover"
-            />
-            {/* Overlay con información */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-6">
-              <div className="w-full">
-                <h3 className="text-white text-xl md:text-2xl font-bold drop-shadow-lg mb-2">
-                  {getItem(index).titulo}
-                </h3>
-                {getItem(index).descripcion && (
-                  <p className="text-white/95 text-sm md:text-base line-clamp-2 drop-shadow">
-                    {getItem(index).descripcion}
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* imagen lateral */}
-        <div className="relative w-1/4 md:w-1/5 transition-all duration-700 ease-out opacity-60 scale-90">
-          <div className="aspect-[3/4] rounded-lg overflow-hidden shadow-md">
-            <img
-              src={getItem(nextIndex).imagenUrl}
-              alt={getItem(nextIndex).titulo}
-              className="w-full h-full object-cover"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* los botones de izquierda derecha */}
+      {/* Flecha izquierda */}
       <button
+        onClick={prevSlide}
+        className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-3 transition z-10"
         aria-label="Anterior"
-        onClick={() => setIndex((i) => (i - 1 + displayItems.length) % displayItems.length)}
-        className="absolute left-0 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-3 transition-all z-20"
       >
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
         </svg>
       </button>
+
+      {/* Contenido a la izquierda */}
+      <div className="flex-1 flex flex-col gap-4">
+        <h3 className="self-center text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+          {currentItem.titulo}
+        </h3>
+
+        {/* Descripción - colapsada o expandida */}
+        <div className={`self-center text-gray-700 dark:text-gray-300 ${showFull ? '' : 'line-clamp-3'} text-center`}>
+          {currentItem.descripcion}
+        </div>
+
+        {/* Contenido con links - solo se muestra cuando está expandido */}
+        {showFull && currentItem.contenido && (
+          <div
+            className="self-center text-gray-800 dark:text-gray-200 p-4 bg-gray-100 dark:bg-gray-800/50 rounded-md border border-gray-300 dark:border-gray-700 w-full"
+            dangerouslySetInnerHTML={{ __html: currentItem.contenido }}
+          />
+        )}
+
+        <button
+          onClick={() => setShowFull(!showFull)}
+          className="mt-auto self-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition"
+        >
+          {showFull ? 'Ocultar' : 'Ver más'}
+        </button>
+      </div>
+
+      {/* Imagen a la derecha */}
+      <div className="flex-1 relative">
+        <div className="aspect-[16/9] rounded-xl overflow-hidden shadow-2xl bg-gray-200 dark:bg-gray-800">
+          <img
+            src={currentItem.imagenUrl}
+            alt={currentItem.titulo}
+            className="w-full h-full object-cover"
+          />
+        </div>
+      </div>
+
+      {/* Flecha derecha */}
       <button
+        onClick={nextSlide}
+        className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-3 transition z-10"
         aria-label="Siguiente"
-        onClick={() => setIndex((i) => (i + 1) % displayItems.length)}
-        className="absolute right-0 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-3 transition-all z-20"
       >
         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
         </svg>
       </button>
 
-      {/* Indicadores */}
-      <div className="flex justify-center gap-2 mt-6">
+      {/* Indicadores - centrados horizontalmente en la parte inferior */}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
         {displayItems.map((_, i) => (
           <button
             key={i}
-            onClick={() => setIndex(i)}
+            onClick={() => {
+              setIndex(i)
+              setShowFull(false)
+            }}
             className={`transition-all rounded-full ${
               i === index
-                ? 'w-8 h-3 bg-brand-blue dark:bg-white'
+                ? 'w-8 h-3 bg-blue-600 dark:bg-white'
                 : 'w-3 h-3 bg-gray-300 dark:bg-gray-600 hover:bg-gray-400'
             }`}
             aria-label={`Ir a novedad ${i + 1}`}
