@@ -8,7 +8,7 @@ export interface TipoDispositivoItem {
 
 // Listar todos los tipos de dispositivos
 async function getTiposDispositivo(token: string): Promise<TipoDispositivoItem[]> {
-  const res = await fetch(`http://localhost:8080/api/v1/admin/sysadmin/deviceTypes/allTypes`, {
+  const res = await fetch(`http://26.73.68.190:8080/api/v1/admin/sysadmin/deviceTypes/allTypes`, {
     headers: { Authorization: `Bearer ${token}` },
   })
   if (!res.ok) throw new Error(await res.text())
@@ -20,7 +20,7 @@ async function getTiposDispositivo(token: string): Promise<TipoDispositivoItem[]
 // Obtener tipo de dispositivo por ID
 async function getTipoDispositivoById(token: string, id: number): Promise<TipoDispositivoItem> {
   const res = await fetch(
-    `http://localhost:8080/api/v1/admin/sysadmin/deviceTypes/getTypeDevice/${id}`,
+    `http://26.73.68.190:8080/api/v1/admin/sysadmin/deviceTypes/getTypeDevice/${id}`,
     {
       headers: { Authorization: `Bearer ${token}` },
     }
@@ -35,7 +35,7 @@ async function createTipoDispositivo(
   data: Partial<TipoDispositivoItem>
 ): Promise<TipoDispositivoItem> {
   const res = await fetch(
-    `http://localhost:8080/api/v1/admin/sysadmin/deviceTypes/createTypeDevice`,
+    `http://26.73.68.190:8080/api/v1/admin/sysadmin/deviceTypes/createTypeDevice`,
     {
       method: 'POST',
       headers: {
@@ -56,7 +56,7 @@ async function updateTipoDispositivo(
   data: Partial<TipoDispositivoItem>
 ): Promise<TipoDispositivoItem> {
   const res = await fetch(
-    `http://localhost:8080/api/v1/admin/sysadmin/deviceTypes/updateTypeDevice/${id}`,
+    `http://26.73.68.190:8080/api/v1/admin/sysadmin/deviceTypes/updateTypeDevice/${id}`,
     {
       method: 'PUT',
       headers: {
@@ -73,7 +73,7 @@ async function updateTipoDispositivo(
 // Eliminar tipo de dispositivo
 async function deleteTipoDispositivo(token: string, id: number): Promise<void> {
   const res = await fetch(
-    `http://localhost:8080/api/v1/admin/sysadmin/deviceTypes/deleteTypeDevice/${id}`,
+    `http://26.73.68.190:8080/api/v1/admin/sysadmin/deviceTypes/deleteTypeDevice/${id}`,
     {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${token}` },

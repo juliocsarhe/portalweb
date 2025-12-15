@@ -85,7 +85,7 @@ export default function ProfilePage() {
         throw new Error('Usuario no está cargado')
       }
 
-      const res = await fetch(`http://localhost:8080/api/v1/usuarios/actualizarfoto`, {
+      const res = await fetch(`http://26.73.68.190:8080/api/v1/usuarios/actualizarfoto`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -242,7 +242,7 @@ export default function ProfilePage() {
                       placeholder="No definido"
                       onSave={async (newPhone) => {
                         try {
-                          const res = await fetch(`http://localhost:8080/api/v1/usuarios/me`, {
+                          const res = await fetch(`http://26.73.68.190:8080/api/v1/usuarios/me`, {
                             method: 'PUT',
                             headers: {
                               'Content-Type': 'application/json',

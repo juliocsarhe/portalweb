@@ -7,7 +7,7 @@ import {
   NovedadesDefaultResponseDto,
 } from '@/types'
 
-const API_URL = 'http://localhost:8080/api/v1/admin/th/novedades'
+const API_URL = 'http://26.73.68.190:8080/api/v1/admin/th/novedades'
 
 const authHeaders = (token: string) => ({
   'Content-Type': 'application/json',

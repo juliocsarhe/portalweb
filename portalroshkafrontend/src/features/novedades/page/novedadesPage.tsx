@@ -19,7 +19,7 @@ export default function NovedadesPage() {
   // Traer todas las novedades
   useEffect(() => {
     setLoading(true)
-    fetch('http://localhost:8080/api/v1/admin/th')
+    fetch('http://26.73.68.190:8080/api/v1/admin/th')
       .then(res => {
         if (!res.ok) throw new Error('Error al cargar novedades')
         return res.json()
@@ -32,7 +32,7 @@ export default function NovedadesPage() {
   // Crear novedad
   const crearNovedad = () => {
     setLoading(true)
-    fetch('http://localhost:8080/api/v1/admin/th/novedades', {
+    fetch('http://26.73.68.190:8080/api/v1/admin/th/novedades', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(form),

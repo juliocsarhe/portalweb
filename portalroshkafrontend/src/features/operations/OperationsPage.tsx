@@ -8,8 +8,8 @@ import IconButton from '../../shared/ui/components/IconButton'
 import PaginationFooter from '../../shared/ui/components/PaginationFooter'
 
 const PAGE_SIZE = 10
-const LIST_PATH = 'http://localhost:8080/api/v1/admin/operations/teams'
-const TEAM_PATH = 'http://localhost:8080/api/v1/admin/operations/team'
+const LIST_PATH = 'http://26.73.68.190:8080/api/v1/admin/operations/teams'
+const TEAM_PATH = 'http://26.73.68.190:8080/api/v1/admin/operations/team'
 
 type Tecnologia = { idTecnologia: number; nombre: string }
 

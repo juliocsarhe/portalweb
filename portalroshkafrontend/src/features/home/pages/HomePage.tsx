@@ -43,14 +43,10 @@ export default function HomePage() {
 
             <div className="absolute top-6 right-6">
               <NotificationBell
-                notificationCount={notifications.length}
+                notifications={notifications.length}
                 onClick={toggleOpen}
               />
 
-              <NotificationPanel
-                notifications={notifications}
-                isOpen={open}
-              />
             </div>
 
           </div> {/* cierre Header */}

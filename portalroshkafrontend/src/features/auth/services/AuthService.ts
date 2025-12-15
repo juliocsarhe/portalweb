@@ -1,4 +1,4 @@
-const BASE = import.meta.env.VITE_API_BASE ?? 'http://localhost:8080'
+const BASE = import.meta.env.VITE_API_BASE ?? 'http://26.73.68.190:8080'
 
 export type AuthRequest = {
   correo: string
