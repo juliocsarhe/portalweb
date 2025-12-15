@@ -2,7 +2,7 @@
 import { throwIfNotOk } from '../../../shared/utils/http'
 import type { TecnologiasPageResponse, TecnologiaResponse, TecnologiaRequest } from '../../../types'
 
-const BASE_URL = 'http://localhost:8080/api/v1/admin/operations/tecnologias'
+const BASE_URL = 'http://26.73.68.190:8080/api/v1/admin/operations/tecnologias'
 
 /**
  * GET /tecnologias (paginado)

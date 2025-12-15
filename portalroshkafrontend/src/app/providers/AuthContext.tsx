@@ -93,7 +93,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(basicUser)
 
       // Ahora pedimos los datos completos al backend
-      const res = await fetch('http://localhost:8080/api/v1/usuarios/me', {
+      const res = await fetch('http://26.73.68.190:8080/api/v1/usuarios/me', {
         headers: { Authorization: `Bearer ${jwtToken}` },
       })
       if (!res.ok) throw new Error('No se pudo obtener datos completos del usuario')

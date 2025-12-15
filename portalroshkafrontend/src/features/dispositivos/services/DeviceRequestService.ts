@@ -14,7 +14,7 @@ async function getSolicitudesDispositivoAdmin(
   page: number = 0,
   size: number = 10
 ): Promise<PageResponse<SolicitudDispositivoItem>> {
-  const url = `http://localhost:8080/api/v1/admin/sysadmin/allRequests?page=${page}&size=${size}`
+  const url = `http://26.73.68.190:8080/api/v1/admin/sysadmin/allRequests?page=${page}&size=${size}`
 
   const res = await fetch(url, {
     headers: { Authorization: `Bearer ${token}` },
@@ -28,7 +28,7 @@ async function getSolicitudesDispositivoAdmin(
  * Listar solicitudes del usuario autenticado (no paginado).
  */
 async function getSolicitudesDispositivoUsuario(token: string): Promise<SolicitudUserItem[]> {
-  const url = `http://localhost:8080/api/v1/usuarios/solicitudes`
+  const url = `http://26.73.68.190:8080/api/v1/usuarios/solicitudes`
 
   const res = await fetch(url, {
     headers: { Authorization: `Bearer ${token}` },
@@ -43,7 +43,7 @@ async function getSolicitudesDispositivoUsuario(token: string): Promise<Solicitu
  */
 async function acceptSolicitudDispositivo(token: string, idSolicitud: number): Promise<void> {
   // 👈 ahora void
-  const url = `http://localhost:8080/api/v1/admin/sysadmin/deviceRequest/${idSolicitud}/accept`
+  const url = `http://26.73.68.190:8080/api/v1/admin/sysadmin/deviceRequest/${idSolicitud}/accept`
 
   const res = await fetch(url, {
     method: 'POST',
@@ -57,7 +57,7 @@ async function acceptSolicitudDispositivo(token: string, idSolicitud: number): P
  * Rechazar solicitud de dispositivo (solo SysAdmin).
  */
 async function rejectSolicitudDispositivo(token: string, idSolicitud: number): Promise<void> {
-  const url = `http://localhost:8080/api/v1/admin/sysadmin/deviceRequest/${idSolicitud}/reject`
+  const url = `http://26.73.68.190:8080/api/v1/admin/sysadmin/deviceRequest/${idSolicitud}/reject`
 
   const res = await fetch(url, {
     method: 'POST',
@@ -74,7 +74,7 @@ async function createSolicitudDispositivo(
   token: string,
   data: UserSolDispositivoDto
 ): Promise<SolicitudUserItem> {
-  const url = `http://localhost:8080/api/v1/usuarios/pedirdispositivo`
+  const url = `http://26.73.68.190:8080/api/v1/usuarios/pedirdispositivo`
   const res = await fetch(url, {
     method: 'POST',
     headers: {
@@ -89,7 +89,7 @@ async function createSolicitudDispositivo(
 }
 
 async function getSolicitudById(token: string, idSolicitud: number): Promise<SolicitudUserItem> {
-  const url = `http://localhost:8080/api/v1/admin/sysadmin/request/${idSolicitud}`
+  const url = `http://26.73.68.190:8080/api/v1/admin/sysadmin/request/${idSolicitud}`
   console.log('[Service] GET', url)
   const res = await fetch(url, {
     headers: { Authorization: `Bearer ${token}` },

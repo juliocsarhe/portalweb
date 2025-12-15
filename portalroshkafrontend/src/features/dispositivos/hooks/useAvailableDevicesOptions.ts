@@ -18,7 +18,7 @@ export function useAvailableDevicesOptions(token: string | null, selectedDeviceI
     params.set('sortBy', 'default')
 
     fetch(
-      `http://localhost:8080/api/v1/admin/sysadmin/devices/allDevicesWithoutOwner?${params.toString()}`,
+      `http://26.73.68.190:8080/api/v1/admin/sysadmin/devices/allDevicesWithoutOwner?${params.toString()}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }

@@ -263,7 +263,7 @@ useEffect(() => {
     currentPassword: string,
     newPassword: string
   ): Promise<void> => {
-    const API_URL = 'http://localhost:8080/api/v1/usuarios/cambiarcontrasena'
+    const API_URL = 'http://26.73.68.190:8080/api/v1/usuarios/cambiarcontrasena'
 
     try {
       const response = await fetch(API_URL, {

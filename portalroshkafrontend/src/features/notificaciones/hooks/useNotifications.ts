@@ -1,6 +1,7 @@
 import { Client } from '@stomp/stompjs';
 import { useEffect, useState } from 'react';
 
+
 export function useNotifications(userEmail: string) {
     const [notifications, setNotifications] = useState<string[]>([]);
     const [open, setOpen] = useState(false);
@@ -11,7 +12,7 @@ export function useNotifications(userEmail: string) {
     if (!userEmail) return;
 
     const client = new Client({
-        brokerURL: 'ws://localhost:8080/ws',
+        brokerURL: 'ws://26.73.68.190:8080/ws',
         reconnectDelay: 5000,
         
         onConnect: () => {
@@ -19,8 +20,10 @@ export function useNotifications(userEmail: string) {
 
         //  ESTO ES LO QUE ENVÍA TU BACKEND (línea 66 de NotificationService.java)
         // template.convertAndSendToUser(usuarioCorreo, "/topic/notification", message);
-        client.subscribe(`/user/${userEmail}/topic/notification`, msg => {
+        client.subscribe(`/topic/notificarsolicitudaprobadaevent`, msg => {
             console.log('📬 Notificación recibida:', msg.body);
+            var data = JSON.parse(msg.body);
+            console.log(data);
             setNotifications(prev => [...prev, msg.body]);
         });
 
