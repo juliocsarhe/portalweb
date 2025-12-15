@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class NotificationDTO {
 
-    public int id;
+    public int idUsuario;
     public int idSolicitud;
     public String message;
 

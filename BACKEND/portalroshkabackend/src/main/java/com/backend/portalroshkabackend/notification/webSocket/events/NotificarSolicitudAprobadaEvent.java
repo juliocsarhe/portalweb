@@ -17,11 +17,10 @@ public class NotificarSolicitudAprobadaEvent implements Notification{
 
         NotificationDTO dto = new NotificationDTO();
 
-        dto.setId(id); ;
+        dto.setIdUsuario(id); ;
 
         dto.setMessage("Solicitud Aprobada");
 
         return dto;
-
     }
 }

@@ -7,6 +7,7 @@ public class NotificarSolicitudTlEvent implements Notification {
     private int id;
 
     public NotificarSolicitudTlEvent(int id){
+
         this.id = id;
     }
 
@@ -15,8 +16,7 @@ public class NotificarSolicitudTlEvent implements Notification {
     public NotificationDTO getMessageDTO () {
         NotificationDTO dto = new NotificationDTO();
 
-        dto.setId(id);
-
+        dto.setIdUsuario(id);
         dto.setMessage("Solicitud realizada lider");
 
         return dto;
