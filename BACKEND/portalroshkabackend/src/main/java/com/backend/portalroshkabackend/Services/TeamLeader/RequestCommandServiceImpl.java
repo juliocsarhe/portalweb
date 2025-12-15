@@ -1,10 +1,14 @@
 package com.backend.portalroshkabackend.Services.TeamLeader;
 
 import com.backend.portalroshkabackend.DTO.TeamLeader.TeamLeaderDefaultResponse;
+import com.backend.portalroshkabackend.Models.Enum.EstadoActivoInactivo;
 import com.backend.portalroshkabackend.Models.Enum.EstadoSolicitudEnum;
 import com.backend.portalroshkabackend.Models.Enum.SolicitudesEnum;
+import com.backend.portalroshkabackend.Models.Equipos;
 import com.backend.portalroshkabackend.Models.Solicitud;
 import com.backend.portalroshkabackend.Models.Usuario;
+import com.backend.portalroshkabackend.Repositories.OP.AsignacionUsuarioRepository;
+import com.backend.portalroshkabackend.Repositories.OP.EquiposRepository;
 import com.backend.portalroshkabackend.Repositories.TH.SolicitudRepository;
 import com.backend.portalroshkabackend.Services.TeamLeader.subservices.IAcceptRequestTeamLeaderService;
 import com.backend.portalroshkabackend.notification.NotificationService;
@@ -38,6 +42,8 @@ public class RequestCommandServiceImpl implements IRequestsCommandService {
     private final RequestTeamLeaderMapper requestMapper;
     private final RepositoryService repositoryService;
     private final ValidatorStrategy<Solicitud> requestValidator;
+    private final EquiposRepository equiposRepository;
+    private final AsignacionUsuarioRepository asignacionUsuarioRepository;
 
     @Autowired
     public RequestCommandServiceImpl(
@@ -47,8 +53,10 @@ public class RequestCommandServiceImpl implements IRequestsCommandService {
             NotificationService notificationService,
             RequestTeamLeaderMapper requestMapper,
             RepositoryService repositoryService,
-            @Qualifier("requestHandlerValidator")ValidatorStrategy<Solicitud> requestValidator
-            ) {
+            @Qualifier("requestHandlerValidator")ValidatorStrategy<Solicitud> requestValidator,
+            EquiposRepository equiposRepository,
+            AsignacionUsuarioRepository asignacionUsuarioRepository
+    ) {
         this.solicitudRepository = solicitudRepository;
         this.securityUtils = securityUtils;
         this.notificationService = notificationService;
@@ -57,6 +65,8 @@ public class RequestCommandServiceImpl implements IRequestsCommandService {
                 .collect(Collectors.toMap(IAcceptRequestTeamLeaderService::getType, Function.identity()));
         this.repositoryService = repositoryService;
         this.requestValidator = requestValidator;
+        this.equiposRepository = equiposRepository;
+        this.asignacionUsuarioRepository = asignacionUsuarioRepository;
     }
 
     @Override
@@ -69,15 +79,13 @@ public class RequestCommandServiceImpl implements IRequestsCommandService {
                 () -> new RequestNotFoundException(idRequest)
         );
 
-        Usuario usuario = securityUtils.getUsuarioActual();
+        Usuario leader = securityUtils.getUsuarioActual();
 
-        if(request.getLider() == null
-                || !request.getLider().getIdUsuario().equals(usuario.getIdUsuario())
-                || !securityUtils.hasRole(usuario, SecurityUtils.ROLE_TEAM_LIDER)) {
-
+        if(!securityUtils.hasRole(leader, SecurityUtils.ROLE_TEAM_LIDER)) {
             throw new TeamLeaderNotAuthorized();
         }
 
+        validateLeaderScope(request, leader);
         requestValidator.validate(request);
         request.setEstado(EstadoSolicitudEnum.A);
 
@@ -106,33 +114,59 @@ public class RequestCommandServiceImpl implements IRequestsCommandService {
     @Override
     @Transactional
     public TeamLeaderDefaultResponse rejectRequest(int idSolicitud){
-        Solicitud solicitud = repositoryService.findByIdOrThrow(
+        Solicitud request = repositoryService.findByIdOrThrow(
                 solicitudRepository,
                 idSolicitud,
                 () -> new RequestNotFoundException(idSolicitud)
         );
-        requestValidator.validate(solicitud);
+        requestValidator.validate(request);
 
-        Usuario usuario = securityUtils.getUsuarioActual();
-        if(solicitud.getLider() == null
-                || !solicitud.getLider().getIdUsuario().equals(usuario.getIdUsuario())
-                || !securityUtils.hasRole(usuario, SecurityUtils.ROLE_TEAM_LIDER)){
-
+        Usuario leader = securityUtils.getUsuarioActual();
+        if(!securityUtils.hasRole(leader, SecurityUtils.ROLE_TEAM_LIDER)){
             throw new TeamLeaderNotAuthorized();
         }
 
-        solicitud.setEstado(EstadoSolicitudEnum.R);
+        validateLeaderScope(request, leader);
+        request.setEstado(EstadoSolicitudEnum.R);
 
-        notificationService.notifyUserses(solicitud, false);
-        notificationService.alertTH(solicitud, false);
+        notificationService.notifyUserses(request, false);
+        notificationService.alertTH(request, false);
         NotificarSolicitudRechazadaEvent event = new NotificarSolicitudRechazadaEvent();
 
         repositoryService.save(
                 solicitudRepository,
-                solicitud,
+                request,
                 DATABASE_DEFAULT_ERROR
         );
-        return requestMapper.toTeamLeaderDefaultResponseDto(solicitud.getIdSolicitud(), REQUEST_REJECTED_MESSAGE);
+        return requestMapper.toTeamLeaderDefaultResponseDto(request.getIdSolicitud(), REQUEST_REJECTED_MESSAGE);
+    }
+
+
+    private void validateLeaderScope(Solicitud request, Usuario leader) {
+
+        if (request.getLider() == null ||
+                !request.getLider().getIdUsuario().equals(leader.getIdUsuario())) {
+            throw new TeamLeaderNotAuthorized();
+        }
+
+        List<Equipos> equiposLiderados =
+                equiposRepository.findAllByLider_IdUsuario(leader.getIdUsuario());
+
+        if (equiposLiderados.isEmpty()) {
+            throw new TeamLeaderNotAuthorized();
+        }
+
+        boolean pertenece = asignacionUsuarioRepository
+                .existsByEquipoInAndUsuario_IdUsuarioAndEstado(
+                        equiposLiderados,
+                        request.getUsuario().getIdUsuario(),
+                        EstadoActivoInactivo.A
+                );
+
+        if (!pertenece) {
+            throw new TeamLeaderNotAuthorized();
+        }
+
     }
 
 }

@@ -1,10 +1,14 @@
 package com.backend.portalroshkabackend.Services.TeamLeader;
 
 import com.backend.portalroshkabackend.DTO.TeamLeader.request.TeamLeaderRequestResponseDto;
+import com.backend.portalroshkabackend.Models.Enum.EstadoActivoInactivo;
 import com.backend.portalroshkabackend.Models.Enum.EstadoSolicitudEnum;
 import com.backend.portalroshkabackend.Models.Enum.SolicitudesEnum;
+import com.backend.portalroshkabackend.Models.Equipos;
 import com.backend.portalroshkabackend.Models.Solicitud;
 import com.backend.portalroshkabackend.Models.Usuario;
+import com.backend.portalroshkabackend.Repositories.OP.AsignacionUsuarioRepository;
+import com.backend.portalroshkabackend.Repositories.OP.EquiposRepository;
 import com.backend.portalroshkabackend.Repositories.TH.SolicitudRepository;
 import com.backend.portalroshkabackend.tools.RepositoryService;
 import com.backend.portalroshkabackend.tools.errors.errorslist.solicitudes.RequestNotFoundException;
@@ -26,17 +30,23 @@ public class RequestQueryServiceImpl implements IRequestQueryService {
     private final SolicitudRepository solicitudRepository;
     private final RepositoryService repositoryService;
     private final RequestTeamLeaderMapper requestMapper;
+    private final AsignacionUsuarioRepository asignacionUsuarioRepository;
+    private final EquiposRepository equiposRepository;
 
     public RequestQueryServiceImpl(
             SecurityUtils securityUtils,
             SolicitudRepository solicitudRepository,
             RepositoryService repositoryService,
-            RequestTeamLeaderMapper requestMapper
+            RequestTeamLeaderMapper requestMapper,
+            AsignacionUsuarioRepository asignacionUsuarioRepository,
+            EquiposRepository equiposRepository
     ){
         this.securityUtils = securityUtils;
         this.solicitudRepository = solicitudRepository;
         this.repositoryService = repositoryService;
         this.requestMapper = requestMapper;
+        this.asignacionUsuarioRepository = asignacionUsuarioRepository;
+        this.equiposRepository = equiposRepository;
     }
 
 
@@ -49,15 +59,19 @@ public class RequestQueryServiceImpl implements IRequestQueryService {
                 idRequest,
                 () -> new RequestNotFoundException(idRequest)
         );
-        Usuario usuario = securityUtils.getUsuarioActual();
+        Usuario leader = securityUtils.getUsuarioActual();
 
-        boolean isOwner = usuario.getIdUsuario().equals(request.getLider().getIdUsuario());
-        boolean isAllowedType = request.getTipoSolicitud() == SolicitudesEnum.PERMISO
-                || request.getTipoSolicitud() == SolicitudesEnum.VACACIONES;
 
-        if(!isOwner || !isAllowedType){
+        boolean isAllowedType =
+                request.getTipoSolicitud() == SolicitudesEnum.PERMISO ||
+                request.getTipoSolicitud() == SolicitudesEnum.VACACIONES;
+
+        if(!isAllowedType){
             throw new TeamLeaderNotAuthorized();
         }
+
+        validateLeaderScope(request, leader); // validar que en realidad el lider pertenece a ese equipo
+
 
         return requestMapper.toTeamLeaderRequestByIdDto(request);
 
@@ -119,5 +133,34 @@ public class RequestQueryServiceImpl implements IRequestQueryService {
                 .findAllByLiderAndTipoSolicitud(leader, SolicitudesEnum.PERMISO, pageRequest)
                 .map(requestMapper::toTeamLeaderRequestByIdDto);
     }
+
+
+    private void validateLeaderScope(Solicitud request, Usuario leader) {
+
+        if (request.getLider() == null ||
+                !request.getLider().getIdUsuario().equals(leader.getIdUsuario())) {
+            throw new TeamLeaderNotAuthorized();
+        }
+
+        List<Equipos> equiposLiderados =
+                equiposRepository.findAllByLider_IdUsuario(leader.getIdUsuario());
+
+        if (equiposLiderados.isEmpty()) {
+            throw new TeamLeaderNotAuthorized();
+        }
+
+        boolean pertenece = asignacionUsuarioRepository
+                .existsByEquipoInAndUsuario_IdUsuarioAndEstado(
+                        equiposLiderados,
+                        request.getUsuario().getIdUsuario(),
+                        EstadoActivoInactivo.A
+                );
+
+        if (!pertenece) {
+            throw new TeamLeaderNotAuthorized();
+        }
+
+    }
+
 
 }

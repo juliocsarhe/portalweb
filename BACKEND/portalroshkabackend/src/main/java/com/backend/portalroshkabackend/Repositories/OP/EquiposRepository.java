@@ -36,4 +36,5 @@ public interface EquiposRepository extends JpaRepository<Equipos, Integer> {
 
     Equipos findByIdEquipo(Integer idEquipo);
 
+    List<Equipos> findAllByLider_IdUsuario(Integer idUsuario);
 }

@@ -28,7 +28,7 @@ public class RequestCommandController {
         NotificarSolicitudAprobadaEvent event = new NotificarSolicitudAprobadaEvent();
         notificationService.sendEvent(event);
 
-        return ResponseEntity.ok(respuesta); // Placeholder response
+        return ResponseEntity.ok(respuesta);
     }
 
     @PostMapping("/users/requests/{idSolicitud}/reject")
@@ -39,7 +39,7 @@ public class RequestCommandController {
         NotificarSolicitudRechazadaEvent event = new NotificarSolicitudRechazadaEvent();
         notificationService.sendEvent(event);
 
-        return ResponseEntity.ok(respuesta); // Placeholder response
+        return ResponseEntity.ok(respuesta);
     }
 
 }

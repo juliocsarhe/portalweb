@@ -36,7 +36,6 @@ import com.backend.portalroshkabackend.Repositories.UsuarioRepositories.TipoDisp
 
 import com.backend.portalroshkabackend.notification.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -266,7 +265,7 @@ public class UserService {
         tiposDispositivosDto dto = new tiposDispositivosDto();
         dto.setIdTipoDispositivo(tipoDispositivo.getIdTipoDispositivo());
         dto.setNombre(tipoDispositivo.getNombre());
-        dto.setDetalle(tipoDispositivo.getDetalle());;
+        dto.setDetalle(tipoDispositivo.getDetalle());
         return dto;
     }
 
@@ -696,7 +695,7 @@ public class UserService {
         if (!esBase64(dto.getFoto())) { // Verifica si la cadena es una imagen en base64
             return false;
         }
-        usuario.setUrlPerfil(dto.getFoto());; // Actualiza la foto con la nueva codificada
+        usuario.setUrlPerfil(dto.getFoto()); // Actualiza la foto con la nueva codificada
         usuarioRepository.save(usuario);
         return true;
     }
@@ -733,8 +732,7 @@ public class UserService {
         dto.setFechaCreacion(solicitud.getFechaCreacion());
         dto.setNombreLider(solicitud.getLider() != null ? solicitud.getLider().getNombre() + " " + solicitud.getLider().getApellido() : null);
         dto.setNombreUsuario(solicitud.getUsuario() != null ? solicitud.getUsuario().getNombre() + " " + solicitud.getUsuario().getApellido() : null);
-        
-        
+
         Integer idSubtipoSolicitud = extraerIdSubtipoSolicitud(solicitud.getComentario());
         
         // System.out.println("ID SUBTIPO SOLICITUD EXTRAIDO: " + idSubtipoSolicitud);
