@@ -18,18 +18,23 @@
 //   return <Outlet />;
 // }
 // src/components/ProtectedRoute.tsx
-import { Navigate, Outlet, useLocation } from 'react-router'
+import { Navigate, Outlet, useLocation } from 'react-router-dom'
 
 import { useAuth } from '../../../app/providers/AuthContext'
 
 export default function ProtectedRoute() {
-  const { token } = useAuth() // usa token o flag de sesión
+  const { token, logout } = useAuth() // usa token o flag de sesión
   const location = useLocation()
 
-  const isAllowed = !!token
-
-  if (!isAllowed) {
+  // No hay sesión
+  if (!token) {
     return <Navigate to="/login" replace state={{ from: location }} />
+  }
+
+  // Token inválido (extra seguridad)
+  if (typeof token !== "string" || token.trim() === "") {
+    logout()
+    return <Navigate to="/login" replace />
   }
   return <Outlet />
 }
