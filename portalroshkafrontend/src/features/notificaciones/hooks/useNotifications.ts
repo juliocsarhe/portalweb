@@ -1,56 +1,42 @@
-import { Client } from '@stomp/stompjs';
 import { useEffect, useState } from 'react';
-
-
-export function useNotifications(userEmail: string) {
-    const [notifications, setNotifications] = useState<string[]>([]);
-    const [open, setOpen] = useState(false);
-
-    const toggleOpen = () => setOpen(o => !o);
-
-    useEffect(() => {
-    if (!userEmail) return;
-
+import { Client } from '@stomp/stompjs';
+type Notification = {
+  idUsuario?: number | null;
+  idSolicitud?: number;
+  message: string;
+};
+export function useNotifications(userId?: number) {
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [open, setOpen] = useState(false);
+  const toggleOpen = () => setOpen(o => !o);
+  useEffect(() => {
+    if (!userId) return;
     const client = new Client({
-        brokerURL: 'ws://26.73.68.190:8080/ws',
-        reconnectDelay: 5000,
-        
-        onConnect: () => {
-        console.log('Conectado a WebSocket para:', userEmail);
-
-        //  ESTO ES LO QUE ENVÍA TU BACKEND (línea 66 de NotificationService.java)
-        // template.convertAndSendToUser(usuarioCorreo, "/topic/notification", message);
-        client.subscribe(`/topic/notificarsolicitudaprobadaevent`, msg => {
-            console.log('📬 Notificación recibida:', msg.body);
-            var data = JSON.parse(msg.body);
-            console.log(data);
-            setNotifications(prev => [...prev, msg.body]);
-        });
-
-        //  Notificaciones broadcast (por si las usan después)
-        client.subscribe('/topic/notification', msg => {
-            console.log(' Broadcast recibido:', msg.body);
-            setNotifications(prev => [...prev, msg.body]);
-        });
-        },
-        
-    onStompError: (frame) => {
-        console.error('Error STOMP:', frame);
-        console.error('Detalles:', frame.headers['message']);
-    },
-        
-        onWebSocketError: (error) => {
-        console.error(' Error de WebSocket:', error);
-        },
+      brokerURL: 'ws://26.73.68.190:8080/ws',
+      reconnectDelay: 5000,
     });
-
-    client.activate();
-    
-    return () => {
-        console.log(' Desconectando WebSocket');
-        client.deactivate();
+    client.onConnect = () => {
+      console.log(':círculo_verde_grande: WebSocket conectado');
+      const topics = [
+        // :candado_cerrado_con_llave: SOLO USUARIO
+        '/topic/notificarsolicitudaprobadaevent',
+        '/topic/notificarsolicitudrechazadaevent',
+        // :tierra_áfrica: GLOBALES
+        '/topic/notificacionglobal',
+      ];
+      topics.forEach(topic => {
+        client.subscribe(topic, msg => {
+          const data: Notification = JSON.parse(msg.body);
+          // :candado_cerrado_con_llave: Filtrado por usuario
+          if (data.idUsuario && data.idUsuario !== userId) {
+            return; // no es para este usuario
+          }
+          setNotifications(prev => [data, ...prev]);
+        });
+      });
     };
-    }, [userEmail]);
-
-    return { notifications, open, toggleOpen };
+    client.activate();
+    return () => client.deactivate();
+  }, [userId]);
+  return { notifications, setNotifications, open, toggleOpen };
 }
