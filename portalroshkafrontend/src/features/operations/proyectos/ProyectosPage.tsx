@@ -106,7 +106,7 @@
         <div className="relative z-10 h-full w-full p-4">
             <GlassCard className="h-full w-full p-6">
             <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-[#083b6a]">
+                <h2 className="text-2xl font-bold text-[#083b6a] dark:text-white">
                 Proyectos
                 </h2>
 
@@ -118,6 +118,7 @@
                 Nuevo Proyecto
                 </button>
             </div>
+            <div className="h-px w-full bg-white/100 mb-6" />
 
             {loading && <div>Cargando proyectos…</div>}
             {error && <div className="text-red-600">{error}</div>}
