@@ -60,9 +60,9 @@ export default function HomePage() {
           </div>
 
           {/* Carrusel de Novedades */}
-          <div className="bg-white/45 dark:bg-gray-900/70 backdrop-blur-xs rounded-2xl shadow-lg border border-white/20 p-6">
+          <div className="bg-white/45 dark:bg-gray-900/70 backdrop-blur-xs rounded-2xl shadow-lg border border-white/20 pl-15 pr-15 pb-4 pt-4">
             {loadingCarrusel ? (
-              <div className="flex items-center justify-center h-48">
+              <div className="ml-5 flex items-center justify-center h-48">
                 <p className="text-gray-600 dark:text-gray-300">Cargando carrusel...</p>
               </div>
             ) : errorCarrusel ? (
