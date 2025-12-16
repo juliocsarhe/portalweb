@@ -7,7 +7,6 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.ses.SesClient;
 import software.amazon.awssdk.services.sns.SnsClient;
 
-@Profile("prod")
 @Configuration
 public class SesConfig {
 
