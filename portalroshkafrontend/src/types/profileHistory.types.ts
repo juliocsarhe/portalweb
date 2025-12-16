@@ -1,18 +1,18 @@
 
 
 export type ProfileHistoryItem = {
-    id:string
+    id:string;
     proyecto:{
-        id:string
-        nombre:string
-    }
+        id:string;
+        nombre:string;
+    };
     equipo:{
-        id:string
-        nombre:string
+        id:string;
+        nombre:string;
     }
-    tareasRealizadas:string
-    tecnologias:string[]
+    tareasRealizadas:string;
+    tecnologias:string[];
 
-    fechaInicio:string
-    fechaFin?:string
+    fechaInicio:string;
+    fechaFin?:string;
 }

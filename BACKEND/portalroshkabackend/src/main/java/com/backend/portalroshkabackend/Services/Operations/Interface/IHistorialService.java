@@ -1,21 +1,17 @@
 package com.backend.portalroshkabackend.Services.Operations.Interface;
 
 import com.backend.portalroshkabackend.DTO.Operationes.HistorialDTO;
+import com.backend.portalroshkabackend.DTO.Operationes.HistorialResponseDTO;
 
 import java.util.List;
 
 public interface IHistorialService {
 
-    HistorialDTO asignarUsuarioAProyecto(HistorialDTO dto);
+    List<HistorialResponseDTO> listarHistorialPorUsuario(Integer idUsuario);
 
-    HistorialDTO obtenerHistorialPorId(Integer idHistorial);
+    List<HistorialResponseDTO> listarHistorialPorProyecto(Integer idProyecto);
 
-    List<HistorialDTO> listarHistorialPorUsuario(Integer idUsuario);
+    HistorialResponseDTO obtenerHistorialPorId(Integer idHistorial);
 
-    List<HistorialDTO> listarHistorialPorProyecto(Integer idProyecto);
-
-    HistorialDTO actualizarHistorial(Integer idHistorial, HistorialDTO dto);
-
-    void eliminarHistorial(Integer idHistorial);
 
 }
