@@ -134,7 +134,7 @@ public class ProyectoServiceImpl implements IProyectoService {
         var usuariosDespues = new HashSet<>(equipos.getUsuarios());
 
         for(Usuario usuario : usuariosDespues){
-gi
+
             if(!usuariosAntes.contains(usuario)){
                 historialTrabajoService.registrarIngresoProyecto(
                         usuario, proyecto, equipos, "Asignado al proyecto "+ proyecto.getNombre()
