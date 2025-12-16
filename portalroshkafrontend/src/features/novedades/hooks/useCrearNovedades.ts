@@ -1,3 +1,29 @@
+<<<<<<< HEAD
+// src/features/novedades/hooks/useCrearNovedades.ts
+import { useState } from 'react'
+import { NovedadesInsertDto, NovedadesResponseDto } from '@/types'
+import { novedadesService } from '../services/novedadesService'
+import { useAuth } from '@/app/providers/AuthContext'
+
+export function useCrearNovedades() {
+  const { token } = useAuth()
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const create = async (dto: NovedadesInsertDto): Promise<NovedadesResponseDto | null> => {
+    if (!token) {
+      setError('No hay token disponible')
+      return null
+    }
+
+    setLoading(true)
+    setError(null)
+
+    try {
+      return await novedadesService.create(dto, token)
+    } catch (err: any) {
+      setError(err?.message || 'Error al crear la novedad')
+=======
 import { useState } from 'react'
 import { NovedadesDefaultResponseDto, NovedadesInsertDto, NovedadesResponseDto } from '@/types'
 import { novedadesService } from '../services/novedadesService'
@@ -22,7 +48,8 @@ export function useCrearNovedades() {
     try {
       return await novedadesService.create(dto, token)
     } catch (err: any) {
-      setError(err?.message || 'Error al crear la novedad')
+      setError(err.message)
+>>>>>>> feature/novedades-innovation
       return null
     } finally {
       setLoading(false)

@@ -1,8 +1,20 @@
+<<<<<<< HEAD
+// src/features/novedades/hooks/useUpdateNovedades.ts
 import { useState } from 'react'
 import { NovedadesUpdateDto, NovedadesDefaultResponseDto } from '@/types'
 import { novedadesService } from '../services/novedadesService'
 import { useAuth } from '@/app/providers/AuthContext'
 
+export function useUpdateNovedades() {
+  const { token } = useAuth()
+=======
+import { useState } from 'react'
+import { NovedadesUpdateDto, NovedadesDefaultResponseDto } from '@/types'
+import { novedadesService } from '../services/novedadesService'
+import { useAuth } from '@/app/providers/AuthContext'
+
+export const useUpdateNovedades = () => {
+>>>>>>> feature/novedades-innovation
 export function useUpdateNovedades() {
   const { token } = useAuth()
   const [loading, setLoading] = useState(false)
