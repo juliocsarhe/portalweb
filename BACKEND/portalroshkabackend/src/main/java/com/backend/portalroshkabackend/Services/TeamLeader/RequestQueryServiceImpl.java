@@ -1,6 +1,8 @@
 package com.backend.portalroshkabackend.Services.TeamLeader;
 
-import com.backend.portalroshkabackend.DTO.TeamLeader.request.TeamLeaderRequestResponseDto;
+import com.backend.portalroshkabackend.DTO.TeamLeader.request.TeamLeaderAllRequestResponseDto;
+import com.backend.portalroshkabackend.DTO.th.SolicitudByIdResponseDto;
+import com.backend.portalroshkabackend.DTO.th.SolicitudResponseDto;
 import com.backend.portalroshkabackend.Models.Enum.EstadoActivoInactivo;
 import com.backend.portalroshkabackend.Models.Enum.EstadoSolicitudEnum;
 import com.backend.portalroshkabackend.Models.Enum.SolicitudesEnum;
@@ -13,7 +15,7 @@ import com.backend.portalroshkabackend.Repositories.TH.SolicitudRepository;
 import com.backend.portalroshkabackend.tools.RepositoryService;
 import com.backend.portalroshkabackend.tools.errors.errorslist.solicitudes.RequestNotFoundException;
 import com.backend.portalroshkabackend.tools.errors.errorslist.teamLeader.TeamLeaderNotAuthorized;
-import com.backend.portalroshkabackend.tools.mapper.RequestTeamLeaderMapper;
+import com.backend.portalroshkabackend.tools.mapper.RequestMapper;
 import com.backend.portalroshkabackend.tools.security.SecurityUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,7 +31,7 @@ public class RequestQueryServiceImpl implements IRequestQueryService {
     private final SecurityUtils securityUtils;
     private final SolicitudRepository solicitudRepository;
     private final RepositoryService repositoryService;
-    private final RequestTeamLeaderMapper requestMapper;
+    private final RequestMapper requestMapper;
     private final AsignacionUsuarioRepository asignacionUsuarioRepository;
     private final EquiposRepository equiposRepository;
 
@@ -37,7 +39,7 @@ public class RequestQueryServiceImpl implements IRequestQueryService {
             SecurityUtils securityUtils,
             SolicitudRepository solicitudRepository,
             RepositoryService repositoryService,
-            RequestTeamLeaderMapper requestMapper,
+            RequestMapper requestMapper,
             AsignacionUsuarioRepository asignacionUsuarioRepository,
             EquiposRepository equiposRepository
     ){
@@ -52,7 +54,7 @@ public class RequestQueryServiceImpl implements IRequestQueryService {
 
     @Override
     @Transactional(readOnly = true)
-    public TeamLeaderRequestResponseDto getRequestById(Integer idRequest) {
+    public SolicitudByIdResponseDto getRequestById(Integer idRequest) {
 
         Solicitud request = repositoryService.findByIdOrThrow(
                 solicitudRepository,
@@ -72,13 +74,13 @@ public class RequestQueryServiceImpl implements IRequestQueryService {
 
         validateLeaderScope(request, leader); // validar que en realidad el lider pertenece a ese equipo
 
-        return requestMapper.toTeamLeaderRequestByIdDto(request);
+        return requestMapper.toSolicitudByIdResponseDto(request);
 
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<TeamLeaderRequestResponseDto> getAllRequests(Pageable pageRequest) {
+    public Page<TeamLeaderAllRequestResponseDto> getAllRequests(Pageable pageRequest) {
         Usuario leader = securityUtils.getUsuarioActual();
         if(!securityUtils.hasRole(leader, SecurityUtils.ROLE_TEAM_LIDER)){
             throw new TeamLeaderNotAuthorized(); //TODO: refactorizar excepcion
@@ -89,12 +91,12 @@ public class RequestQueryServiceImpl implements IRequestQueryService {
                         List.of(SolicitudesEnum.PERMISO, SolicitudesEnum.VACACIONES),
                         pageRequest
                 )
-                .map(requestMapper::toTeamLeaderRequestByIdDto);
+                .map(requestMapper::toTeamLeaderAllRequestDto);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<TeamLeaderRequestResponseDto> getPendingRequests(Pageable pageRequest) {
+    public Page<TeamLeaderAllRequestResponseDto> getPendingRequests(Pageable pageRequest) {
         Usuario leader = securityUtils.getUsuarioActual();
         if(!securityUtils.hasRole(leader, SecurityUtils.ROLE_TEAM_LIDER)){
             throw new TeamLeaderNotAuthorized(); //TODO: refactorizar excepcion
@@ -106,31 +108,31 @@ public class RequestQueryServiceImpl implements IRequestQueryService {
                         List.of(SolicitudesEnum.PERMISO, SolicitudesEnum.VACACIONES),
                         pageRequest
                 )
-                .map(requestMapper::toTeamLeaderRequestByIdDto);
+                .map(requestMapper::toTeamLeaderAllRequestDto);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<TeamLeaderRequestResponseDto> getVacationsRequests(Pageable pageRequest) {
+    public Page<SolicitudResponseDto> getVacationsRequests(Pageable pageRequest) {
         Usuario leader = securityUtils.getUsuarioActual();
         if(!securityUtils.hasRole(leader, SecurityUtils.ROLE_TEAM_LIDER)){
             throw new TeamLeaderNotAuthorized(); //TODO: refactorizar excepcion
         }
         return solicitudRepository
                 .findAllByLiderAndTipoSolicitud(leader, SolicitudesEnum.VACACIONES, pageRequest)
-                .map(requestMapper::toTeamLeaderRequestByIdDto);
+                .map(requestMapper::toVacationsResponseDto);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<TeamLeaderRequestResponseDto> getPermissionsRequests(Pageable pageRequest) {
+    public Page<SolicitudResponseDto> getPermissionsRequests(Pageable pageRequest) {
         Usuario leader = securityUtils.getUsuarioActual();
         if(!securityUtils.hasRole(leader, SecurityUtils.ROLE_TEAM_LIDER)){
             throw new TeamLeaderNotAuthorized(); //TODO: refactorizar excepcion
         }
         return solicitudRepository
                 .findAllByLiderAndTipoSolicitud(leader, SolicitudesEnum.PERMISO, pageRequest)
-                .map(requestMapper::toTeamLeaderRequestByIdDto);
+                .map(requestMapper::toPermissionResponseDto);
     }
 
 

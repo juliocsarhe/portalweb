@@ -1,6 +1,8 @@
 package com.backend.portalroshkabackend.Controllers.TeamLeader;
 
-import com.backend.portalroshkabackend.DTO.TeamLeader.request.TeamLeaderRequestResponseDto;
+import com.backend.portalroshkabackend.DTO.TeamLeader.request.TeamLeaderAllRequestResponseDto;
+import com.backend.portalroshkabackend.DTO.th.SolicitudByIdResponseDto;
+import com.backend.portalroshkabackend.DTO.th.SolicitudResponseDto;
 import com.backend.portalroshkabackend.Services.TeamLeader.IRequestQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,43 +23,43 @@ public class RequestQueryController {
     private final IRequestQueryService requestQueryService;
 
     @GetMapping("/requests/{id}")
-    public ResponseEntity<TeamLeaderRequestResponseDto> getSolicitudById(@PathVariable Integer id) {
+    public ResponseEntity<SolicitudByIdResponseDto> getSolicitudById(@PathVariable Integer id) {
 
-        TeamLeaderRequestResponseDto solicitud = requestQueryService.getRequestById(id);
+        SolicitudByIdResponseDto solicitud = requestQueryService.getRequestById(id);
         return  ResponseEntity.ok(solicitud);
     }
 
     @GetMapping("/requests")
-    public ResponseEntity<Page<TeamLeaderRequestResponseDto>> getAllRequests(
+    public ResponseEntity<Page<TeamLeaderAllRequestResponseDto>> getAllRequests(
             @PageableDefault(direction = Sort.Direction.ASC) Pageable pageRequest
     ) {
-        Page<TeamLeaderRequestResponseDto> solicitudes = requestQueryService.getAllRequests(pageRequest);
+        Page<TeamLeaderAllRequestResponseDto> solicitudes = requestQueryService.getAllRequests(pageRequest);
         return ResponseEntity.ok(solicitudes);
     }
 
     @GetMapping("/requests/pending")
-    public ResponseEntity<Page<TeamLeaderRequestResponseDto>> getPendingRequests(
+    public ResponseEntity<Page<TeamLeaderAllRequestResponseDto>> getPendingRequests(
             @PageableDefault(direction = Sort.Direction.ASC) Pageable pageRequest
     ){
-        Page<TeamLeaderRequestResponseDto> solicitudes = requestQueryService.getPendingRequests(pageRequest);
+        Page<TeamLeaderAllRequestResponseDto> solicitudes = requestQueryService.getPendingRequests(pageRequest);
         return ResponseEntity.ok(solicitudes);
     }
 
 
     @GetMapping("/requests/vacations")
-    public ResponseEntity<Page<TeamLeaderRequestResponseDto>> getVacationRequests(
+    public ResponseEntity<Page<SolicitudResponseDto>> getVacationRequests(
             @PageableDefault(direction = Sort.Direction.ASC) Pageable pageRequest
     ){
-        Page<TeamLeaderRequestResponseDto> solicitudes = requestQueryService.getVacationsRequests(pageRequest);
+        Page<SolicitudResponseDto> solicitudes = requestQueryService.getVacationsRequests(pageRequest);
         return ResponseEntity.ok(solicitudes);
     }
 
     @GetMapping("/requests/permissions")
-    public ResponseEntity<Page<TeamLeaderRequestResponseDto>> getPermissionsRequests(
+    public ResponseEntity<Page<SolicitudResponseDto>> getPermissionsRequests(
             @PageableDefault(direction = Sort.Direction.ASC) Pageable pageRequest
 
     ){
-        Page<TeamLeaderRequestResponseDto> solicitudes = requestQueryService.getPermissionsRequests(pageRequest);
+        Page<SolicitudResponseDto> solicitudes = requestQueryService.getPermissionsRequests(pageRequest);
         return ResponseEntity.ok(solicitudes);
     }
 

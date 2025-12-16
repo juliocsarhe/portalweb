@@ -1,10 +1,10 @@
 package com.backend.portalroshkabackend.Services.TeamLeader;
 
-import com.backend.portalroshkabackend.DTO.TeamLeader.TeamLeaderDefaultResponse;
+import com.backend.portalroshkabackend.DTO.th.request.RequestResponseDto;
 
 public interface IRequestsCommandService {
 
-    TeamLeaderDefaultResponse acceptRequest(int idSolicitud);
-    TeamLeaderDefaultResponse rejectRequest(int idSolicitud);
+    RequestResponseDto acceptRequest(int idSolicitud);
+    RequestResponseDto rejectRequest(int idSolicitud);
 
 }

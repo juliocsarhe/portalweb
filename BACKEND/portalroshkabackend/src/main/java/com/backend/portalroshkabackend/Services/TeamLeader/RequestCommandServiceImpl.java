@@ -1,6 +1,6 @@
 package com.backend.portalroshkabackend.Services.TeamLeader;
 
-import com.backend.portalroshkabackend.DTO.TeamLeader.TeamLeaderDefaultResponse;
+import com.backend.portalroshkabackend.DTO.th.request.RequestResponseDto;
 import com.backend.portalroshkabackend.Models.Enum.EstadoActivoInactivo;
 import com.backend.portalroshkabackend.Models.Enum.EstadoSolicitudEnum;
 import com.backend.portalroshkabackend.Models.Enum.SolicitudesEnum;
@@ -16,7 +16,7 @@ import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSo
 import com.backend.portalroshkabackend.tools.RepositoryService;
 import com.backend.portalroshkabackend.tools.errors.errorslist.solicitudes.RequestNotFoundException;
 import com.backend.portalroshkabackend.tools.errors.errorslist.teamLeader.TeamLeaderNotAuthorized;
-import com.backend.portalroshkabackend.tools.mapper.RequestTeamLeaderMapper;
+import com.backend.portalroshkabackend.tools.mapper.RequestMapper;
 import com.backend.portalroshkabackend.tools.security.SecurityUtils;
 import com.backend.portalroshkabackend.tools.validator.ValidatorStrategy;
 import jakarta.transaction.Transactional;
@@ -39,7 +39,7 @@ public class RequestCommandServiceImpl implements IRequestsCommandService {
     private final SolicitudRepository solicitudRepository;
     private final SecurityUtils securityUtils;
     private final NotificationService notificationService;
-    private final RequestTeamLeaderMapper requestMapper;
+    private final RequestMapper requestMapper;
     private final RepositoryService repositoryService;
     private final ValidatorStrategy<Solicitud> requestValidator;
     private final EquiposRepository equiposRepository;
@@ -51,7 +51,7 @@ public class RequestCommandServiceImpl implements IRequestsCommandService {
             List<IAcceptRequestTeamLeaderService> strategyList,
             SecurityUtils securityUtils,
             NotificationService notificationService,
-            RequestTeamLeaderMapper requestMapper,
+            RequestMapper requestMapper,
             RepositoryService repositoryService,
             @Qualifier("requestHandlerValidator")ValidatorStrategy<Solicitud> requestValidator,
             EquiposRepository equiposRepository,
@@ -71,7 +71,7 @@ public class RequestCommandServiceImpl implements IRequestsCommandService {
 
     @Override
     @Transactional
-    public TeamLeaderDefaultResponse acceptRequest(int idRequest) {
+    public RequestResponseDto acceptRequest(int idRequest) {
 
         Solicitud request = repositoryService.findByIdOrThrow(
                 solicitudRepository,
@@ -106,14 +106,14 @@ public class RequestCommandServiceImpl implements IRequestsCommandService {
 
         notificationService.alertTH(acceptedRequest, true);
 
-        return requestMapper.toTeamLeaderDefaultResponseDto(acceptedRequest.getIdSolicitud(), REQUEST_ACCEPTED_MESSAGE );
+        return requestMapper.toRequestResponseDto(acceptedRequest.getIdSolicitud(), REQUEST_ACCEPTED_MESSAGE );
     }
 
 
 
     @Override
     @Transactional
-    public TeamLeaderDefaultResponse rejectRequest(int idSolicitud){
+    public RequestResponseDto rejectRequest(int idSolicitud){
         Solicitud request = repositoryService.findByIdOrThrow(
                 solicitudRepository,
                 idSolicitud,
@@ -138,7 +138,7 @@ public class RequestCommandServiceImpl implements IRequestsCommandService {
                 request,
                 DATABASE_DEFAULT_ERROR
         );
-        return requestMapper.toTeamLeaderDefaultResponseDto(request.getIdSolicitud(), REQUEST_REJECTED_MESSAGE);
+        return requestMapper.toRequestResponseDto(request.getIdSolicitud(), REQUEST_REJECTED_MESSAGE);
     }
 
 

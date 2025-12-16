@@ -1,6 +1,6 @@
 package com.backend.portalroshkabackend.Controllers.TeamLeader;
 
-import com.backend.portalroshkabackend.DTO.TeamLeader.TeamLeaderDefaultResponse;
+import com.backend.portalroshkabackend.DTO.th.request.RequestResponseDto;
 import com.backend.portalroshkabackend.Services.TeamLeader.IRequestsCommandService;
 import com.backend.portalroshkabackend.notification.NotificationService;
 import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSolicitudAprobadaEvent;
@@ -21,9 +21,9 @@ public class RequestCommandController {
     private final NotificationService notificationService;
 
     @PostMapping("/users/requests/{idSolicitud}/accept")
-    public ResponseEntity<TeamLeaderDefaultResponse> acceptRequest(@PathVariable int idSolicitud) {
+    public ResponseEntity<RequestResponseDto> acceptRequest(@PathVariable int idSolicitud) {
 
-        TeamLeaderDefaultResponse respuesta = requestsTeamLeaderService.acceptRequest(idSolicitud);
+        RequestResponseDto respuesta = requestsTeamLeaderService.acceptRequest(idSolicitud);
 
         NotificarSolicitudAprobadaEvent event = new NotificarSolicitudAprobadaEvent();
         notificationService.sendEvent(event);
@@ -32,9 +32,9 @@ public class RequestCommandController {
     }
 
     @PostMapping("/users/requests/{idSolicitud}/reject")
-    public ResponseEntity<TeamLeaderDefaultResponse> rejectRequest(@PathVariable int idSolicitud) {
+    public ResponseEntity<RequestResponseDto> rejectRequest(@PathVariable int idSolicitud) {
 
-        TeamLeaderDefaultResponse respuesta = requestsTeamLeaderService.rejectRequest(idSolicitud);
+        RequestResponseDto respuesta = requestsTeamLeaderService.rejectRequest(idSolicitud);
 
         NotificarSolicitudRechazadaEvent event = new NotificarSolicitudRechazadaEvent();
         notificationService.sendEvent(event);
