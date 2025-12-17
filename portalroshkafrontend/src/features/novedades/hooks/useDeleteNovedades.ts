@@ -1,3 +1,4 @@
+// src/features/novedades/hooks/useDeleteNovedades.ts
 import { useState } from 'react'
 import { novedadesService } from '../services/novedadesService'
 import { useAuth } from '@/app/providers/AuthContext'

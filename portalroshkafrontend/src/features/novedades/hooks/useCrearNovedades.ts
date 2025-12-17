@@ -22,7 +22,8 @@ export function useCrearNovedades() {
     try {
       return await novedadesService.create(dto, token)
     } catch (err: any) {
-      setError(err?.message || 'Error al crear la novedad')
+      setError(err.message)
+>>>>>>> feature/novedades-innovation
       return null
     } finally {
       setLoading(false)

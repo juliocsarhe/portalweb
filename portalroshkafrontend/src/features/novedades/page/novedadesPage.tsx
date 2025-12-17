@@ -8,6 +8,7 @@ import { useDeleteNovedades } from '../hooks/useDeleteNovedades'
 import CarruselNovedades from '../components/CarruselNovedades'
 import AvisosList from '../components/AvisosList'
 import ModalNovedad from '../components/ModalNovedad'
+import Toast from '@/shared/ui/components/Toast'
 import { uploadImageToCloudinary } from '../services/uploadImageToCloudinary'
 
 export default function NovedadesPage() {
@@ -15,6 +16,9 @@ export default function NovedadesPage() {
   const { create, loading: creating } = useCrearNovedades()
   const { update } = useUpdateNovedades()
   const { remove } = useDeleteNovedades()
+
+  const [toastMessage, setToastMessage] = useState<string | null>(null)
+  const [toastType, setToastType] = useState<'success' | 'error' | 'info' | 'warning'>('info')
 
   const [carrusel, setCarrusel] = useState<NovedadesResponseDto[]>([])
   const [avisos, setAvisos] = useState<NovedadesResponseDto[]>([])
@@ -156,12 +160,14 @@ export default function NovedadesPage() {
   const submitCarrusel = async () => {
     try {
       if (!formCarrusel.titulo.trim()) {
-        alert('El título es obligatorio')
+        setToastMessage('El título es obligatorio')
+        setToastType('warning')
         return
       }
 
       if (!formCarrusel.imagenUrl.trim()) {
-        alert('Debes subir una imagen para el carrusel')
+        setToastMessage('Debes subir una imagen para el carrusel')
+        setToastType('warning')
         return
       }
 
@@ -180,8 +186,9 @@ export default function NovedadesPage() {
       const res = await create(dto)
 
       if (!res) {
-        console.error('Error al crear la novedad del carrusel')
-        alert('Error al crear la novedad del carrusel. Revisa los logs del backend.')
+        console.error('Error al crear la novedad.')
+        setToastMessage('Error al crear la novedad.')
+        setToastType('error')
         return
       }
 
@@ -200,20 +207,23 @@ export default function NovedadesPage() {
       const fileInput = document.querySelector('#carrusel-image-input') as HTMLInputElement
       if (fileInput) fileInput.value = ''
 
-      alert('Novedad agregada al carrusel exitosamente')
+      setToastMessage('Novedad creada exitosamente')
+      setToastType('success')
       console.log('NOVEDAD CREADA y agregada al CARRUSEL')
     } catch (err: any) {
       console.error('Error completo:', err)
       console.error('Mensaje de error:', err?.message)
       console.error('Response:', err?.response)
-      alert('Error al crear la novedad del carrusel. Revisa la consola y los logs del backend.')
+      setToastMessage('Error al crear la novedad.')
+      setToastType('error')
     }
   }
 
   const submitAviso = async () => {
     try {
       if (!formAviso.titulo.trim()) {
-        alert('El título es obligatorio')
+        setToastMessage('El título es obligatorio')
+        setToastType('warning')
         return
       }
 
@@ -232,7 +242,8 @@ export default function NovedadesPage() {
       const res = await create(dto)
 
       if (!res) {
-        alert('Error al crear el aviso')
+        setToastMessage('Error al crear el aviso')
+        setToastType('error')
         return
       }
 
@@ -248,11 +259,12 @@ export default function NovedadesPage() {
         prioridad: false,
       })
 
-      alert('Aviso creado exitosamente')
+      setToastMessage(res?.message ?? 'Aviso creado exitosamente')
+      setToastType('success')
       console.log('AVISO CREADO y agregado a la sección de AVISOS')
     } catch (err) {
-      console.error('Error completo:', err)
-      alert('Error al crear el aviso')
+      setToastMessage('Error al crear el aviso')
+      setToastType('error')
     }
   }
 
@@ -584,6 +596,13 @@ export default function NovedadesPage() {
           onSave={handleUpdate}
         />
       </div>
+      {toastMessage && (
+      <Toast
+      message={toastMessage}
+      type={toastType}
+      onClose={() => setToastMessage(null)}
+      />
+      )}
     </PageLayout>
   )
 }
