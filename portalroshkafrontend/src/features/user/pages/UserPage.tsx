@@ -20,6 +20,7 @@ import PaginationFooter from '../../../shared/ui/components/PaginationFooter'
 import SelectDropdown from '../../../shared/ui/components/SelectDropdown'
 import Toast from '../../../shared/ui/components/Toast'
 import { tieneRol } from '../../../shared/utils/permisos'
+import UsuarioHistorialModal from './UsuarioHistorialModal'
 
 export default function UserPage() {
   const { token, user } = useAuth()
@@ -63,12 +64,26 @@ export default function UserPage() {
     setPage(0)
   }
 
+  const [openHistorial, setOpenHistorial] = useState(false)
+  const [usuarioHistorialId, setUsuarioHistorialId] = useState<number | null>(null)
+
   // Acciones con íconos
   const onEdit = (u: UsuarioItem) => navigate(`/usuarios/${u.idUsuario}`)
   const onView = (u: UsuarioItem) => navigate(`/usuarios/${u.idUsuario}?readonly=true`)
 
   const rowActions: RowAction<UsuarioItem>[] = puedeEditarUsuarios
     ? [
+        {
+          key:'historial',
+          label:'Historial',
+          icon: <MsIcon name='visibility'/>,
+          onClick: (u)=> {
+            setUsuarioHistorialId(u.idUsuario)
+            setOpenHistorial(true)
+          },
+          variant:'secondary',
+        },
+
         {
           key: 'edit',
           label: 'Editar',
@@ -112,6 +127,7 @@ export default function UserPage() {
   }
 
   return (
+    <>
     <PageLayout
       title="Listado de usuarios"
       actions={
@@ -204,5 +220,14 @@ export default function UserPage() {
         <Toast message={toastMessage} type={toastType} onClose={() => setToastMessage(null)} />
       )}
     </PageLayout>
+    <UsuarioHistorialModal 
+    open={openHistorial}
+    usuarioId={usuarioHistorialId}
+    onClose={()=>{
+      setOpenHistorial(false)
+      setUsuarioHistorialId(null)
+    }}
+    />
+    </>
   )
 }
