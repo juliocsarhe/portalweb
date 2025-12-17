@@ -92,7 +92,7 @@ export default function DevicePage() {
         puedeEditar && (
           <IconButton
             label="Registrar Dispositivo"
-            icon={<span>➕</span>}
+            icon={<span className="material-symbols-outlined">add</span>}
             variant="primary"
             onClick={() => navigate('/dispositivos/nuevo')}
             className="h-10 text-sm px-4 flex items-center"

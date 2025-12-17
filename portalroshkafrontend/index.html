@@ -20,6 +20,15 @@
 
       setFavicon(mq) // inicial
       mq.addEventListener('change', setFavicon) // escucha cambios
+
+  (function() {
+    const saved = localStorage.getItem('darkMode');
+    if (saved === 'true') {
+      document.documentElement.classList.add('dark');
+    }
+  })();
+
+
     </script>
   </head>
   <body>

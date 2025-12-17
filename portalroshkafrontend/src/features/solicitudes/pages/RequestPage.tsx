@@ -115,29 +115,8 @@ export default function RequestPage() {
           <div className="flex flex-col shrink-0 p-6 border-b border-gray-200 gap-4">
             {/* Botones */}
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-brand-blue">Mis Solicitudes</h2>
+              <h2 className="text-2xl font-bold dark:text-white text-brand-blue">Mis Solicitudes</h2>
               <div className="flex gap-2">
-                <IconButton
-                  label="Solicitar Permiso"
-                  icon={<span>➕</span>}
-                  variant="primary"
-                  onClick={() => navigate('/requests/permiso')}
-                  className="h-10 text-sm px-4"
-                />
-                <IconButton
-                  label="Solicitar Beneficio"
-                  icon={<span>➕</span>}
-                  variant="primary"
-                  onClick={() => navigate('/requests/beneficio')}
-                  className="h-10 text-sm px-4"
-                />
-                <IconButton
-                  label="Solicitar Vacaciones"
-                  icon={<span>➕</span>}
-                  variant="primary"
-                  onClick={() => navigate('/request/vacaciones')}
-                  className="h-10 text-sm px-4 flex items-center"
-                />
               </div>
             </div>
 
@@ -171,7 +150,7 @@ export default function RequestPage() {
               />
               <IconButton
                 label="Limpiar filtros"
-                icon={<span>🧹</span>}
+                icon={<span className="material-symbols-outlined">cleaning_services</span>}
                 variant="secondary"
                 onClick={limpiarFiltros}
                 className="h-10 text-sm px-4"

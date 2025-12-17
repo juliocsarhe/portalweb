@@ -71,7 +71,7 @@ export default function TecnologiasPage({ embedded = false }: Props) {
   const newTecnologiaButton = canEdit && (
     <IconButton
       label="Nueva Tecnología"
-      icon={<span>➕</span>}
+      icon={<span className="material-symbols-outlined">add</span>}
       variant="primary"
       onClick={() => {
         setSelected(null)

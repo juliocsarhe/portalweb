@@ -22,7 +22,7 @@ public class SpringSecurityConfig {
     private AuthenticationConfiguration authenticationConfiguration;
 
     @Autowired
-    private UsuariosService userService; // ✅ inyectamos UserService
+    private UsuariosService userService; // inyectamos UserService
 
     // Bean de AuthenticationManager
     @Bean
