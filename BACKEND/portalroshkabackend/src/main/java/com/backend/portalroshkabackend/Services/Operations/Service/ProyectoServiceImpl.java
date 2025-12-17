@@ -115,6 +115,12 @@ public class ProyectoServiceImpl implements IProyectoService {
         proyecto.setEquipos(equipos);
         proyecto.setLiderEquipo(equipos.getLider());
 
+        if (requestDto.getTecnologiasIds() != null) {
+            List<Tecnologias> lista =
+                    tecnologiaProyectoRepository.findAllById(requestDto.getTecnologiasIds());
+            proyecto.setTecnologias(new HashSet<>(lista));
+        }
+
         if(equipoAnterior !=null && equipoAnterior.getIdEquipo().equals(equipos.getIdEquipo())){
             proyectoRepository.save(proyecto);
             return ProyectoMapper.toDto(proyecto);

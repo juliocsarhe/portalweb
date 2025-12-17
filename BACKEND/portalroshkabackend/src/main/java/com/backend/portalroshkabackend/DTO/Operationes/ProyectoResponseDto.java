@@ -23,7 +23,7 @@ public class ProyectoResponseDto {
     private Integer idCliente;
     private String nombreCliente;
 
-    private List<Integer> tecnologias;
+    private List<TecnologiasDto> tecnologias;
 
     private String descripcion;
 

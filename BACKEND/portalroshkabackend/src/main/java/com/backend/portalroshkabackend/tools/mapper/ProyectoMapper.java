@@ -2,6 +2,7 @@ package com.backend.portalroshkabackend.tools.mapper;
 
 import com.backend.portalroshkabackend.DTO.Operationes.ProyectoRequestDto;
 import com.backend.portalroshkabackend.DTO.Operationes.ProyectoResponseDto;
+import com.backend.portalroshkabackend.DTO.Operationes.TecnologiasDto;
 import com.backend.portalroshkabackend.Models.Proyecto;
 import com.backend.portalroshkabackend.Models.Tecnologias;
 
@@ -45,8 +46,15 @@ public class ProyectoMapper {
         }
 
         if (entity.getTecnologias()!=null){
-            proyectoResponseDto.setTecnologias(entity.getTecnologias().stream()
-                    .map(Tecnologias::getIdTecnologia).collect(Collectors.toList()));
+            proyectoResponseDto.setTecnologias(
+                    entity.getTecnologias().stream()
+                            .map(t -> new TecnologiasDto(
+                                    t.getIdTecnologia(),
+                                    t.getNombre(),
+                                    t.getDescripcion()
+                            ))
+                            .collect(Collectors.toList())
+            );
         }
 
         proyectoResponseDto.setDescripcion(entity.getDescripcion());

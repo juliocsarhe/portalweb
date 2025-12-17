@@ -53,9 +53,7 @@
         try {
         const res = await fetch(`${BASE_URL}/${equipo.idEquipo}/toggle`, {
             method: "PATCH",
-            headers: {
-            Authorization: `Bearer ${token}`,
-            },
+            headers: { Authorization: `Bearer ${token}` },
         })
 
         if (!res.ok) throw new Error("No se pudo cambiar el estado")
@@ -120,7 +118,6 @@
                 Equipos
                 </h2>
 
-
                 <button
                 onClick={() => navigate("/operations/equipos/nuevo")}
                 className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition"
@@ -129,6 +126,7 @@
                 Nuevo Equipo
                 </button>
             </div>
+
             <div className="h-px w-full bg-white/100 mb-6" />
 
             {loading && <div>Cargando equipos…</div>}
@@ -234,91 +232,106 @@
     }: DetalleProps) {
     if (!equipo && !loading && !error) return null
 
-    const liderNombre = equipo?.lider
-        ? `${equipo.lider.nombre} ${equipo.lider.apellido}`
-        : "—"
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
         <div
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-            onClick={onClose}
-        />
-
-        <div className="relative z-10 w-full max-w-3xl mx-4 rounded-2xl shadow-2xl bg-white overflow-hidden">
-            <div className="flex items-start justify-between px-6 py-4 bg-[#085394] text-white">
-            <div>
-                <h3 className="text-xl font-bold">{equipo?.nombre}</h3>
-                <p className="text-sm opacity-90">Detalle del equipo</p>
-            </div>
-
+            className="
+            w-full max-w-2xl rounded-2xl p-6 shadow-xl
+            bg-white text-gray-800
+            dark:bg-slate-900 dark:text-slate-200
+            "
+        >
+            <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                Detalle del Equipo
+            </h2>
             <button
                 onClick={onClose}
-                className="p-2 rounded-lg hover:bg-white/20 transition"
+                className="text-gray-500 hover:text-gray-800 dark:text-slate-300 dark:hover:text-white"
             >
                 ✕
             </button>
             </div>
 
-            <div className="p-6 space-y-6 max-h-[70vh] overflow-auto">
-            {loading && <div>Cargando detalle…</div>}
-            {error && <div className="text-red-600">{error}</div>}
+            {loading && (
+            <div className="text-gray-600 dark:text-slate-300">
+                Cargando...
+            </div>
+            )}
+
+            {error && (
+            <div className="text-red-600 dark:text-red-400">
+                {error}
+            </div>
+            )}
 
             {!loading && !error && equipo && (
-                <>
-                <section>
-                    <h4 className="text-sm font-semibold text-gray-500 mb-1">
+            <div className="space-y-4 text-sm">
+
+                <div>
+                <span className="font-medium text-gray-500 dark:text-slate-400">
+                    Nombre
+                </span>
+                <p>{equipo.nombre}</p>
+                </div>
+
+                <div>
+                <span className="font-medium text-gray-500 dark:text-slate-400">
                     Líder del equipo
-                    </h4>
-                    <div className="p-4 rounded-lg bg-blue-50">
-                    <p className="font-medium text-gray-800">{liderNombre}</p>
-                    {equipo.lider?.correo && (
-                        <p className="text-sm text-gray-600">
-                        {equipo.lider.correo}
-                        </p>
-                    )}
-                    </div>
-                </section>
+                </span>
+                <p>
+                    {equipo.lider
+                    ? `${equipo.lider.nombre} ${equipo.lider.apellido}`
+                    : "-"}
+                </p>
+                </div>
 
-                <section>
-                    <h4 className="text-sm font-semibold text-gray-500 mb-2">
+                <div>
+                <span className="font-medium text-gray-500 dark:text-slate-400">
                     Miembros del equipo
-                    </h4>
+                </span>
 
+                <div className="space-y-2 mt-2">
                     {equipo.usuarios?.length ? (
-                    <ul className="space-y-2">
-                        {equipo.usuarios.map((u) => (
-                        <li
-                            key={u.idUsuario}
-                            className="p-4 rounded-lg bg-gray-50 flex justify-between items-center"
+                    equipo.usuarios.map((u) => (
+                        <div
+                        key={u.idUsuario}
+                        className="
+                            rounded-lg px-4 py-2
+                            bg-gray-100 text-gray-800
+                            dark:bg-slate-800 dark:text-slate-200
+                        "
                         >
-                            <div>
-                            <p className="font-medium text-gray-800">
-                                {u.nombre} {u.apellido}
+                        <p>
+                            {u.nombre} {u.apellido}
+                        </p>
+                        {u.correo && (
+                            <p className="text-xs text-gray-600 dark:text-slate-400">
+                            {u.correo}
                             </p>
-                            {u.correo && (
-                                <p className="text-sm text-gray-600">
-                                {u.correo}
-                                </p>
-                            )}
-                            </div>
-                        </li>
-                        ))}
-                    </ul>
+                        )}
+                        </div>
+                    ))
                     ) : (
-                    <p className="text-sm text-gray-500">
-                        No hay miembros asignados.
-                    </p>
+                    <span className="text-gray-500 dark:text-slate-400">
+                        No hay miembros asignados
+                    </span>
                     )}
-                </section>
-                </>
-            )}
-            </div>
+                </div>
+                </div>
 
-            <div className="px-6 py-4 border-t flex justify-end">
+            </div>
+            )}
+
+            <div className="flex justify-end mt-6">
             <button
                 onClick={onClose}
-                className="px-4 py-2 rounded-lg bg-[#085394] text-white font-medium hover:bg-[#06406f] transition"
+                className="
+                px-4 py-2 rounded-lg font-medium
+                bg-gray-200 text-gray-800 hover:bg-gray-300
+                dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600
+                "
             >
                 Cerrar
             </button>
@@ -327,3 +340,4 @@
         </div>
     )
     }
+    

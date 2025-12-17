@@ -4,6 +4,7 @@
 
     import GlassCard from "@/shared/ui/components/GlassCard"
     import DataTable from "@/shared/ui/components/DataTable"
+    import ProyectoDetalleModal from "./ProyectoDetalleModal"
 
     const API_URL = "http://localhost:8080/api/v1/admin/operations/proyectos"
 
@@ -40,6 +41,10 @@
     const [proyectos, setProyectos] = useState<ProyectoItem[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
+
+    const [openDetalle, setOpenDetalle] = useState(false)
+    const [detalleProyecto, setDetalleProyecto] = useState<any | null>(null)
+    const [loadingDetalle, setLoadingDetalle] = useState(false)
 
     useEffect(() => {
         if (!token) return
@@ -88,6 +93,32 @@
         )
         } catch (e: any) {
         alert(e?.message ?? "Error eliminando")
+        }
+    }
+
+    // Ver detalle
+    const verDetalleProyecto = async (idProyecto: number) => {
+        if (!token) return
+
+        try {
+        setLoadingDetalle(true)
+
+        const res = await fetch(`${API_URL}/${idProyecto}`, {
+            headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+            },
+        })
+
+        if (!res.ok) throw new Error("Error cargando detalle")
+
+        const data = await res.json()
+        setDetalleProyecto(data)
+        setOpenDetalle(true)
+        } catch (e: any) {
+        alert(e?.message ?? "Error cargando detalle")
+        } finally {
+        setLoadingDetalle(false)
         }
     }
 
@@ -151,6 +182,18 @@
                     },
                 ]}
                 rowActions={[
+                    
+                    {
+                    key: "ver",
+                    label: "Ver",
+                    icon: (
+                        <span className="material-symbols-outlined">
+                        visibility
+                        </span>
+                    ),
+                    onClick: row => verDetalleProyecto(row.idProyecto),
+                    variant: "secondary",
+                    },
                     {
                     key: "editar",
                     label: "Editar",
@@ -181,6 +224,13 @@
             )}
             </GlassCard>
         </div>
+
+        <ProyectoDetalleModal
+            open={openDetalle}
+            onClose={() => setOpenDetalle(false)}
+            proyecto={detalleProyecto}
+            loading={loadingDetalle}
+        />
         </div>
     )
     }
