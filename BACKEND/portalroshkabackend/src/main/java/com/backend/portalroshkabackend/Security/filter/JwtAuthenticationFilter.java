@@ -98,7 +98,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String errorMessage = "Credenciales inválidas";
 
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.setContentType(CONTENT_TYPE); // application/json
+        response.setContentType("application/json;charset=UTF-8");
         response.getWriter().write(new ObjectMapper().writeValueAsString(errorMessage));
     }
 
