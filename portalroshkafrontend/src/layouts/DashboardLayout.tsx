@@ -68,13 +68,13 @@ export default function DashboardLayout() {
 
 {
   id: '/mi-equipo',
-  label: <span className="font-semibold text-[15px]">Mis Equipo</span>,
+  label: <span className="font-semibold text-[15px]">Mis Equipos</span>,
   icon: <span className="material-symbols-outlined">groups</span>,
   available: disponiblePara(Roles.DESARROLLO, Roles.TEAM_LEADER),
 },
 {
   id: '/mi-proyecto',
-  label: <span className="font-semibold text-[15px]">Mis Proyecto</span>,
+  label: <span className="font-semibold text-[15px]">Mis Proyectos</span>,
   icon: <span className="material-symbols-outlined">work</span>,
   available: disponiblePara(Roles.DESARROLLO, Roles.TEAM_LEADER),
 },
