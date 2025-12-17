@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import PageLayout from '@/layouts/PageLayout'
+import Toast from '@/shared/ui/components/Toast'
 
 // Iconos SVG nativos
 const EyeIcon = () => (
@@ -241,6 +242,11 @@ function PasswordField({ label, onSave }: PasswordFieldProps) {
 }
 
 export default function Configuration() {
+
+  const [toastMessage, setToastMessage] = useState<string | null>(null)
+  const [toastType, setToastType] =
+  useState<'success' | 'error' | 'info' | 'warning'>('info')
+
   const [darkMode, setDarkMode] = useState(() => {
   // Si ya hay preferencia guardada
   const saved = localStorage.getItem('darkMode');
@@ -283,20 +289,26 @@ useEffect(() => {
         throw new Error(data.message || 'Error al cambiar contraseña')
       }
 
-      alert(data.message)
+      setToastMessage(data.message || 'Contraseña actualizada exitosamente')
+      setToastType('success')
 
       // Opcional: Mostrar mensaje de éxito
       console.log('Contraseña actualizada exitosamente')
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error en cambio de contraseña:', error)
-      throw error
+       setToastMessage(
+    error?.message || 'Error al cambiar la contraseña'
+    )
+    setToastType('error')
     }
   }
 
   return (
       <PageLayout>
       {/* Main content */}
-      <div className="relative z-10 flex flex-col h-full p-6">
+      
+        <div className="relative z-10 flex flex-col px-6 pt-1 pb-24">
+
         <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-md rounded-2xl shadow-2xl flex flex-col h-full overflow-hidden border border-gray-200 dark:border-gray-800">
           {/* Header */}
           <div className="p-6 border-b border-gray-200 dark:border-gray-700 shrink-0">
@@ -338,6 +350,13 @@ useEffect(() => {
           </div>
         </div>
       </div>
+      {toastMessage && (
+    <Toast
+    message={toastMessage}
+    type={toastType}
+    onClose={() => setToastMessage(null)}
+  />
+)}
     </PageLayout>
   )
 }
