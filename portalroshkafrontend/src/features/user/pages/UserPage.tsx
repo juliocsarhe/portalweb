@@ -39,8 +39,8 @@ export default function UserPage() {
 
   // permisos
 
-  const puedeVerUsuarios = tieneRol(user, Roles.TALENTO_HUMANO)
-  const puedeEditarUsuarios = tieneRol(user, Roles.TALENTO_HUMANO)
+  const puedeVerUsuarios = tieneRol(user, Roles.TALENTO_HUMANO, Roles.DIRECTIVO)
+  const puedeEditarUsuarios = tieneRol(user, Roles.TALENTO_HUMANO, Roles.DIRECTIVO)
 
   // si no tiene permisos de ver
   if (!puedeVerUsuarios) {

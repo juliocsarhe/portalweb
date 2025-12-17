@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesResponseDto;
 import com.backend.portalroshkabackend.DTO.UsuarioDTO.SolicitudUserDto;
 import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserCambContrasDto;
 import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserDto;
@@ -96,7 +96,7 @@ public class UsuariosController {
         notificationService.sendEvent(event);
         return ResponseEntity.ok(solVacacionDto);
     }
-    
+
     @PostMapping("/pedirdispositivo")
     public ResponseEntity<UserSolDispositivoDto> pedirDispositivoUsuarioActual(@RequestBody UserSolDispositivoDto solDispositivoDto) {
         //TODO: process POST request
@@ -105,7 +105,7 @@ public class UsuariosController {
         notificationService.sendEvent(event);
         return ResponseEntity.ok(solDispositivoDto);
     }
-    
+
     @PostMapping("/cambiarcontrasena")
     public ResponseEntity<UserMensajeJsonDto> cambiarContrasena(@RequestBody UserCambContrasDto dto) {
         boolean actualizado = userService.actualizarContrasena(dto);
@@ -134,7 +134,7 @@ public class UsuariosController {
 
     @PostMapping("/actualizarfoto")
     public ResponseEntity<?> actualizarFoto(@RequestBody UserUpdateFoto dto) {
-        
+
         boolean actualizado = userService.actualizarFoto(dto);
 
         if (actualizado) {
@@ -143,6 +143,7 @@ public class UsuariosController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No se pudo actualizar la foto");
         }
     }
+
     // Get de las solicitudes por ID
     @GetMapping("/solicitud/{id}")
     public ResponseEntity<SolicitudUserDto> getSolicitudById(@PathVariable Integer id) {
@@ -153,11 +154,10 @@ public class UsuariosController {
             return ResponseEntity.notFound().build();
         }
     }
-    
+
     @GetMapping("/tiposdispositivos") // Endpoint para obtener los tipos de dispositivos
     public ResponseEntity<List<tiposDispositivosDto>> getTiposDispositivos() {
         List<tiposDispositivosDto> dispositivos = userService.getTiposDispositivos();
         return ResponseEntity.ok(dispositivos);
     }
-
 }

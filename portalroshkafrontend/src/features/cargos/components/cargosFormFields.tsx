@@ -1,10 +1,11 @@
 import type { FormSection } from '../../../shared/ui/components/DynamicForm'
+import espacioBlanco from '@/assets/espacio_blanconegro.svg'
 
 export function buildCargoSections(): FormSection[] {
   return [
     {
       title: 'Datos del cargo',
-      icon: <span className="material-symbols-outlined">interactive_space</span>,
+      icon: <img src={espacioBlanco} alt="Cargo" className="w-full h-full object-contain bg-[#1A1F37] rounded-[8px]" />,
       fields: [
         {
           name: 'nombre',
