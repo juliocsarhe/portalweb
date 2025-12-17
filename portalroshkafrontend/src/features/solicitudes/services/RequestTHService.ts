@@ -15,9 +15,9 @@ async function getSolicitudesApi(
   let endpoint = ''
 
   if (params.tipoSolicitud === 'VACACIONES') {
-    endpoint = 'http://26.73.68.190:8080/api/v1/admin/th/users/requests/vacations'
+    endpoint = `${import.meta.env.VITE_API_URL}/api/v1/admin/th/users/requests/vacations`
   } else {
-    endpoint = 'http://26.73.68.190:8080/api/v1/admin/th/users/requests/sortby'
+    endpoint = `${import.meta.env.VITE_API_URL}/api/v1/admin/th/users/requests/sortby`
     if (params.tipoSolicitud) {
       endpoint += `?type=${params.tipoSolicitud.toLowerCase()}`
     }
@@ -35,7 +35,7 @@ async function getSolicitudesApi(
 }
 
 async function getSolicitudByIdApi(token: string, id: string): Promise<SolicitudItem> {
-  const res = await fetch(`http://26.73.68.190:8080/api/v1/admin/th/users/requests/${id}`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/admin/th/users/requests/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   })
 
@@ -44,7 +44,7 @@ async function getSolicitudByIdApi(token: string, id: string): Promise<Solicitud
 }
 
 async function aprobarSolicitudApi(token: string, id: string) {
-  const res = await fetch(`http://26.73.68.190:8080/api/v1/admin/th/users/requests/${id}/accept`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/admin/th/users/requests/${id}/accept`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -58,7 +58,7 @@ async function aprobarSolicitudApi(token: string, id: string) {
 }
 
 export async function confirmarSolicitudVacaciones(token: string, id: string) {
-  const res = await fetch(`http://26.73.68.190:8080/api/v1/admin/th/users/requests/${id}/accept`, {
+  const res = await fetch(`/${import.meta.env.VITE_API_URL}/api/v1/admin/th/users/requests/${id}/accept`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -72,7 +72,7 @@ export async function confirmarSolicitudVacaciones(token: string, id: string) {
 }
 
 async function rechazarSolicitudApi(token: string, id: string) {
-  const res = await fetch(`http://26.73.68.190:8080/api/v1/admin/th/users/requests/${id}/reject`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/admin/th/users/requests/${id}/reject`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,

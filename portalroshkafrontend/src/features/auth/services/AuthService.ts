@@ -1,4 +1,3 @@
-const BASE = import.meta.env.VITE_API_BASE ?? 'http://26.73.68.190:8080'
 
 export type AuthRequest = {
   correo: string
@@ -11,7 +10,7 @@ export type AuthResponse = {
 
 // 🔑 Login normal
 export async function login(req: AuthRequest): Promise<string> {
-  const res = await fetch(`${BASE}/login`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(req),

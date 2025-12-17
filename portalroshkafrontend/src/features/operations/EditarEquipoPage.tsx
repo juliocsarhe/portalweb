@@ -49,11 +49,11 @@ type MemberOpt = {
   dispRestante: number // int 0..100
 }
 
-const METADATAS_PATH = 'http://26.73.68.190:8080/api/v1/admin/operations/metadatas'
-const TEAM_PATH = 'http://26.73.68.190:8080/api/v1/admin/operations/team'
-const USERS_PATH = 'http://26.73.68.190:8080/api/v1/admin/operations/users'
-const DIAS_PATH = 'http://26.73.68.190:8080/api/v1/admin/operations/diaslaborales'
-const LIBRES_PATH = 'http://26.73.68.190:8080/api/v1/admin/operations/asignacion/libres'
+const METADATAS_PATH = `${import.meta.env.VITE_API_URL}/api/v1/admin/operations/metadatas`
+const TEAM_PATH = `${import.meta.env.VITE_API_URL}/api/v1/admin/operations/team`
+const USERS_PATH = `${import.meta.env.VITE_API_URL}/api/v1/admin/operations/users`
+const DIAS_PATH = `${import.meta.env.VITE_API_URL}/api/v1/admin/operations/diaslaborales`
+const LIBRES_PATH = `${import.meta.env.VITE_API_URL}/api/v1/admin/operations/asignacion/libres`
 
 function useIsDark() {
   const [isDark, setIsDark] = useState(

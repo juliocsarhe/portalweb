@@ -1,7 +1,7 @@
 import type { UsuarioItem, FiltrosUsuarios, PaginatedResponse } from '../../../types'
 import { mapUserResponseToUsuarioItem } from '../../../mappers/userMapper'
 
-const BASE_URL = 'http://26.73.68.190:8080/api/v1/admin/th/users'
+const BASE_URL = `${import.meta.env.VITE_API_URL}/api/v1/admin/th/users`
 
 /**
  * GET usuarios paginados con filtros

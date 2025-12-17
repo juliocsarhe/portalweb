@@ -87,7 +87,7 @@ export default function BeneficioFormPage() {
     }
     try {
       setLoading(true)
-      const res = await fetch('http://26.73.68.190:8080/api/beneficios', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/beneficios`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify(payload),

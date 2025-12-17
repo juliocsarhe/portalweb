@@ -7,7 +7,7 @@ async function getDispositivosAsignados(
   size: number = 10
 ): Promise<PaginatedResponse<DispositivoAsignadoItem>> {
   const res = await fetch(
-    `http://26.73.68.190:8080/api/v1/admin/sysadmin/deviceAssignments/listAssignments?page=${page}&size=${size}`,
+    `${import.meta.env.VITE_API_URL}/api/v1/admin/sysadmin/deviceAssignments/listAssignments?page=${page}&size=${size}`,
     {
       headers: { Authorization: `Bearer ${token}` },
     }
@@ -22,7 +22,7 @@ async function getDispositivoAsignadoById(
   id: number
 ): Promise<DispositivoAsignadoItem> {
   const res = await fetch(
-    `http://26.73.68.190:8080/api/v1/admin/sysadmin/deviceAssignments/getAssignment/${id}`,
+    `${import.meta.env.VITE_API_URL}/api/v1/admin/sysadmin/deviceAssignments/getAssignment/${id}`,
     {
       headers: { Authorization: `Bearer ${token}` },
     }
@@ -37,7 +37,7 @@ async function createDispositivoAsignado(
   data: Partial<DispositivoAsignadoItem>
 ): Promise<DispositivoAsignadoItem> {
   const res = await fetch(
-    `http://26.73.68.190:8080/api/v1/admin/sysadmin/deviceAssignments/createAssignment`,
+    `${import.meta.env.VITE_API_URL}/api/v1/admin/sysadmin/deviceAssignments/createAssignment`,
     {
       method: 'POST',
       headers: {
@@ -58,7 +58,7 @@ async function updateDispositivoAsignado(
   data: Partial<DispositivoAsignadoItem>
 ): Promise<DispositivoAsignadoItem> {
   const res = await fetch(
-    `http://26.73.68.190:8080/api/v1/admin/sysadmin/deviceAssignments/updateAssignment/${id}`,
+    `${import.meta.env.VITE_API_URL}/api/v1/admin/sysadmin/deviceAssignments/updateAssignment/${id}`,
     {
       method: 'PUT',
       headers: {
@@ -75,7 +75,7 @@ async function updateDispositivoAsignado(
 // Eliminar asignación
 async function deleteDispositivoAsignado(token: string, id: number): Promise<void> {
   const res = await fetch(
-    `http://26.73.68.190:8080/api/v1/admin/sysadmin/deviceAssignments/deleteAssignment/${id}`,
+    `${import.meta.env.VITE_API_URL}/api/v1/admin/sysadmin/deviceAssignments/deleteAssignment/${id}`,
     {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${token}` },

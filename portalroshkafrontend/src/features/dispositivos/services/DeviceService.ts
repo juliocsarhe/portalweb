@@ -1,6 +1,6 @@
 import type { DispositivoItem, PageResponse } from '../../../types'
 
-const BASE = 'http://26.73.68.190:8080/api/v1/admin/sysadmin/devices'
+const BASE = `${import.meta.env.VITE_API_URL}/api/v1/admin/sysadmin/devices`
 
 // Helpers
 async function ensureOk(res: Response) {

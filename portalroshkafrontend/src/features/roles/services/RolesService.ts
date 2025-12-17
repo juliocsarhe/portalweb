@@ -7,7 +7,7 @@ import type {
   RolActionResponse,
 } from '../../../types'
 
-const BASE_URL = 'http://26.73.68.190:8080/api/v1/admin/th/roles'
+const BASE_URL = `${import.meta.env.VITE_API_URL}/api/v1/admin/th/roles`
 
 export async function getRoles(
   token: string,

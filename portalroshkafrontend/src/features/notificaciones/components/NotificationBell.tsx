@@ -3,10 +3,11 @@ import { useNotifications } from '../hooks/useNotifications';
 
 interface Props {
     userId?: number;
+    userRol?: number;
 }
 
-export default function NotificationBell({ userId }: Props) {
-    const { notifications, setNotifications, open, toggleOpen } = useNotifications(userId);
+export default function NotificationBell({ userId, userRol }: Props) {
+    const { notifications, setNotifications, open, toggleOpen } = useNotifications(userId, userRol);
 
     return (
     <div className="relative">
@@ -76,6 +77,14 @@ export default function NotificationBell({ userId }: Props) {
     </div>
     );
 }
+
+
+
+
+
+
+
+
 
 
 

@@ -4,13 +4,20 @@ import ProfileCard from '../components/ProfileCard'
 
 //notificaciones
 import NotificationBell from '../../../features/notificaciones/components/NotificationBell'
-
+import { useNotifications } from '../../../features/notificaciones/hooks/useNotifications'  
 
 export default function HomePage() {
-  const { user } = useAuth()
+  const { user, userLoaded } = useAuth()
   const navigate = useNavigate()
 
-  if (!user) return <p>Cargando...</p>
+
+if (!userLoaded) {
+  return <p>Cargando usuario...</p>;
+}
+
+if (!user) {
+  return <p>No autenticado</p>;
+}
 
   return (
     <div className="h-full flex flex-col overflow-hidden">
@@ -40,7 +47,7 @@ export default function HomePage() {
 
             {/* CAMPANA DE NOTIFICACIONES */}
             <div className="absolute top-6 right-6">
-              <NotificationBell userId={user?.id} />
+              <NotificationBell userId={user.idUsuario} userRol={user.rol?.idRol} />
             </div>
 
           </div> {/* cierre Header */}

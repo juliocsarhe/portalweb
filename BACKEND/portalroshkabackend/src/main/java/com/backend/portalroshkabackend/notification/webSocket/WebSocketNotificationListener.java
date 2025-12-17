@@ -22,6 +22,6 @@ public class WebSocketNotificationListener {
         template.convertAndSend("/topic/" + notification.getClass().getSimpleName().toLowerCase(), notification.getMessageDTO());
         System.out.println("Evento recibido: " + notification.getMessageDTO());
 
-        System.out.println("Clase (simple): " + notification.getClass().getSimpleName());
+        System.out.println("Clase (simple): " + notification.getClass().getSimpleName().toLowerCase());
     }
 }

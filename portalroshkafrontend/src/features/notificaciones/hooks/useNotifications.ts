@@ -1,42 +1,99 @@
-import { useEffect, useState } from 'react';
-import { Client } from '@stomp/stompjs';
+import { useState, useEffect, useRef } from 'react';
+import { Client, IMessage } from '@stomp/stompjs';
+import SockJS from 'sockjs-client';
+
+/* Tipo de notificación (simple, sin complicar) */
 type Notification = {
-  idUsuario?: number | null;
-  idSolicitud?: number;
   message: string;
+  idUsuario?: number;
+  idSolicitud?: number;
+  type?: 'success' | 'error';
 };
-export function useNotifications(userId?: number) {
+export const useNotifications = (userId?: number, userRol?: number) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
+  const clientRef = useRef<Client | null>(null);
   const toggleOpen = () => setOpen(o => !o);
   useEffect(() => {
-    if (!userId) return;
+
+
+    console.log('🟢 UserId listo:', userId);
+    console.log('🟢 UserRol listo:', userRol);
+
     const client = new Client({
-      brokerURL: 'ws://26.73.68.190:8080/ws',
+      webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
       reconnectDelay: 5000,
     });
+
     client.onConnect = () => {
-      console.log(':círculo_verde_grande: WebSocket conectado');
-      const topics = [
-        // :candado_cerrado_con_llave: SOLO USUARIO
-        '/topic/notificarsolicitudaprobadaevent',
-        '/topic/notificarsolicitudrechazadaevent',
-        // :tierra_áfrica: GLOBALES
-        '/topic/notificacionglobal',
+      console.log(':círculo_verde_grande: Conectado al sistema de notificaciones');
+      const topicsUser = [
+        'NotificarSolicitudAprobadaEvent',
+        'NotificarSolicitudRechazadaEvent',
       ];
-      topics.forEach(topic => {
-        client.subscribe(topic, msg => {
-          const data: Notification = JSON.parse(msg.body);
-          // :candado_cerrado_con_llave: Filtrado por usuario
-          if (data.idUsuario && data.idUsuario !== userId) {
+
+      const topicsAdmin = [
+        //'topic/notificarsolicitudsaevent',
+        'NotificarSolicitudTEvent',
+        //'topic/notificarsolicitudtlevent',
+        'NotificarSolicitudTEvent',
+      ];
+
+
+      client.subscribe('/topic/notificarsolicitudaprobadaevent', function(message) {
+        const notification: Notification = JSON.parse(message.body);
+
+        if (notification.idUsuario && notification.idUsuario !== userId) {
             return; // no es para este usuario
-          }
-          setNotifications(prev => [data, ...prev]);
-        });
+        }
+
+        console.log('Mensaje recibido:', notification);
+        setNotifications(prev => [notification, ...prev]);
       });
+
+      client.subscribe('/topic/notificarsolicitudrechazadaevent', function(message) {
+        const notification: Notification = JSON.parse(message.body);
+        console.log('ID recibido: ', notification.idUsuario);
+        console.log('UserID actual: ', userId);
+        if (notification.idUsuario !== userId) {
+          return; // no es para este usuario
+        }
+
+        console.log('Mensaje recibido:', notification);
+        setNotifications(prev => [notification, ...prev]);
+      });
+
+      client.subscribe('/topic/notificarsolicitudthevent', function(message) {
+        const notification: Notification = JSON.parse(message.body);
+
+        console.log('Mensaje recibido:', notification);
+        setNotifications(prev => [notification, ...prev]);
+      });
+
+      client.subscribe('/topic/notificarsolicitudtlevent', function(message) {
+        const notification: Notification = JSON.parse(message.body);
+
+        console.log('Mensaje recibido:', notification);
+        setNotifications(prev => [notification, ...prev]);
+      });
+
+
+    };
+
+    client.onStompError = frame => {
+      console.error(':x: STOMP error:', frame.headers['message']);
     };
     client.activate();
-    return () => client.deactivate();
+    return () => {
+      client.deactivate();
+    };
   }, [userId]);
-  return { notifications, setNotifications, open, toggleOpen };
-}
+  return {
+    notifications,
+    setNotifications,
+    open,
+    toggleOpen,
+  };
+
+};
+   

@@ -9,7 +9,7 @@ export interface PaginatedResponse<T> {
 }
 
 export async function getSolicitudesPermisoBeneficio(token: string): Promise<SolicitudItem[]> {
-  const res = await fetch(`http://26.73.68.190:8080/api/v1/usuarios/solicitudes`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/usuarios/solicitudes`, {
     headers: { Authorization: `Bearer ${token}` },
   })
 
@@ -30,7 +30,7 @@ export async function getSolicitudesVacaciones(
     if (v !== undefined && v !== '') query.append(k, String(v))
   })
 
-  const res = await fetch(`http://26.73.68.190:8080/api/v1/usuarios/solicitudes?${query.toString()}`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/usuarios/solicitudes?${query.toString()}`, {
     headers: { Authorization: `Bearer ${token}` },
   })
 
@@ -39,7 +39,7 @@ export async function getSolicitudesVacaciones(
 }
 
 async function getSolicitudByIdApi(token: string, id: string): Promise<SolicitudItem> {
-  const res = await fetch(`http://26.73.68.190:8080/api/v1/usuarios/solicitud/${id}`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/usuarios/solicitud/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   })
 
@@ -51,7 +51,7 @@ export async function createSolicitudPermiso(
   token: string,
   solicitud: SolicitudPayload
 ): Promise<SolicitudItem> {
-  const res = await fetch(`http://26.73.68.190:8080/api/v1/usuarios/crearpermiso`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/usuarios/crearpermiso`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -68,7 +68,7 @@ export async function createSolicitudBeneficio(
   token: string,
   solicitud: SolicitudPayload
 ): Promise<SolicitudItem> {
-  const res = await fetch(`http://26.73.68.190:8080/api/v1/usuarios/crearbeneficio`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/usuarios/crearbeneficio`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -94,7 +94,7 @@ export async function createSolicitudVacaciones(
   token: string,
   solicitud: SolicitudPayload
 ): Promise<SolicitudItem> {
-  const res = await fetch(`http://26.73.68.190:8080/api/v1/usuarios/crearvacacion`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/usuarios/crearvacacion`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -112,7 +112,7 @@ export async function updateSolicitud(
   id: string,
   solicitud: Partial<SolicitudItem>
 ): Promise<SolicitudItem> {
-  const res = await fetch(`http://26.73.68.190:8080/api/solicitudes/${id}`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/solicitudes/${id}`, {
     method: 'PUT',
     headers: {
       Authorization: `Bearer ${token}`,
