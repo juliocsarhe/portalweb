@@ -8,6 +8,7 @@ import software.amazon.awssdk.services.ses.SesClient;
 import software.amazon.awssdk.services.ses.SesClient;
 import software.amazon.awssdk.services.ses.model.*;
 
+@Profile("Prod")
 @Service
 public class EmailService {
 

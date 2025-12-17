@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.sns.SnsClient;
 
 
+@Profile("Prod")
 @Service
 public class NotificacitionServiceAws {
 
