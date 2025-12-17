@@ -1,11 +1,21 @@
 package com.backend.portalroshkabackend.tools.errors.errorslist.user;
 
 public class UserNotFoundException extends RuntimeException {
-    public UserNotFoundException(int id) {
-        super("Usuario con ID " + id + " no encontrado.");
+
+    private UserNotFoundException(String message){
+        super(message);
     }
 
-    public UserNotFoundException(String cedula){
-        super("Usuario con cedula numero " + cedula + " no encontrado.");
+    public static UserNotFoundException byId(int id) {
+        return new UserNotFoundException("Usuario con ID " + id + " no encontrado.");
     }
+
+    public static UserNotFoundException byCorreo(String correo) {
+        return new UserNotFoundException("Usuario con Correo " + correo + " no encontrado.");
+    }
+
+    public static UserNotFoundException byCedula(String cedula) {
+        return new UserNotFoundException("Usuario con cédula número " + cedula + " no encontrado.");
+    }
+
 }
