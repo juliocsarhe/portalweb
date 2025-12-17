@@ -2,6 +2,6 @@ package com.backend.portalroshkabackend.tools.errors.errorslist.solicitudDisposi
 
 public class DeviceRequestNotFoundException extends RuntimeException {
     public DeviceRequestNotFoundException(Integer id) {
-        super("No se encontro una solicitud de Dispositivo con el id: "+ id);
+        super("No se encontró una solicitud de Dispositivo con el id: "+ id);
     }
 }

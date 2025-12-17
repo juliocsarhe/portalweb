@@ -30,9 +30,10 @@ public class RequestServiceImpl implements IRequestService{
     private final IAcceptRequestService acceptBenefitService;
     private final IAcceptRequestService acceptPermissionsService;
     private final RequestMapper requestMapper;
-
     private final NotificationService notificationService;
-    private final NotificacitionServiceAws notificacitionServiceAws;
+
+    @Autowired(required = false)
+    private NotificacitionServiceAws notificacitionServiceAws;
 
 
     ValidatorStrategy<Solicitud> requestValidator;
@@ -45,10 +46,8 @@ public class RequestServiceImpl implements IRequestService{
                                @Qualifier("acceptBenefitService") IAcceptRequestService acceptBenefitService,
                                @Qualifier("acceptPermissionsService") IAcceptRequestService acceptPermissionsService,
                                @Qualifier("requestHandlerValidator")ValidatorStrategy<Solicitud> requestValidator,
-                               NotificationService notificationService,
-                               NotificacitionServiceAws notificationServiceaws
+                               NotificationService notificationService
     ){
-        this.notificacitionServiceAws = notificationServiceaws;
         this.notificationService = notificationService;
         this.solicitudRepository = solicitudRepository;
         this.requestValidator = requestValidator;

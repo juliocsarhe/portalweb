@@ -1,11 +1,11 @@
-package com.backend.portalroshkabackend.DTO.TeamLeaderDTO;
+package com.backend.portalroshkabackend.DTO.TeamLeader;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class SolicitudRespuestaDto {
+public class TeamLeaderDefaultResponse {
     private Integer idSolicitud;
     private String message;
 }

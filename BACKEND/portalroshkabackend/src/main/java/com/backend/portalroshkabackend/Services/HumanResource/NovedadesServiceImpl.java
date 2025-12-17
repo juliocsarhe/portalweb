@@ -1,4 +1,4 @@
-package com.backend.portalroshkabackend.Services.HumanResource.subservices;
+package com.backend.portalroshkabackend.Services.HumanResource;
 
 import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesDefaultResponseDto;
 import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesResponseDto;
@@ -8,15 +8,14 @@ import com.backend.portalroshkabackend.Models.Novedades;
 import com.backend.portalroshkabackend.Models.Usuario;
 import com.backend.portalroshkabackend.Repositories.TH.NovedadesRepository;
 
-import com.backend.portalroshkabackend.Repositories.TH.UserRepository;
 import com.backend.portalroshkabackend.tools.RepositoryService;
+import com.backend.portalroshkabackend.tools.errors.errorslist.novedades.NovedadNotAuthorizedException;
 import com.backend.portalroshkabackend.tools.errors.errorslist.novedades.NovedadNotFoundException;
-import com.backend.portalroshkabackend.tools.errors.errorslist.novedades.NovedadesUserNotFoundException;
 import com.backend.portalroshkabackend.tools.mapper.NovedadesMapper;
+import com.backend.portalroshkabackend.tools.security.SecurityUtils;
 import com.backend.portalroshkabackend.tools.validator.ValidatorStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -31,31 +30,31 @@ public class NovedadesServiceImpl implements INovedadesService {
     private final ValidatorStrategy<NovedadesUpdateDto> updateValidator;
     private final NovedadesRepository novedadesRepository;
     private final RepositoryService repositoryService;
-    private final UserRepository userRepository;
+    private final SecurityUtils securityUtils;
 
     @Autowired
     public NovedadesServiceImpl(NovedadesRepository novedadesRepository,
                                 @Qualifier("novedadInsertValidatorComposite") ValidatorStrategy<NovedadesInsertDto> insertValidator,
                                 @Qualifier("novedadUpdateValidatorComposite") ValidatorStrategy<NovedadesUpdateDto> updateValidator,
                                 RepositoryService repositoryService,
-                                UserRepository userRepository) {
+                                SecurityUtils securityUtils) {
 
         this.novedadesRepository = novedadesRepository;
         this.insertValidator = insertValidator;
         this.updateValidator = updateValidator;
         this.repositoryService = repositoryService;
-        this.userRepository = userRepository;
+        this.securityUtils = securityUtils;
     }
 
     @Override
     public NovedadesDefaultResponseDto create(NovedadesInsertDto dto) {
 
-        insertValidator.validate(dto);
+        Usuario user = securityUtils.getUsuarioActual();
+        if (!securityUtils.hasRole(user, SecurityUtils.ROLE_TALENTO_HUMANO)) {
+            throw new NovedadNotAuthorizedException();
+        }
 
-        // Obtener usuario del token JWT
-        String correo = SecurityContextHolder.getContext().getAuthentication().getName();
-        Usuario user = userRepository.findByCorreo(correo)
-                .orElseThrow(NovedadesUserNotFoundException::new);
+        insertValidator.validate(dto);
 
         // Mapear DTO a entidad
         Novedades novedad = NovedadesMapper.toEntityFromInsertDto(dto, user);
@@ -80,7 +79,13 @@ public class NovedadesServiceImpl implements INovedadesService {
     @Override
     public NovedadesDefaultResponseDto update(NovedadesUpdateDto dto) {
 
+        Usuario user = securityUtils.getUsuarioActual();
+        if (!securityUtils.hasRole(user, SecurityUtils.ROLE_TALENTO_HUMANO)) {
+            throw new NovedadNotAuthorizedException();
+        }
+
         updateValidator.validate(dto);
+
         // 1. Buscar la novedad por ID
         Novedades novedad = novedadesRepository.findById(dto.getId())
                 .orElseThrow(() -> new NovedadNotFoundException("Novedad no encontrada"));
@@ -106,6 +111,12 @@ public class NovedadesServiceImpl implements INovedadesService {
 
     @Override
     public NovedadesDefaultResponseDto delete(Integer id) {
+
+        Usuario user = securityUtils.getUsuarioActual();
+        if (!securityUtils.hasRole(user, SecurityUtils.ROLE_TALENTO_HUMANO)) {
+            throw new NovedadNotAuthorizedException();
+        }
+
         // Buscar la novedad
         Novedades novedad = novedadesRepository.findById(id)
                 .orElseThrow(() -> new NovedadNotFoundException("Novedad no encontrada"));
