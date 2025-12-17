@@ -8,6 +8,7 @@ import { useDeleteNovedades } from '../hooks/useDeleteNovedades'
 import CarruselNovedades from '../components/CarruselNovedades'
 import AvisosList from '../components/AvisosList'
 import ModalNovedad from '../components/ModalNovedad'
+import Toast from '@/shared/ui/components/Toast'
 import { uploadImageToCloudinary } from '../services/uploadImageToCloudinary'
 
 export default function NovedadesPage() {
@@ -16,11 +17,14 @@ export default function NovedadesPage() {
   const { update } = useUpdateNovedades()
   const { remove } = useDeleteNovedades()
 
+  const [toastMessage, setToastMessage] = useState<string | null>(null)
+  const [toastType, setToastType] = useState<'success' | 'error' | 'info' | 'warning'>('info')
+
   const [carrusel, setCarrusel] = useState<NovedadesResponseDto[]>([])
   const [avisos, setAvisos] = useState<NovedadesResponseDto[]>([])
   const [isUploading, setIsUploading] = useState(false)
   const [editItem, setEditItem] = useState<NovedadesResponseDto | null>(null)
-  
+
   const [searchTerm, setSearchTerm] = useState('')
   const [searchDate, setSearchDate] = useState('')
   const [filteredCarrusel, setFilteredCarrusel] = useState<NovedadesResponseDto[]>([])
@@ -52,23 +56,25 @@ export default function NovedadesPage() {
     let filteredA = avisos
 
     if (searchTerm) {
-      filteredC = filteredC.filter(n => 
-        n.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        n.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
+      filteredC = filteredC.filter(
+        (n) =>
+          n.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          n.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
       )
-      filteredA = filteredA.filter(n => 
-        n.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        n.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
+      filteredA = filteredA.filter(
+        (n) =>
+          n.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          n.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
       )
     }
 
     if (searchDate) {
       const targetDate = new Date(searchDate).toISOString().split('T')[0]
-      filteredC = filteredC.filter(n => {
+      filteredC = filteredC.filter((n) => {
         const createdDate = new Date(n.fechaCreacion).toISOString().split('T')[0]
         return createdDate === targetDate
       })
-      filteredA = filteredA.filter(n => {
+      filteredA = filteredA.filter((n) => {
         const createdDate = new Date(n.fechaCreacion).toISOString().split('T')[0]
         return createdDate === targetDate
       })
@@ -99,10 +105,10 @@ export default function NovedadesPage() {
 
       const img = new Image()
       const imageUrl = URL.createObjectURL(file)
-      
+
       img.onload = async () => {
         URL.revokeObjectURL(imageUrl)
-        
+
         const width = img.width
         const height = img.height
 
@@ -111,10 +117,10 @@ export default function NovedadesPage() {
         if (width < 800 || height < 600) {
           const proceed = window.confirm(
             `ADVERTENCIA: Imagen de baja resolución\n\n` +
-            `Dimensiones: ${width}x${height}px\n` +
-            `Recomendado: 800x600px mínimo\n\n` +
-            `La imagen se verá pixelada en el carrusel.\n\n` +
-            `¿Continuar de todos modos?`
+              `Dimensiones: ${width}x${height}px\n` +
+              `Recomendado: 800x600px mínimo\n\n` +
+              `La imagen se verá pixelada en el carrusel.\n\n` +
+              `¿Continuar de todos modos?`
           )
           if (!proceed) {
             setIsUploading(false)
@@ -154,12 +160,14 @@ export default function NovedadesPage() {
   const submitCarrusel = async () => {
     try {
       if (!formCarrusel.titulo.trim()) {
-        alert('El título es obligatorio')
+        setToastMessage('El título es obligatorio')
+        setToastType('warning')
         return
       }
 
       if (!formCarrusel.imagenUrl.trim()) {
-        alert('Debes subir una imagen para el carrusel')
+        setToastMessage('Debes subir una imagen para el carrusel')
+        setToastType('warning')
         return
       }
 
@@ -176,10 +184,11 @@ export default function NovedadesPage() {
       console.log('Enviando al backend:', JSON.stringify(dto, null, 2))
 
       const res = await create(dto)
-      
+
       if (!res) {
-        console.error('Error al crear la novedad del carrusel')
-        alert('Error al crear la novedad del carrusel. Revisa los logs del backend.')
+        console.error('Error al crear la novedad.')
+        setToastMessage('Error al crear la novedad.')
+        setToastType('error')
         return
       }
 
@@ -198,20 +207,23 @@ export default function NovedadesPage() {
       const fileInput = document.querySelector('#carrusel-image-input') as HTMLInputElement
       if (fileInput) fileInput.value = ''
 
-      alert('Novedad agregada al carrusel exitosamente')
+      setToastMessage('Novedad creada exitosamente')
+      setToastType('success')
       console.log('NOVEDAD CREADA y agregada al CARRUSEL')
     } catch (err: any) {
       console.error('Error completo:', err)
       console.error('Mensaje de error:', err?.message)
       console.error('Response:', err?.response)
-      alert('Error al crear la novedad del carrusel. Revisa la consola y los logs del backend.')
+      setToastMessage('Error al crear la novedad.')
+      setToastType('error')
     }
   }
 
   const submitAviso = async () => {
     try {
       if (!formAviso.titulo.trim()) {
-        alert('El título es obligatorio')
+        setToastMessage('El título es obligatorio')
+        setToastType('warning')
         return
       }
 
@@ -228,9 +240,10 @@ export default function NovedadesPage() {
       console.log('Enviando al backend:', dto)
 
       const res = await create(dto)
-      
+
       if (!res) {
-        alert('Error al crear el aviso')
+        setToastMessage('Error al crear el aviso')
+        setToastType('error')
         return
       }
 
@@ -246,11 +259,12 @@ export default function NovedadesPage() {
         prioridad: false,
       })
 
-      alert('Aviso creado exitosamente')
+      setToastMessage(res?.message ?? 'Aviso creado exitosamente')
+      setToastType('success')
       console.log('AVISO CREADO y agregado a la sección de AVISOS')
     } catch (err) {
-      console.error('Error completo:', err)
-      alert('Error al crear el aviso')
+      setToastMessage('Error al crear el aviso')
+      setToastType('error')
     }
   }
 
@@ -268,11 +282,14 @@ export default function NovedadesPage() {
     if (res) await refetch()
   }
 
+  const carruselSale = searchTerm || searchDate ? filteredCarrusel : carrusel
+  const avisosHome = searchTerm || searchDate ? filteredAvisos : avisos
+
   return (
     <PageLayout>
       <div className="p-6 max-w-6xl mx-auto">
         <h1 className="text-3xl font-bold mb-6 text-brand-blue dark:text-white">
-          Administrar Novedades
+          Crear Novedades
         </h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
@@ -286,7 +303,13 @@ export default function NovedadesPage() {
               </h2>
             </div>
 
-            <form onSubmit={(e) => { e.preventDefault(); submitCarrusel() }} className="space-y-4 flex-1 flex flex-col">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault()
+                submitCarrusel()
+              }}
+              className="space-y-4 flex-1 flex flex-col"
+            >
               <div>
                 <label className="block text-sm font-medium mb-1 dark:text-gray-200">
                   Título *
@@ -327,7 +350,9 @@ export default function NovedadesPage() {
                       type="button"
                       onClick={() => {
                         setFormCarrusel({ ...formCarrusel, imagenUrl: '' })
-                        const fileInput = document.querySelector('#carrusel-image-input') as HTMLInputElement
+                        const fileInput = document.querySelector(
+                          '#carrusel-image-input'
+                        ) as HTMLInputElement
                         if (fileInput) fileInput.value = ''
                       }}
                       className="text-sm text-red-600 hover:text-red-700 dark:text-red-400 hover:underline"
@@ -348,9 +373,12 @@ export default function NovedadesPage() {
                 <textarea
                   className="border border-gray-300 dark:border-gray-600 p-2 w-full rounded dark:bg-gray-700 dark:text-white"
                   placeholder="Descripción breve..."
+                  maxLength={250}
                   rows={2}
                   value={formCarrusel.descripcion}
-                  onChange={(e) => setFormCarrusel({ ...formCarrusel, descripcion: e.target.value })}
+                  onChange={(e) =>
+                    setFormCarrusel({ ...formCarrusel, descripcion: e.target.value })
+                  }
                 />
               </div>
 
@@ -363,7 +391,12 @@ export default function NovedadesPage() {
                     type="date"
                     className="border border-gray-300 dark:border-gray-600 p-2 w-full rounded dark:bg-gray-700 dark:text-white text-sm"
                     value={formCarrusel.fechaExpiracion.toISOString().slice(0, 10)}
-                    onChange={(e) => setFormCarrusel({ ...formCarrusel, fechaExpiracion: new Date(e.target.value) })}
+                    onChange={(e) =>
+                      setFormCarrusel({
+                        ...formCarrusel,
+                        fechaExpiracion: new Date(e.target.value),
+                      })
+                    }
                   />
                 </div>
 
@@ -372,7 +405,9 @@ export default function NovedadesPage() {
                     <input
                       type="checkbox"
                       checked={formCarrusel.prioridad}
-                      onChange={(e) => setFormCarrusel({ ...formCarrusel, prioridad: e.target.checked })}
+                      onChange={(e) =>
+                        setFormCarrusel({ ...formCarrusel, prioridad: e.target.checked })
+                      }
                     />
                     <span className="text-sm dark:text-gray-200">Prioritaria</span>
                   </label>
@@ -393,15 +428,17 @@ export default function NovedadesPage() {
 
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg flex flex-col">
             <div className="flex items-center gap-2 mb-4">
-              <span className="material-symbols-outlined text-[#ECB22E] text-2xl">
-                campaign
-              </span>
-              <h2 className="text-xl font-semibold text-brand-blue dark:text-white">
-                Crear Aviso
-              </h2>
+              <span className="material-symbols-outlined text-[#ECB22E] text-2xl">campaign</span>
+              <h2 className="text-xl font-semibold text-brand-blue dark:text-white">Crear Aviso</h2>
             </div>
 
-            <form onSubmit={(e) => { e.preventDefault(); submitAviso() }} className="space-y-4 flex-1 flex flex-col">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault()
+                submitAviso()
+              }}
+              className="space-y-4 flex-1 flex flex-col"
+            >
               <div>
                 <label className="block text-sm font-medium mb-1 dark:text-gray-200">
                   Título *
@@ -437,7 +474,9 @@ export default function NovedadesPage() {
                     type="date"
                     className="border border-gray-300 dark:border-gray-600 p-2 w-full rounded dark:bg-gray-700 dark:text-white text-sm"
                     value={formAviso.fechaExpiracion.toISOString().slice(0, 10)}
-                    onChange={(e) => setFormAviso({ ...formAviso, fechaExpiracion: new Date(e.target.value) })}
+                    onChange={(e) =>
+                      setFormAviso({ ...formAviso, fechaExpiracion: new Date(e.target.value) })
+                    }
                   />
                 </div>
 
@@ -468,7 +507,7 @@ export default function NovedadesPage() {
 
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
           <h2 className="text-xl font-semibold mb-4 text-brand-blue dark:text-white">
-            Buscar Novedades
+            Gestionar Novedades
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -508,7 +547,7 @@ export default function NovedadesPage() {
           )}
         </div>
 
-        {filteredCarrusel.length > 0 && (
+        {carruselSale.length > 0 && (
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-6">
             <div className="flex items-center gap-2 mb-4">
               <span className="material-symbols-outlined text-[#ECB22E] text-2xl">
@@ -516,35 +555,33 @@ export default function NovedadesPage() {
               </span>
               <h2 className="text-xl font-semibold text-brand-blue dark:text-white">
                 Carrusel con imagen
-                {(searchTerm || searchDate) && ` - ${filteredCarrusel.length} resultado(s)`}
+                {(searchTerm || searchDate) && ` - ${carruselSale.length} resultado(s)`}
               </h2>
             </div>
-            <CarruselNovedades items={filteredCarrusel} />
+            <CarruselNovedades items={carruselSale} />
             <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
               <h3 className="text-lg font-semibold mb-3 text-brand-blue dark:text-white">
                 Gestionar Carrusel
               </h3>
-              <AvisosList items={filteredCarrusel} onEdit={setEditItem} onDelete={handleDelete} />
+              <AvisosList items={carruselSale} onEdit={setEditItem} onDelete={handleDelete} />
             </div>
           </div>
         )}
 
-        {filteredAvisos.length > 0 && (
+        {avisosHome.length > 0 && (
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
             <div className="flex items-center gap-2 mb-4">
-              <span className="material-symbols-outlined text-[#ECB22E] text-2xl">
-                campaign
-              </span>
+              <span className="material-symbols-outlined text-[#ECB22E] text-2xl">campaign</span>
               <h2 className="text-xl font-semibold text-brand-blue dark:text-white">
                 Avisos sin imagen
-                {(searchTerm || searchDate) && ` - ${filteredAvisos.length} resultado(s)`}
+                {(searchTerm || searchDate) && ` - ${avisosHome.length} resultado(s)`}
               </h2>
             </div>
-            <AvisosList items={filteredAvisos} onEdit={setEditItem} onDelete={handleDelete} />
+            <AvisosList items={avisosHome} onEdit={setEditItem} onDelete={handleDelete} />
           </div>
         )}
 
-        {(searchTerm || searchDate) && filteredCarrusel.length === 0 && filteredAvisos.length === 0 && (
+        {(searchTerm || searchDate) && carruselSale.length === 0 && avisosHome.length === 0 && (
           <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg text-center">
             <p className="text-gray-600 dark:text-gray-400">
               No se encontraron novedades con los filtros aplicados
@@ -552,8 +589,20 @@ export default function NovedadesPage() {
           </div>
         )}
 
-        <ModalNovedad open={!!editItem} onClose={() => setEditItem(null)} item={editItem} onSave={handleUpdate} />
+        <ModalNovedad
+          open={!!editItem}
+          onClose={() => setEditItem(null)}
+          item={editItem}
+          onSave={handleUpdate}
+        />
       </div>
+      {toastMessage && (
+      <Toast
+      message={toastMessage}
+      type={toastType}
+      onClose={() => setToastMessage(null)}
+      />
+      )}
     </PageLayout>
   )
 }

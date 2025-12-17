@@ -87,6 +87,8 @@ VITE_API_URL=http://localhost:8080
 VITE_USE_MOCK=false
 #For Production environment
 VITE_API_BASE=https://TU-DOMINIO-O-EC2/api
+VITE_CLOUDINARY_CLOUD_NAME=dcjadfldc
+VITE_CLOUDINARY_PRESET=portalroshka
 
 ESE DEBEN COPIAR Y EN EL NUEVO CAMBIAR EL NOMBRE A env.development
 
