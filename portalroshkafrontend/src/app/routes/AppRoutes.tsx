@@ -59,6 +59,10 @@ import EditarEquipoPageOps from '../../features/operations/equipos/EditarEquipoP
 import ProyectosPage from '../../features/operations/proyectos/ProyectosPage'
 import ProyectoFormPage from '../../features/operations/proyectos/ProyectoFormPage'
 
+//Mi equipo / Mi proyecto 
+
+import MiEquipoPage from '../../features/me-equipo/MiEquipoPage'
+import MiProyectoPage from '@/features/me-proyecto/MiProyectoPage'
 
 export default function AppRoutes() {
   return (
@@ -107,6 +111,11 @@ export default function AppRoutes() {
           <Route path="/operations/equipos" element={<EquiposPage />} />
           <Route path="/operations/equipos/nuevo" element={<EquipoFormPageOps />} />
           <Route path="/operations/equipos/:id/edit" element={<EditarEquipoPageOps />} />
+
+          {/*Mi-Equipo/ Mi- Proyecto*/ }
+
+          <Route path="/mi-equipo" element={<MiEquipoPage />} />
+          <Route path="/mi-proyecto" element={<MiProyectoPage />} />
 
           {/* ------------------------------------
                 NUEVAS RUTAS OFICIALES – PROYECTOS

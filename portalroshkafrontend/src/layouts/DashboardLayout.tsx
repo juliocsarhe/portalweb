@@ -65,6 +65,20 @@ export default function DashboardLayout() {
     },
   ],
 },
+
+{
+  id: '/mi-equipo',
+  label: <span className="font-semibold text-[15px]">Mis Equipo</span>,
+  icon: <span className="material-symbols-outlined">groups</span>,
+  available: disponiblePara(Roles.DESARROLLO, Roles.TEAM_LEADER),
+},
+{
+  id: '/mi-proyecto',
+  label: <span className="font-semibold text-[15px]">Mis Proyecto</span>,
+  icon: <span className="material-symbols-outlined">work</span>,
+  available: disponiblePara(Roles.DESARROLLO, Roles.TEAM_LEADER),
+},
+
     { id: '/benefits', label: <span className="font-semibold text-[15px]">Beneficios</span>, icon: <span className="material-symbols-outlined">redeem</span>, available: true },
     { id: '/crear-novedadesTH', label: <span className="font-semibold text-[15px]">Crear Novedades</span>, icon: <span className="material-symbols-outlined">newspaper</span>, available: disponiblePara(Roles.ADMINISTRADOR_DEL_SISTEMA, Roles.TALENTO_HUMANO) },
   ].filter((opt) => opt.available)

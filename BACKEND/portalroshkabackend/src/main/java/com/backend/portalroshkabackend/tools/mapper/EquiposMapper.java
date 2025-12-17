@@ -31,7 +31,9 @@ public class EquiposMapper {
         return dto;
     }
 
-
+    public static EquiposResponseDto toDto(Equipos e) {
+        return toResponse(e);
+    }
     public EquiposResponseDto getAllTeams(Equipos e) {
         return toResponse(e);
     }
