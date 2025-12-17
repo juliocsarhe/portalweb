@@ -1,4 +1,4 @@
-package com.backend.portalroshkabackend.Services.HumanResource.subservices;
+package com.backend.portalroshkabackend.Services.HumanResource;
 
 import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesDefaultResponseDto;
 import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesResponseDto;

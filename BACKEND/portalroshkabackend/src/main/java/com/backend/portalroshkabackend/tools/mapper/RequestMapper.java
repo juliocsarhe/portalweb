@@ -1,5 +1,6 @@
 package com.backend.portalroshkabackend.tools.mapper;
 
+import com.backend.portalroshkabackend.DTO.TeamLeader.request.TeamLeaderAllRequestResponseDto;
 import com.backend.portalroshkabackend.DTO.th.SolicitudByIdResponseDto;
 import com.backend.portalroshkabackend.DTO.th.SolicitudResponseDto;
 import com.backend.portalroshkabackend.DTO.th.request.RequestResponseDto;
@@ -12,7 +13,6 @@ import com.backend.portalroshkabackend.Repositories.TH.BeneficiosRepository;
 import com.backend.portalroshkabackend.Repositories.TH.VacacionesAsignadasRepository;
 import com.backend.portalroshkabackend.tools.errors.errorslist.beneficios.BenefitTypeNotFoundException;
 import com.backend.portalroshkabackend.tools.errors.errorslist.permisos.PermissionTypeNotFoundException;
-import com.backend.portalroshkabackend.tools.errors.errorslist.solicitudes.RequestNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -52,7 +52,6 @@ public class RequestMapper {
         if (idTipoPermiso != null){
             tipoPermiso = permisosRepository.findById(idTipoPermiso).orElseThrow(() -> new PermissionTypeNotFoundException(idTipoPermiso));
         }
-
 
 
         dto.setIdSolicitud(solicitud.getIdSolicitud());
@@ -189,6 +188,29 @@ public class RequestMapper {
 
         return dto;
     }
+
+    public TeamLeaderAllRequestResponseDto toTeamLeaderAllRequestDto(Solicitud solicitud) {
+        TeamLeaderAllRequestResponseDto dto = new TeamLeaderAllRequestResponseDto();
+
+        dto.setIdSolicitud(solicitud.getIdSolicitud());
+        dto.setIdUsuario(solicitud.getUsuario().getIdUsuario());
+        dto.setNombreUsuario(solicitud.getUsuario().getNombre() + " " + solicitud.getUsuario().getApellido());
+
+        dto.setTipoSolicitud(
+                solicitud.getTipoSolicitud() != null
+                        ? solicitud.getTipoSolicitud().toString()
+                        : null
+        );
+
+        dto.setEstado(
+                solicitud.getEstado() != null
+                        ? solicitud.getEstado().toString()
+                        : null
+        );
+
+        return dto;
+    }
+
 
     private  Integer extraerIdTipoPermiso(String comentario) {
         Pattern pattern = Pattern.compile("\\((\\d+)\\)");

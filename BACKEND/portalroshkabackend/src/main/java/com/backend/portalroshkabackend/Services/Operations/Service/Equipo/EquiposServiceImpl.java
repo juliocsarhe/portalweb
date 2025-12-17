@@ -10,6 +10,7 @@ import com.backend.portalroshkabackend.Models.Usuario;
 import com.backend.portalroshkabackend.Repositories.OP.EquiposRepository;
 import com.backend.portalroshkabackend.Repositories.UsuarioRepositories.UsuarioRepository;
 import com.backend.portalroshkabackend.Services.Operations.Interface.Equipo.IEquiposService;
+import com.backend.portalroshkabackend.Services.Operations.Service.HistorialTrabajoService;
 import com.backend.portalroshkabackend.tools.exception.DuplicateResourceException;
 import com.backend.portalroshkabackend.tools.mapper.EquiposMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +25,15 @@ public class EquiposServiceImpl implements IEquiposService {
 
     private final EquiposRepository equiposRepository;
     private final UsuarioRepository usuarioRepository;
+    private final HistorialTrabajoService historialService;
 
     @Autowired
     public EquiposServiceImpl(EquiposRepository equiposRepository,
-                              UsuarioRepository usuarioRepository) {
+                              UsuarioRepository usuarioRepository,
+                              HistorialTrabajoService historialService) {
         this.equiposRepository = equiposRepository;
         this.usuarioRepository = usuarioRepository;
+        this.historialService = historialService;
     }
 
     public EquiposResponseDto crearEquipo(EquiposRequestDto dto){
@@ -57,6 +61,7 @@ public class EquiposServiceImpl implements IEquiposService {
                 Usuario usuario = usuarioRepository.findById(idUsuario)
                         .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
                 equipo.getUsuarios().add(usuario);
+
             }
         }
 

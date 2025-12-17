@@ -12,6 +12,7 @@ import com.backend.portalroshkabackend.tools.mapper.ProyectoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.backend.portalroshkabackend.Repositories.UsuarioRepositories.UsuarioRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
@@ -26,8 +27,9 @@ public class ProyectoServiceImpl implements IProyectoService {
     private final EquiposRepository equiposRepository;
     private final ClientesRepository clientesRepository;
     private final TecnologiaProyectoRepository tecnologiaProyectoRepository;
+    private final HistorialTrabajoService historialTrabajoService;
 
-
+    @Transactional
     @Override
     public ProyectoResponseDto crearProyecto(ProyectoRequestDto requestDto) {
 
@@ -68,11 +70,13 @@ public class ProyectoServiceImpl implements IProyectoService {
 
         proyecto = proyectoRepository.save(proyecto);
 
+        for(Usuario usuario : equipos.getUsuarios()){
+            historialTrabajoService.registrarIngresoProyecto(
+                    usuario, proyecto, equipos, "Asignado al proyecto " + proyecto.getNombre()
+            );
+        }
         return ProyectoMapper.toDto(proyecto);
-
     }
-
-
 
     @Override
     public ProyectoResponseDto obtenerProyectoPorId(Integer idProyecto) {
@@ -81,21 +85,22 @@ public class ProyectoServiceImpl implements IProyectoService {
         return ProyectoMapper.toDto(proyecto);
     }
 
-
-
     public List<ProyectoResponseDto> listarProyectos() {
         return proyectoRepository.findAll().stream()
                 .map(ProyectoMapper::toDto)
                 .collect(Collectors.toList());
     }
 
-
-
+    @Transactional
     @Override
     public ProyectoResponseDto actualizarProyectos(Integer idProyecto, ProyectoRequestDto requestDto) {
 
         Proyecto proyecto = proyectoRepository.findById(idProyecto)
                 .orElseThrow(() -> new RuntimeException("Proyecto no encontrado"));
+
+        Equipos equipoAnterior = proyecto.getEquipos();
+        var usuariosAntes = equipoAnterior != null ? new HashSet<>(equipoAnterior.getUsuarios())
+                : new HashSet<Usuario>();
 
 
 
@@ -105,12 +110,15 @@ public class ProyectoServiceImpl implements IProyectoService {
         proyecto.setFechaLimite(requestDto.getFechaLimite());
         proyecto.setEstado(requestDto.getEstado());
 
-
-
         Equipos equipos = equiposRepository.findById(requestDto.getIdEquipo())
                         .orElseThrow(()-> new RuntimeException("Equipo no encontrado"));
         proyecto.setEquipos(equipos);
         proyecto.setLiderEquipo(equipos.getLider());
+
+        if(equipoAnterior !=null && equipoAnterior.getIdEquipo().equals(equipos.getIdEquipo())){
+            proyectoRepository.save(proyecto);
+            return ProyectoMapper.toDto(proyecto);
+        }
 
         Clientes clientes = clientesRepository.findById(requestDto.getIdCliente())
                         .orElseThrow(()-> new RuntimeException("Cliente no encontrado"));
@@ -123,13 +131,39 @@ public class ProyectoServiceImpl implements IProyectoService {
 
         proyectoRepository.save(proyecto);
 
+        var usuariosDespues = new HashSet<>(equipos.getUsuarios());
+
+        for(Usuario usuario : usuariosDespues){
+
+            if(!usuariosAntes.contains(usuario)){
+                historialTrabajoService.registrarIngresoProyecto(
+                        usuario, proyecto, equipos, "Asignado al proyecto "+ proyecto.getNombre()
+                );
+            }
+        }
+
+        for (Usuario usuario : usuariosAntes){
+            if(!usuariosDespues.contains(usuario)){
+                historialTrabajoService.registrarSalidaProyecto(usuario);
+            }
+        }
+
         return ProyectoMapper.toDto(proyecto);
     }
 
+    @Transactional
     @Override
     public void eliminarProyecto(Integer idProyecto) {
         Proyecto proyecto = proyectoRepository.findById(idProyecto)
                 .orElseThrow(() -> new RuntimeException("Proyecto no encontrado"));
+
+        Equipos equipos = proyecto.getEquipos();
+
+        if(equipos != null){
+            for(Usuario usuario : equipos.getUsuarios()){
+                historialTrabajoService.registrarSalidaProyecto(usuario);
+            }
+        }
         proyectoRepository.delete(proyecto);
     }
 

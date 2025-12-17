@@ -17,23 +17,29 @@ public class HistorialTrabajo {
     @Column(name = "id_historial")
     private Integer idHistorial;
         //Relacion Con Usuario
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
         //Relacion con proyecto
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_proyecto", nullable = false)
     private Proyecto proyecto;
+
+    //relacion con los equipos
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_equipo", nullable = false)
+    private Equipos equipos;
 
     @Column(name = "fecha_inicio")
     private LocalDate fechaInicio;
 
-    @Column(name = "fecha_limite")
-    private LocalDate fechaLimite;
+    @Column(name = "fecha_fin")
+    private LocalDate fechaFin;
 
     @Column(columnDefinition = "TEXT")
     private String descripcion;
 
-    @Column(name = "disponible_para_nuevos")
-    private Boolean disponibleParaNuevos = true;
+    @Column(nullable = false)
+    private Boolean activo = true;
+
 }
