@@ -27,7 +27,7 @@ public class JpaUserDetailsService implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(String correo) throws UsernameNotFoundException {
         // Buscar usuario por correo
-        Optional<Usuario> optionalUser = userRepository.findByCorreo(correo);
+        Optional<Usuario> optionalUser = userRepository.findByCorreoOrNroCedula(correo);
 
         // Verificar si existe el usuario
         if (optionalUser.isEmpty()) {
