@@ -5,5 +5,5 @@
         idLider: number
         nombre: string
         estado: string
-        usuarios: number[]  // los Ids de los usuarios
+        usuarios: number[]  
     }

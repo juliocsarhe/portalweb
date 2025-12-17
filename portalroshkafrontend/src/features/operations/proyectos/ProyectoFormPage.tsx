@@ -5,6 +5,7 @@
     const API_PROYECTOS = "http://localhost:8080/api/v1/admin/operations/proyectos"
     const API_CLIENTES = "http://localhost:8080/api/v1/admin/operations/clientes"
     const API_EQUIPOS = "http://localhost:8080/api/v1/admin/operations/equipos"
+    const API_TECNOLOGIAS = "http://localhost:8080/api/v1/admin/operations/tecnologias"
 
     export default function ProyectoFormPage() {
     const { token } = useAuth()
@@ -17,6 +18,8 @@
 
     const [clientes, setClientes] = useState<any[]>([])
     const [equipos, setEquipos] = useState<any[]>([])
+    const [tecnologias, setTecnologias] = useState<any[]>([])
+    const [tecnologiasIds, setTecnologiasIds] = useState<number[]>([])
 
     const [form, setForm] = useState({
         nombre: "",
@@ -28,6 +31,7 @@
         estado: "ACTIVO",
     })
 
+    // Clientes
     useEffect(() => {
         if (!token) return
 
@@ -36,15 +40,13 @@
         })
         .then(res => res.json())
         .then(data => {
-            if (Array.isArray(data?.content)) {
-            setClientes(data.content)
-            } else {
-            setClientes([])
-            }
+            if (Array.isArray(data?.content)) setClientes(data.content)
+            else setClientes([])
         })
         .catch(() => setClientes([]))
     }, [token])
 
+    // Equipos
     useEffect(() => {
         if (!token) return
 
@@ -59,6 +61,27 @@
         .catch(() => setEquipos([]))
     }, [token])
 
+    // tecnologias
+    useEffect(() => {
+        if (!token) return
+
+        fetch(API_TECNOLOGIAS, {
+        headers: { Authorization: `Bearer ${token}` },
+        })
+        .then(res => res.json())
+        .then(data => {
+        if (Array.isArray(data?.content)) {
+            setTecnologias(data.content)
+        } else if (Array.isArray(data)) {
+            setTecnologias(data)
+        } else {
+            setTecnologias([])
+        }
+})
+        .catch(() => setTecnologias([]))
+    }, [token])
+
+    //  Editar proyecto
     useEffect(() => {
         if (!editar || !token) return
 
@@ -76,6 +99,12 @@
             idEquipo: String(data.idEquipo ?? ""),
             estado: data.estado ?? "ACTIVO",
             })
+
+            setTecnologiasIds(
+            Array.isArray(data.tecnologias)
+                ? data.tecnologias.map((t: any) => t.idTecnologia)
+                : []
+            )
         })
     }, [editar, id, token])
 
@@ -83,6 +112,7 @@
         setForm({ ...form, [e.target.name]: e.target.value })
     }
 
+    //  GUARDAR 
     const handleSubmit = async (e: any) => {
         e.preventDefault()
         setError(null)
@@ -98,7 +128,7 @@
         fechaLimite: form.fechaLimite || null,
         idCliente: Number(form.idCliente),
         idEquipo: Number(form.idEquipo),
-        tecnologiasIds: [],
+        tecnologiasIds, 
         estado: form.estado,
         activo: true,
         }
@@ -168,7 +198,7 @@
                 </div>
 
                 <div>
-                <label className="block font-semibold">Descripción</label>
+                <label className="block font-semibold">Descripcion</label>
                 <textarea
                     name="descripcion"
                     value={form.descripcion}
@@ -191,7 +221,7 @@
                 </div>
 
                 <div>
-                    <label className="block font-semibold">Fecha Límite</label>
+                    <label className="block font-semibold">Fecha Limite</label>
                     <input
                     type="date"
                     name="fechaLimite"
@@ -236,6 +266,37 @@
                 </select>
                 </div>
 
+                {/* tecnologias  */}
+                <div>
+                <label className="block font-semibold mb-2">
+                    Tecnologias
+                </label>
+
+                <div className="grid grid-cols-2 gap-2">
+                    {tecnologias.map(tec => (
+                    <label
+                        key={tec.idTecnologia}
+                        className="flex items-center gap-2 text-sm"
+                    >
+                        <input
+                        type="checkbox"
+                        checked={tecnologiasIds.includes(tec.idTecnologia)}
+                        onChange={(e) => {
+                            if (e.target.checked) {
+                            setTecnologiasIds(prev => [...prev, tec.idTecnologia])
+                            } else {
+                            setTecnologiasIds(prev =>
+                                prev.filter(id => id !== tec.idTecnologia)
+                            )
+                            }
+                        }}
+                        />
+                        {tec.nombre}
+                    </label>
+                    ))}
+                </div>
+                </div>
+
                 <div>
                 <label className="block font-semibold">Estado</label>
                 <select
@@ -273,4 +334,3 @@
         </div>
     )
     }
-        

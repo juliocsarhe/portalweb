@@ -2,6 +2,7 @@ package com.backend.portalroshkabackend.notification.ses;
 
 import com.backend.portalroshkabackend.Models.Solicitud;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.ses.SesClient;
 import software.amazon.awssdk.services.ses.SesClient;
@@ -13,7 +14,7 @@ public class EmailService {
     private final SesClient sesClient;
 
     @Autowired
-    public EmailService(SesClient sesCliente, SesClient sesClient){
+    public EmailService(SesClient sesClient){
         this.sesClient = sesClient;
     }
 
