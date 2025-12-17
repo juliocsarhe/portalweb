@@ -65,6 +65,7 @@ public class SpringSecurityConfig {
         http
             .authorizeHttpRequests(auth -> auth
                 // Endpoints públicos primero
+                    .requestMatchers("/ws/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/usuarios/**").permitAll()
                 
                 // Reglas específicas ANTES de las generales - ORDEN IMPORTANTE
@@ -79,7 +80,10 @@ public class SpringSecurityConfig {
                 .requestMatchers("/api/v1/admin/sysadmin/**").hasAnyAuthority("ROLE_3", "ROLE_5")
 
                 //role_6 - TEAM LIDER - acceso a team lider
-                .requestMatchers("/api/v1/teamleader/**").hasAnyAuthority("ROLE_6")
+                .requestMatchers("/api/v1/admin/teamleader/**").hasAuthority("ROLE_6")
+
+                // ROLE_5 - DIRECTIVO: tiene acceso a TODOS(menos team lider)
+                .requestMatchers("/api/v1/admin/**").hasAnyAuthority("ROLE_5")
 
                 // Cualquier otra request requiere autenticación
                 .anyRequest().authenticated()

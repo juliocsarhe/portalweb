@@ -10,6 +10,8 @@ import com.backend.portalroshkabackend.Models.Enum.EstadoActivoInactivo;
 import com.backend.portalroshkabackend.Models.Usuario;
 import com.backend.portalroshkabackend.Repositories.TH.UserRepository;
 import com.backend.portalroshkabackend.Repositories.TH.UsuarioSpecifications;
+import com.backend.portalroshkabackend.notification.NotificationService;
+import com.backend.portalroshkabackend.notification.aws.NotificacitionServiceAws;
 import com.backend.portalroshkabackend.tools.RepositoryService;
 import com.backend.portalroshkabackend.tools.errors.errorslist.user.UserNotFoundException;
 import com.backend.portalroshkabackend.tools.mapper.EmployeeMapper;
@@ -33,12 +35,20 @@ public class EmployeeServiceImpl implements IEmployeeService {
     private final ValidatorStrategy<Usuario> deleteValidator;
     private final ValidatorStrategy<UserUpdateDto> updateValidator;
 
+    private final NotificationService notificationService;
+
+    @Autowired(required = false)
+    private NotificacitionServiceAws notificacitionServiceAws;
+
     @Autowired
     public EmployeeServiceImpl(UserRepository userRepository,
                                RepositoryService repositoryService,
                                @Qualifier("employeeInsertValidator") ValidatorStrategy<UserInsertDto> insertValidator,
                                @Qualifier("employeeDeleteValidator") ValidatorStrategy<Usuario> deleteValidator,
-                               @Qualifier("employeeUpdateValidator") ValidatorStrategy<UserUpdateDto> updateValidator) {
+                               @Qualifier("employeeUpdateValidator") ValidatorStrategy<UserUpdateDto> updateValidator,
+                               NotificationService notificationService
+    ){
+        this.notificationService = notificationService;
         this.userRepository = userRepository;
         this.repositoryService = repositoryService;
         this.insertValidator = insertValidator;
@@ -51,7 +61,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
         Usuario user = repositoryService.findByIdOrThrow(
                 userRepository,
                 id,
-                () -> new UserNotFoundException(id)
+                () -> UserNotFoundException.byId(id)
         );
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -88,7 +98,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
         var user = repositoryService.findByIdOrThrow(
                 userRepository,
                 id,
-                () -> new UserNotFoundException(id)
+                () -> UserNotFoundException.byId(id)
         );
 
         return EmployeeMapper.toUserByIdDto(user);
@@ -97,7 +107,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
     @Override
     public UserDto getEmployeeByCedula(String cedula) {
-        Usuario user = userRepository.findByNroCedula(cedula).orElseThrow( () -> new UserNotFoundException(cedula));
+        Usuario user = userRepository.findByNroCedula(cedula).orElseThrow( () -> UserNotFoundException.byCedula(cedula));
 
         return EmployeeMapper.toUserDto(user);
     }
@@ -116,6 +126,10 @@ public class EmployeeServiceImpl implements IEmployeeService {
                 DATABASE_DEFAULT_ERROR
         );
 
+        //para subscribir los correos de los nuevos usuarios
+        notificacitionServiceAws.subscribeNewUserToTopic(savedUser.getCorreo());
+        System.out.println("CREANDO USUARIO NUEVO " + insertDto.getCorreo());
+
         return EmployeeMapper.toDefaultResponseDto(savedUser.getIdUsuario(), EMPLOYEE_CREATED_MESSAGE);
 
     }
@@ -126,7 +140,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
         Usuario user = repositoryService.findByIdOrThrow(
                 userRepository,
                 id,
-                () -> new UserNotFoundException(id)
+                () -> UserNotFoundException.byId(id)
         );
 
         updateValidator.validate(updateDto);
@@ -139,6 +153,8 @@ public class EmployeeServiceImpl implements IEmployeeService {
                 DATABASE_DEFAULT_ERROR
         );
 
+
+
         return EmployeeMapper.toDefaultResponseDto(updatedUser.getIdUsuario(), EMPLOYEE_UPDATED_MESSAGE);
 
     }
@@ -149,7 +165,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
         Usuario user = repositoryService.findByIdOrThrow(
                 userRepository,
                 id,
-                () -> new UserNotFoundException(id)
+                () -> UserNotFoundException.byId(id)
         );
 
         deleteValidator.validate(user);

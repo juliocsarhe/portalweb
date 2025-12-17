@@ -3,9 +3,12 @@ package com.backend.portalroshkabackend.Repositories.TH;
 import com.backend.portalroshkabackend.Models.Enum.EstadoSolicitudEnum;
 import com.backend.portalroshkabackend.Models.Enum.SolicitudesEnum;
 import com.backend.portalroshkabackend.Models.Solicitud;
+import com.backend.portalroshkabackend.Models.Usuario;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Collection;
 
 public interface SolicitudRepository extends JpaRepository<Solicitud, Integer> {
 
@@ -31,4 +34,16 @@ public interface SolicitudRepository extends JpaRepository<Solicitud, Integer> {
 
     Solicitud findByUsuario_IdUsuarioAndIdSolicitud(int idUsuario, int idSolicitud);
 
+    Page<Solicitud> findAllByLiderAndTipoSolicitud(Usuario lider, SolicitudesEnum tipoSolicitud, Pageable pageRequest);
+
+    Page<Solicitud> findAllByLiderAndTipoSolicitudIn(
+            Usuario leader,
+            Collection<SolicitudesEnum> tipoSolicitudes,
+            Pageable pageable);
+    Page<Solicitud> findAllByLiderAndEstadoAndTipoSolicitudIn(
+            Usuario leader,
+            EstadoSolicitudEnum estado,
+            Collection<SolicitudesEnum> tipoSolicitudes,
+            Pageable pageRequest
+    );
 }

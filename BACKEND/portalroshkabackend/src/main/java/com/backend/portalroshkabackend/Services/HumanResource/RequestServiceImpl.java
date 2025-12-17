@@ -7,6 +7,8 @@ import com.backend.portalroshkabackend.Models.Enum.SolicitudesEnum;
 import com.backend.portalroshkabackend.Models.Solicitud;
 import com.backend.portalroshkabackend.Repositories.TH.SolicitudRepository;
 import com.backend.portalroshkabackend.Services.HumanResource.subservices.IAcceptRequestService;
+import com.backend.portalroshkabackend.notification.NotificationService;
+import com.backend.portalroshkabackend.notification.aws.NotificacitionServiceAws;
 import com.backend.portalroshkabackend.tools.RepositoryService;
 import com.backend.portalroshkabackend.tools.errors.errorslist.solicitudes.RequestNotFoundException;
 import com.backend.portalroshkabackend.tools.mapper.RequestMapper;
@@ -28,6 +30,12 @@ public class RequestServiceImpl implements IRequestService{
     private final IAcceptRequestService acceptBenefitService;
     private final IAcceptRequestService acceptPermissionsService;
     private final RequestMapper requestMapper;
+    private final NotificationService notificationService;
+
+    @Autowired(required = false)
+    private NotificacitionServiceAws notificacitionServiceAws;
+
+
     ValidatorStrategy<Solicitud> requestValidator;
 
     @Autowired
@@ -37,8 +45,10 @@ public class RequestServiceImpl implements IRequestService{
                                @Qualifier("acceptVacationsService") IAcceptRequestService acceptVacationsService,
                                @Qualifier("acceptBenefitService") IAcceptRequestService acceptBenefitService,
                                @Qualifier("acceptPermissionsService") IAcceptRequestService acceptPermissionsService,
-                               @Qualifier("requestHandlerValidator")ValidatorStrategy<Solicitud> requestValidator
+                               @Qualifier("requestHandlerValidator")ValidatorStrategy<Solicitud> requestValidator,
+                               NotificationService notificationService
     ){
+        this.notificationService = notificationService;
         this.solicitudRepository = solicitudRepository;
         this.requestValidator = requestValidator;
         this.repositoryService = repositoryService;
@@ -113,6 +123,9 @@ public class RequestServiceImpl implements IRequestService{
                 DATABASE_DEFAULT_ERROR
         );
 
+       notificationService.notifyUserses(acceptedRequest, true);
+        //notificationService.notifyUser(acceptedRequest, true);
+
         return requestMapper.toRequestResponseDto(acceptedRequest.getIdSolicitud(), REQUEST_ACCEPTED_MESSAGE);
     }
 
@@ -134,6 +147,9 @@ public class RequestServiceImpl implements IRequestService{
                 request,
                 DATABASE_DEFAULT_ERROR
         );
+
+       // notificationService.notifyUser(rejectedRequest, false);
+        notificationService.notifyUserses(rejectedRequest, false);
 
         return requestMapper.toRequestResponseDto(rejectedRequest.getIdSolicitud(), REQUEST_REJECTED_MESSAGE);
 

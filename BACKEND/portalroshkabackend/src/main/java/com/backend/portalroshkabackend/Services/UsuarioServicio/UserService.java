@@ -34,8 +34,8 @@ import com.backend.portalroshkabackend.Repositories.UsuarioRepositories.TipoPerm
 import com.backend.portalroshkabackend.Repositories.UsuarioRepositories.UsuarioRepository;
 import com.backend.portalroshkabackend.Repositories.UsuarioRepositories.TipoDispositivosRepository;
 
+import com.backend.portalroshkabackend.notification.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -68,6 +68,9 @@ public class UserService {
 
     @Autowired
     private SolicitudesTHRepository solicitudesTHRepository;
+
+    @Autowired
+    private NotificationService notificationService;
 
     // @Autowired
     // private BeneficiosAsignadosRepository beneficiosAsignadosRepository;
@@ -262,7 +265,7 @@ public class UserService {
         tiposDispositivosDto dto = new tiposDispositivosDto();
         dto.setIdTipoDispositivo(tipoDispositivo.getIdTipoDispositivo());
         dto.setNombre(tipoDispositivo.getNombre());
-        dto.setDetalle(tipoDispositivo.getDetalle());;
+        dto.setDetalle(tipoDispositivo.getDetalle());
         return dto;
     }
 
@@ -354,7 +357,9 @@ public class UserService {
                 // solPermisoDto.setId_lider(lider.getIdUsuario()); // Dirigido al Team Leader
                 nuevaSolicitud.setLider(null); // Dirigido a Talento Humano
             }  
-            System.out.println("\n \n asignaciones: \n\n" + asignaciones + "\n \n");            
+            System.out.println("\n \n asignaciones: \n\n" + asignaciones + "\n \n");
+
+            notificationService.sendNotificationToTeamLeader(nuevaSolicitud , lider.getCorreo());
         }
 
         // nuevaSolicitud.setDocumentoAdjunto(solPermisoDto.getId_documento_adjunto());
@@ -419,6 +424,9 @@ public class UserService {
 
         solBeneficioDto.setComentario("Solicitud creada con éxito y enviada a Talento Humano");
 
+        notificationService.sendNotificationToTH(nuevaSolicitud);
+
+
         return solBeneficioDto;
     }
 
@@ -480,12 +488,15 @@ public class UserService {
         // Obtener la lista de equipos a los que está asignado el usuario
         List<AsignacionUsuarioEquipo> asignaciones = asignacionUsuarioRepository.findByUsuario(usuario);
 
+
         // Validar que haya al menos una asignación
         if (asignaciones == null || asignaciones.isEmpty()) {
             nuevaSolicitud.setLider(null); // Dirigido a Talento Humano
             // throw new RuntimeException("El usuario no tiene asignaciones registradas");
+            //TODO: notificationService directo a TH
         }else{
             // Ordenar por porcentaje de trabajo descendente
+            //
             asignaciones.sort(
                 Comparator.comparing(AsignacionUsuarioEquipo::getPorcentajeTrabajo, Comparator.nullsLast(Integer::compareTo)).reversed()
             );
@@ -517,7 +528,10 @@ public class UserService {
             }
 
             nuevaSolicitud.setLider(lider); // Asigna el líder correspondiente
-            
+            //enviar NotificationService sendtolider al lider.getUsuarioId
+
+            notificationService.sendNotificationToTeamLeader(nuevaSolicitud , lider.getCorreo());
+
             System.out.println("\n \n asignaciones: \n\n" + asignaciones + "\n \n");            
         }
 
@@ -562,6 +576,8 @@ public class UserService {
         solicitudesTHRepository.save(nuevaSolicitud);
 
         solDispositivoDto.setComentario("Solicitud de Dispositivo creada con éxito y enviada a SysAdmin");
+
+        notificationService.sendNotificationToSys(nuevaSolicitud);
 
         return solDispositivoDto;
     }
@@ -679,7 +695,7 @@ public class UserService {
         if (!esBase64(dto.getFoto())) { // Verifica si la cadena es una imagen en base64
             return false;
         }
-        usuario.setUrlPerfil(dto.getFoto());; // Actualiza la foto con la nueva codificada
+        usuario.setUrlPerfil(dto.getFoto()); // Actualiza la foto con la nueva codificada
         usuarioRepository.save(usuario);
         return true;
     }
@@ -716,8 +732,7 @@ public class UserService {
         dto.setFechaCreacion(solicitud.getFechaCreacion());
         dto.setNombreLider(solicitud.getLider() != null ? solicitud.getLider().getNombre() + " " + solicitud.getLider().getApellido() : null);
         dto.setNombreUsuario(solicitud.getUsuario() != null ? solicitud.getUsuario().getNombre() + " " + solicitud.getUsuario().getApellido() : null);
-        
-        
+
         Integer idSubtipoSolicitud = extraerIdSubtipoSolicitud(solicitud.getComentario());
         
         // System.out.println("ID SUBTIPO SOLICITUD EXTRAIDO: " + idSubtipoSolicitud);
