@@ -31,9 +31,17 @@
             })
 
             if (!res.ok) {
-            const text = await res.text()
-            throw new Error(text || 'Error al obtener el equipo')
-            }
+                const data = await res.json()
+
+                if (data?.message?.includes('no pertenece')) {
+                    setEquipos([])
+                    setError('Todavía no estás asignado a ningún equipo.')
+                    return
+                }
+
+                setError('No se pudo cargar la información del equipo.')
+                return
+                }
 
             const data = await res.json()
             setEquipos(Array.isArray(data) ? data : [data])
@@ -56,10 +64,15 @@
         )}
 
         {error && (
-            <div className="text-center text-red-500">
-            {error}
+            <div className="flex flex-col items-center justify-center py-16 text-center">
+                <p className="text-lg font-semibold text-gray-300">
+                {error}
+                </p>
+                <p className="mt-2 text-sm text-gray-500">
+                
+                </p>
             </div>
-        )}
+            )}
 
         {!loading && !error && equipos.length === 0 && (
             <div className="text-center text-gray-500 dark:text-gray-300">
