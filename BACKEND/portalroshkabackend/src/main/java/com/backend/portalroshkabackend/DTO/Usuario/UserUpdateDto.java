@@ -1,4 +1,4 @@
-package com.backend.portalroshkabackend.DTO.UsuarioDTO;
+package com.backend.portalroshkabackend.DTO.Usuario;
 
 import java.time.LocalDate;
 import com.backend.portalroshkabackend.Models.Enum.EstadoActivoInactivo;

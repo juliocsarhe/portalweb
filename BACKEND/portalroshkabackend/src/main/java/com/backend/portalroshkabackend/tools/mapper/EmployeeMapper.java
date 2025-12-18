@@ -1,9 +1,8 @@
 package com.backend.portalroshkabackend.tools.mapper;
 
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserDto;
 import com.backend.portalroshkabackend.DTO.common.UserInsertDto;
 import com.backend.portalroshkabackend.DTO.common.UserUpdateDto;
-import com.backend.portalroshkabackend.DTO.th.employees.DefaultResponseDto;
 import com.backend.portalroshkabackend.DTO.th.employees.UserByIdResponseDto;
 import com.backend.portalroshkabackend.DTO.th.employees.UserResponseDto;
 import com.backend.portalroshkabackend.Models.Usuario;
@@ -16,15 +15,6 @@ import java.time.Period;
 public class EmployeeMapper {
 
     // ------ ENTITY TO DTO ------
-
-    public static DefaultResponseDto toDefaultResponseDto(Integer idUsuario, String message){
-        DefaultResponseDto dto = new DefaultResponseDto();
-
-        dto.setIdUsuario(idUsuario);
-        dto.setMessage(message);
-
-        return dto;
-    }
 
     // Devolver todos los campos
     public static UserResponseDto toUserResponseDto(Usuario user) {

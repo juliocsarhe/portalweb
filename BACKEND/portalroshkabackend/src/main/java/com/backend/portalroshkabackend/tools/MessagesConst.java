@@ -28,4 +28,7 @@ public class MessagesConst {
     public static final String NOVEDADES_UPDATED_MESSAGE = "Novedad actualizada exitosamente.";
     public static final String NOVEDADES_DELETED_MESSAGE = "Novedad eliminada exitosamente.";
     public static final String NOVEDADES_CREATED_MESSAGE = "Novedad creada exitosamente.";
+
+    //----- USUARIOS CONST -----
+    public static final String USUARIO_UPDATED_MESSAGE = "Usuario actualizado con exito.";
 }

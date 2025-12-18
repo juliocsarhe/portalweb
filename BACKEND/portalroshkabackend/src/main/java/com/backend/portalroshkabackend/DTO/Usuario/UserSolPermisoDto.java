@@ -1,4 +1,4 @@
-package com.backend.portalroshkabackend.DTO.UsuarioDTO;
+package com.backend.portalroshkabackend.DTO.Usuario;
 
 import java.time.LocalDate;
 
@@ -7,12 +7,13 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class UserSolBeneficioDto {
-
-    private Integer id_tipo_beneficio;
+public class UserSolPermisoDto {
+    
+    // private Integer id_usuario;
+    private Integer id_tipo_permiso;
     private LocalDate fecha_inicio;
     private Integer cant_dias;
     private String comentario;
-    private Integer monto;
 
+    
 }

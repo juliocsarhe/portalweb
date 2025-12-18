@@ -1,4 +1,4 @@
-package com.backend.portalroshkabackend.DTO.UsuarioDTO;
+package com.backend.portalroshkabackend.DTO.Usuario;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -6,5 +6,5 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class UserUpdateFoto {
-    String foto;
+    String urlFoto;
 }

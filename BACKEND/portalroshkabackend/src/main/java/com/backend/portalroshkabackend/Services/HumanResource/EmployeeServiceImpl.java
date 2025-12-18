@@ -1,9 +1,9 @@
 package com.backend.portalroshkabackend.Services.HumanResource;
 
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserDto;
 import com.backend.portalroshkabackend.DTO.common.UserInsertDto;
 import com.backend.portalroshkabackend.DTO.common.UserUpdateDto;
-import com.backend.portalroshkabackend.DTO.th.employees.DefaultResponseDto;
+import com.backend.portalroshkabackend.DTO.common.DefaultResponseDto;
 import com.backend.portalroshkabackend.DTO.th.employees.UserByIdResponseDto;
 import com.backend.portalroshkabackend.DTO.th.employees.UserResponseDto;
 import com.backend.portalroshkabackend.Models.Enum.EstadoActivoInactivo;
@@ -14,6 +14,7 @@ import com.backend.portalroshkabackend.notification.NotificationService;
 import com.backend.portalroshkabackend.notification.aws.NotificacitionServiceAws;
 import com.backend.portalroshkabackend.tools.RepositoryService;
 import com.backend.portalroshkabackend.tools.errors.errorslist.user.UserNotFoundException;
+import com.backend.portalroshkabackend.tools.mapper.DefaultResponseMapper;
 import com.backend.portalroshkabackend.tools.mapper.EmployeeMapper;
 import com.backend.portalroshkabackend.tools.validator.ValidatorStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
     private final ValidatorStrategy<UserInsertDto> insertValidator;
     private final ValidatorStrategy<Usuario> deleteValidator;
     private final ValidatorStrategy<UserUpdateDto> updateValidator;
+    private final DefaultResponseMapper defaultResponseMapper;
 
     private final NotificationService notificationService;
 
@@ -46,8 +48,10 @@ public class EmployeeServiceImpl implements IEmployeeService {
                                @Qualifier("employeeInsertValidator") ValidatorStrategy<UserInsertDto> insertValidator,
                                @Qualifier("employeeDeleteValidator") ValidatorStrategy<Usuario> deleteValidator,
                                @Qualifier("employeeUpdateValidator") ValidatorStrategy<UserUpdateDto> updateValidator,
+                               DefaultResponseMapper defaultResponseMapper,
                                NotificationService notificationService
     ){
+        this.defaultResponseMapper = defaultResponseMapper;
         this.notificationService = notificationService;
         this.userRepository = userRepository;
         this.repositoryService = repositoryService;
@@ -75,7 +79,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
                 DATABASE_DEFAULT_ERROR
         );
 
-        return EmployeeMapper.toDefaultResponseDto(savedUser.getIdUsuario(), PASSWORD_RESETED_MESSAGE);
+        return defaultResponseMapper.build(savedUser.getIdUsuario(), PASSWORD_RESETED_MESSAGE);
     }
 
     @Transactional(readOnly = true)
@@ -130,7 +134,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
         notificacitionServiceAws.subscribeNewUserToTopic(savedUser.getCorreo());
         System.out.println("CREANDO USUARIO NUEVO " + insertDto.getCorreo());
 
-        return EmployeeMapper.toDefaultResponseDto(savedUser.getIdUsuario(), EMPLOYEE_CREATED_MESSAGE);
+        return defaultResponseMapper.build(savedUser.getIdUsuario(), EMPLOYEE_CREATED_MESSAGE);
 
     }
 
@@ -155,7 +159,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
 
 
-        return EmployeeMapper.toDefaultResponseDto(updatedUser.getIdUsuario(), EMPLOYEE_UPDATED_MESSAGE);
+        return defaultResponseMapper.build(updatedUser.getIdUsuario(), EMPLOYEE_UPDATED_MESSAGE);
 
     }
 
@@ -178,7 +182,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
                 DATABASE_DEFAULT_ERROR
         );
 
-        return EmployeeMapper.toDefaultResponseDto(deletedUser.getIdUsuario(), EMPLOYEE_DELETED_MESSAGE);
+        return defaultResponseMapper.build(deletedUser.getIdUsuario(), EMPLOYEE_DELETED_MESSAGE);
 
     }
 }
