@@ -160,7 +160,7 @@ public class NovedadesServiceImpl implements INovedadesService {
     public List<NovedadesResponseDto> getCarrusel() {
         return novedadesRepository.findVigentes()
                 .stream()
-                .filter(n -> n.getImagenUrl() != null)
+                .filter(n -> n.getImagenUrl() != null && !n.getImagenUrl().trim().isEmpty())
                 .map(NovedadesMapper::toResponseDto)
                 .toList();
     }
@@ -168,7 +168,7 @@ public class NovedadesServiceImpl implements INovedadesService {
     @Override
     public List<NovedadesResponseDto> getAvisos() {
         return novedadesRepository.findVigentes().stream()
-                .filter(n -> n.getImagenUrl() == null)
+                .filter(n -> n.getImagenUrl() == null || n.getImagenUrl().trim().isEmpty())
                 .map(NovedadesMapper::toResponseDto)
                 .toList();
     }

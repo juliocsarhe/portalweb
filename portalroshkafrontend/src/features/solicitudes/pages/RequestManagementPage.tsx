@@ -31,7 +31,7 @@ export default function SolicitudesTHPage() {
   const [page, setPage] = useState(0)
   const [procesando, setProcesando] = useState<number | null>(null)
 
-  const puedeVerSolicitudes = tieneRol(user, Roles.TH, Roles.GTH)
+  const puedeVerSolicitudes = tieneRol(user, Roles.TALENTO_HUMANO)
 
   const { tiposPermiso, tiposBeneficio, loading: loadingCatalogos } = useCatalogosSolicitudes(token)
 

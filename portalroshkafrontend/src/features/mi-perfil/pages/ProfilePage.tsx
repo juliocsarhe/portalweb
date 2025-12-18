@@ -215,7 +215,7 @@ export default function ProfilePage() {
                         </span>
                       </div>
                       <span className="inline-flex items-center rounded-full border border-gray-300 dark:border-gray-600 bg-white/70 
-                                          dark:bg-gray-800/80 px-2 py-0.5 text-xs text-gray-700 dark:text-gray-200">
+                                          dark:bg-gray-800/80 px-1 py-0.5 text-xs text-gray-700 dark:text-gray-200">
                         {cargoNombre}
                       </span>
                     </div>

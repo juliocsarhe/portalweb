@@ -38,7 +38,7 @@ interface FormField {
 
 export interface FormSection {
   title: string
-  icon: string | React.ReactNode
+  icon?: string | React.ReactNode
   fields: FormField[]
   className?: string
 }
@@ -182,7 +182,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                 </option>
               ))}
             </select>
-            {error && <p className="text-red-500 dark:text-red-400 text-xs">⚠️ {error}</p>}
+            {error && <p className="text-red-500 dark:text-red-400 text-xs">{error}</p>}
           </div>
         )
 
@@ -204,7 +204,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
               className="w-5 h-5 text-blue-600 border-gray-300 rounded-sm focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-600"
             />
             <span className="text-gray-800 dark:text-gray-200 flex-1">{field.label}</span>
-            {error && <span className="text-red-500 dark:text-red-400 text-sm">⚠️ {error}</span>}
+            {error && <span className="text-red-500 dark:text-red-400 text-sm"> {error}</span>}
           </label>
         )
 
@@ -253,7 +253,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
             <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
               {formData[field.name] ?? 0}%
             </span>
-            {error && <p className="text-red-500 dark:text-red-400 text-xs">⚠️ {error}</p>}
+            {error && <p className="text-red-500 dark:text-red-400 text-xs"> {error}</p>}
           </div>
         )
 
@@ -290,7 +290,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                           hover:file:bg-blue-100
                           ${isFieldDisabled ? 'cursor-not-allowed opacity-60' : ''}`}
             />
-            {error && <p className="text-red-500 dark:text-red-400 text-xs">⚠️ {error}</p>}
+            {error && <p className="text-red-500 dark:text-red-400 text-xs"> {error}</p>}
           </div>
         )
 
@@ -320,7 +320,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
             {field.helperText && (
               <p className="text-gray-500 dark:text-gray-400 text-xs">{field.helperText}</p>
             )}
-            {error && <p className="text-red-500 dark:text-red-400 text-xs">⚠️ {error}</p>}
+            {error && <p className="text-red-500 dark:text-red-400 text-xs"> {error}</p>}
           </div>
         )
 
@@ -346,7 +346,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
             {field.helperText && (
               <p className="text-gray-500 dark:text-gray-400 text-xs">{field.helperText}</p>
             )}
-            {error && <p className="text-red-500 dark:text-red-400 text-xs">⚠️ {error}</p>}
+            {error && <p className="text-red-500 dark:text-red-400 text-xs"> {error}</p>}
           </div>
         )
     }
@@ -383,9 +383,8 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
               <div className="w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center">
                 {section.icon}
               </div>
-              <h2 className="text-gray-800 dark:text-gray-100 font-semibold text-lg">
-                {section.title}
-              </h2>
+              <h2 className="text-black dark:text-white font-semibold text-lg">{section.title}</h2>
+
               <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
             </div>
             <div className={`grid gap-4 ${section.className || 'grid-cols-1 md:grid-cols-2'}`}>

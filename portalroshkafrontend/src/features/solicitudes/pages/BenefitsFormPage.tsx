@@ -2,6 +2,7 @@
 import { useNavigate } from 'react-router'
 import { useState } from 'react'
 
+
 import FormLayout from '../../../layouts/FormLayout'
 import { useAuth } from '../../../app/providers/AuthContext'
 import DynamicForm, { type FormSection } from '../../../shared/ui/components/DynamicForm'
@@ -32,7 +33,6 @@ export default function BeneficioFormPage() {
         fullWidth: true,
       },
     ]
-
     switch (tipo) {
       case 'prestamo':
         fields.push(
@@ -40,9 +40,10 @@ export default function BeneficioFormPage() {
           { name: 'comentario', label: 'Motivo', type: 'textarea', required: true }
         )
         break
+        
       case 'capacitacion':
         fields.push(
-          { name: 'fecha', label: 'Fecha', type: 'date', required: true },
+          { name: 'fecha', label: 'Fecha', type: 'date', required: false },
           { name: 'comentario', label: 'Detalle', type: 'textarea', required: true }
         )
         break
@@ -71,7 +72,7 @@ export default function BeneficioFormPage() {
     return [
       {
         title: 'Solicitud de Beneficio',
-        icon: '🎁',
+        icon: <span className="material-symbols-outlined">loyalty</span>,
         fields,
       },
     ]
@@ -93,7 +94,7 @@ export default function BeneficioFormPage() {
         body: JSON.stringify(payload),
       })
       if (!res.ok) throw new Error(await res.text())
-      alert('Solicitud de beneficio enviada ✅')
+      alert('Solicitud de beneficio enviada ')
       navigate('/beneficios')
     } catch (err: any) {
       alert('Error al enviar: ' + err.message)
@@ -106,11 +107,7 @@ export default function BeneficioFormPage() {
     <FormLayout
       title="Crear solicitud"
       subtitle="Completá los campos para enviar tu solicitud"
-      icon={
-        <span role="img" aria-label="form">
-          📝
-        </span>
-      }
+      icon={<span className="material-symbols-outlined">edit_document</span>}
       onCancel={() => navigate('/beneficios')}
       onSubmitLabel="Enviar solicitud"
       onCancelLabel="Cancelar"

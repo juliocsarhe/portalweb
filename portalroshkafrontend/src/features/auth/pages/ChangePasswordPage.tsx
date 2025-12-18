@@ -82,7 +82,9 @@ export function ChangePasswordPage() {
 
         {success ? (
           <p className="text-green-600 text-center font-medium">
-            ✅ Contraseña cambiada con éxito. Redirigiendo...
+            <span className="material-symbols-outlined">
+check_box
+</span>Contraseña cambiada con éxito. Redirigiendo...
           </p>
         ) : (
           <>

@@ -20,6 +20,7 @@ import PaginationFooter from '../../../shared/ui/components/PaginationFooter'
 import SelectDropdown from '../../../shared/ui/components/SelectDropdown'
 import Toast from '../../../shared/ui/components/Toast'
 import { tieneRol } from '../../../shared/utils/permisos'
+import UsuarioHistorialModal from './UsuarioHistorialModal'
 
 export default function UserPage() {
   const { token, user } = useAuth()
@@ -39,8 +40,8 @@ export default function UserPage() {
 
   // permisos
 
-  const puedeVerUsuarios = tieneRol(user, Roles.TALENTO_HUMANO)
-  const puedeEditarUsuarios = tieneRol(user, Roles.TALENTO_HUMANO)
+  const puedeVerUsuarios = tieneRol(user, Roles.TALENTO_HUMANO, Roles.DIRECTIVO)
+  const puedeEditarUsuarios = tieneRol(user, Roles.TALENTO_HUMANO, Roles.DIRECTIVO)
 
   // si no tiene permisos de ver
   if (!puedeVerUsuarios) {
@@ -63,12 +64,26 @@ export default function UserPage() {
     setPage(0)
   }
 
+  const [openHistorial, setOpenHistorial] = useState(false)
+  const [usuarioHistorialId, setUsuarioHistorialId] = useState<number | null>(null)
+
   // Acciones con íconos
   const onEdit = (u: UsuarioItem) => navigate(`/usuarios/${u.idUsuario}`)
   const onView = (u: UsuarioItem) => navigate(`/usuarios/${u.idUsuario}?readonly=true`)
 
   const rowActions: RowAction<UsuarioItem>[] = puedeEditarUsuarios
     ? [
+        {
+          key:'historial',
+          label:'Historial',
+          icon: <MsIcon name='visibility'/>,
+          onClick: (u)=> {
+            setUsuarioHistorialId(u.idUsuario)
+            setOpenHistorial(true)
+          },
+          variant:'secondary',
+        },
+
         {
           key: 'edit',
           label: 'Editar',
@@ -93,10 +108,10 @@ export default function UserPage() {
     const success = params.get('success')
 
     if (success === 'created') {
-      setToastMessage('✅ Usuario creado con éxito')
+      setToastMessage('Usuario creado con éxito')
       setToastType('success')
     } else if (success === 'updated') {
-      setToastMessage('✅ Usuario actualizado con éxito')
+      setToastMessage('Usuario actualizado con éxito')
       setToastType('success')
     }
   }, [location.search])
@@ -106,21 +121,26 @@ export default function UserPage() {
     return (
       <>
         <p>{error}</p>
-        <Toast message="❌ Error al cargar usuarios" type="error" onClose={() => {}} />
+        <Toast
+          message="Error al cargar usuarios. Intente nuevamente"
+          type="error"
+          onClose={() => {}}
+        />
       </>
     )
   }
 
   return (
+    <>
     <PageLayout
       title="Listado de usuarios"
       actions={
         puedeEditarUsuarios && (
           <IconButton
             label="Crear Usuario"
-            icon={<span>➕</span>}
+            icon={<span className="material-symbols-outlined">add</span>}
             variant="primary"
-            onClick={() => navigate('/usuarios/buscar')}
+            onClick={() => navigate('/usuarios/nuevo')}
             className="h-10 text-sm px-4 flex items-center"
           />
         )
@@ -204,5 +224,16 @@ export default function UserPage() {
         <Toast message={toastMessage} type={toastType} onClose={() => setToastMessage(null)} />
       )}
     </PageLayout>
+
+    {/*para ver historial*/}
+    <UsuarioHistorialModal 
+    open={openHistorial}
+    usuarioId={usuarioHistorialId}
+    onClose={()=>{
+      setOpenHistorial(false)
+      setUsuarioHistorialId(null)
+    }}
+    />
+    </>
   )
 }

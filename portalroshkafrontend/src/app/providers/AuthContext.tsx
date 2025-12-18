@@ -81,64 +81,57 @@
     const [user, setUser] = useState<User | null>(null)
     const [token, setToken] = useState<string | null>(null)
 
-    useEffect(() => {
-      const storedToken = localStorage.getItem('auth_token')
-      if (storedToken) {
-        setToken(storedToken)
-        decodeAndSetUser(storedToken)
-      }
-    }, [])
-
-    const decodeAndSetUser = async (jwtToken: string) => {
-      try {
-        const payload = parseJwt(jwtToken)
-
-        // 🔑 el rol viene como NÚMERO desde el backend
-        const rolId =
-          typeof payload.rol === 'number'
-            ? payload.rol
-            : payload.rol?.idRol ?? null
-
-        // Usuario básico desde el token
-        const basicUser: User = {
-          id: payload.id ?? 0,
-          nombre: payload.nombre ?? '',
-          apellido: payload.apellido ?? '',
-          correo: payload.email ?? payload.sub ?? '',
-          rol: rolId
-            ? {
-                idRol: rolId,
-                nombre: mapRolNombre(rolId),
-              }
-            : null,
-        }
-
-        setUser(basicUser)
-
-        // 🔄 Traer usuario completo del backend
-        const res = await fetch('http://localhost:8080/api/v1/usuarios/me', {
-          headers: { Authorization: `Bearer ${jwtToken}` },
-        })
-
-        if (!res.ok) throw new Error('No se pudo obtener datos completos del usuario')
-
-        const fullUser: User = await res.json()
-
-        setUser({
-          ...fullUser,
-          rol: fullUser.rol
-            ? {
-                idRol: fullUser.rol.idRol,
-                nombre: mapRolNombre(fullUser.rol.idRol), // 🔑 CLAVE
-              }
-            : null,
-        })
-
-      } catch (e) {
-        console.error('Error al decodificar el token:', e)
-        setUser(null)
-      }
+  useEffect(() => {
+    const storedToken = localStorage.getItem('auth_token')
+    if (storedToken) {
+      setToken(storedToken)
+      decodeAndSetUser(storedToken)
     }
+  }, [])
+
+  const decodeAndSetUser = async (jwtToken: string) => {
+    try {
+      const payload = parseJwt(jwtToken)
+      // tolerante a diferentes estructuras de rol
+      let rol = null
+      if (payload.rol) {
+        if (typeof payload.rol === 'object') {
+          rol = {
+            idRol: payload.rol.idRol ?? 0,
+            nombre: payload.rol.nombre ?? '',
+          }
+        } else if (typeof payload.rol === 'string') {
+          rol = { idRol: 0, nombre: payload.rol }
+        } else if (typeof payload.rol === 'number') {
+          rol = { idRol: payload.rol, nombre: '' }
+        }
+      }
+      const basicUser: User = {
+        id: payload.id ?? 0,
+        nombre: payload.nombre ?? '',
+        apellido: payload.apellido ?? '',
+        correo: payload.email ?? payload.sub ?? '',
+        rol: payload.rol
+          ? {
+              idRol: payload.rol.idRol ?? 0,
+              nombre: payload.rol.nombre ?? '',
+            }
+          : null, // 👈 si no viene, null
+      }
+      setUser(basicUser)
+
+      // Ahora pedimos los datos completos al backend
+      const res = await fetch('http://localhost:8080/api/v1/usuarios/me', {
+        headers: { Authorization: `Bearer ${jwtToken}` },
+      })
+      if (!res.ok) throw new Error('No se pudo obtener datos completos del usuario')
+      const fullUser: User = await res.json()
+      setUser(fullUser)
+    } catch (e) {
+      console.error('Error al decodificar el token:', e)
+      setUser(null)
+    }
+  }
 
     const login = (jwtToken: string) => {
       localStorage.setItem('auth_token', jwtToken)

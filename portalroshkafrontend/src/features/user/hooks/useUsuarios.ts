@@ -48,6 +48,6 @@ export function useUsuarios(
     totalElements,
     loading,
     error,
-    refresh: fetchUsuarios, // 👈 ahora lo exponemos
+    refresh: fetchUsuarios, //  ahora lo exponemos
   }
 }

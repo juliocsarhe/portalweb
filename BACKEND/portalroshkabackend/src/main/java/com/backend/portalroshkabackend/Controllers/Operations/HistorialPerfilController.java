@@ -30,5 +30,4 @@ public class HistorialPerfilController {
                 historialService.listarHistorialPorUsuario(usuario.getIdUsuario())
         );
     }
-
 }

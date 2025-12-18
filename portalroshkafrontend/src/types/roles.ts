@@ -10,13 +10,15 @@ export const Roles = {
 
 export type Roles = (typeof Roles)[keyof typeof Roles]
 
-// Conversión de nombreRol (como llega del backend) → Enum interno
+// Conversión de nombreRol (como llega del backend), Enum interno
 export const RolesMap: Record<string, Roles> = {
   'TALENTO HUMANO': Roles.TALENTO_HUMANO,
   DESARROLLO: Roles.DESARROLLO,
   OPERACIONES: Roles.OPERACIONES,
   'ADMINISTRADOR DEL SISTEMA': Roles.ADMINISTRADOR_DEL_SISTEMA,
   DIRECTIVO: Roles.DIRECTIVO,
+  DIRECTOR: Roles.DIRECTIVO,
+  DIRECTORES: Roles.DIRECTIVO,
   ADMINISTRATIVO: Roles.ADMINISTRATIVO,
   TEAM_LEADER: Roles.TEAM_LEADER,
 }

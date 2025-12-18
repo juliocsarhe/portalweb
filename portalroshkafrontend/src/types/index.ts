@@ -429,13 +429,22 @@ export interface NovedadesDefaultResponseDto {
   titulo: string
   message: string
 }
-export interface InsertDto {
+export interface NovedadesInsertDto {
   titulo: string
   descripcion: string
   imagenUrl: string
   fechaExpiracion: Date
-  categoria: string
-  prioridad: string
+  prioridad: boolean
+}
+export interface UsuarioNovedadesDto {
+  idUsuario: number
+  nombre: string
+  apellido: string
+  rol: RolNovedadesDto
+}
+export interface RolNovedadesDto {
+  idRol: number
+  nombre: string
 }
 export interface NovedadesResponseDto {
   titulo: string
@@ -444,8 +453,8 @@ export interface NovedadesResponseDto {
   imagenUrl: string
   fechaExpiracion: Date
   activo: boolean
-  categoria: string
-  prioridad: string
+  prioridad: boolean
+  usuario: UsuarioNovedadesDto
 }
 export interface NovedadesUpdateDto {
   id: number
@@ -453,6 +462,5 @@ export interface NovedadesUpdateDto {
   descripcion: string
   imagenUrl: string
   fechaExpiracion: string
-  categoria: string
-  prioridad: string
+  prioridad: boolean
 }
