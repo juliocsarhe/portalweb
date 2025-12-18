@@ -17,7 +17,7 @@ public class NotificarSolicitudTlEvent implements Notification {
         NotificationDTO dto = new NotificationDTO();
 
         dto.setIdUsuario(id);
-        dto.setMessage("Solicitud realizada lider");
+        dto.setMessage("Nueva Solicitud");
 
         return dto;
     }

@@ -195,6 +195,8 @@ public class TeamLeaderService {
         respuesta.setMessage("La solicitud de " + solicitud.getTipoSolicitud() + " fue aceptada correctamente");
 
         notificationService.alertTH(solicitud, true);
+        NotificarSolicitudAprobadaEvent event = new NotificarSolicitudAprobadaEvent(0);
+        notificationService.sendEvent(event);
 
         return respuesta; // Placeholder response
     }
@@ -226,6 +228,9 @@ public class TeamLeaderService {
         vacacAsignaRepository.save(vacacionesAsignadas);
         notificationService.notifyUserses(solicitud, true);
 
+        NotificarSolicitudAprobadaEvent event = new NotificarSolicitudAprobadaEvent(0);
+        notificationService.sendEvent(event);
+
 
     }
 
@@ -255,6 +260,11 @@ public class TeamLeaderService {
         asigPermSoliRepository.save(permisosAsignados);
         solicitudesTHRepository.save(solicitud);
         notificationService.notifyUserses(solicitud, true);
+
+        NotificarSolicitudAprobadaEvent event = new NotificarSolicitudAprobadaEvent(0);
+        notificationService.sendEvent(event);
+
+
     }
 
     private Integer extraerIdTipoPermiso(String comentario) {
@@ -311,6 +321,9 @@ public class TeamLeaderService {
         solicitudesTHRepository.save(solicitud);
         notificationService.notifyUserses(solicitud, false);
         notificationService.alertTH(solicitud, false);
+
+        NotificarSolicitudRechazadaEvent event = new NotificarSolicitudRechazadaEvent(0);
+        notificationService.sendEvent(event);
 
 
         return respuesta; // Placeholder response

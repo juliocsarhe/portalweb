@@ -17,7 +17,7 @@ public class NotificarSolicitudThEvent implements Notification {
 
         dto.setIdUsuario(id); ;
 
-        dto.setMessage("Solicitud Rechazada por TH");
+        dto.setMessage("Nueva Solicitud");
 
         return dto;
     }

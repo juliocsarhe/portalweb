@@ -56,6 +56,7 @@ public class NotificationService {
         String message = username + " realizo una solicitud: " + solicitud.getTipoSolicitud().toString().toLowerCase();
 
         emailService.sendEmailToUser(correoTH, "NUEVA SOLICITUD", message);
+
     }
 
     public void sendNotificationToSys (Solicitud  solicitud) {
@@ -86,7 +87,8 @@ public class NotificationService {
 
     public void notifyUserses(Solicitud solicitud, boolean aprobado) {
         String usuarioCorreo = solicitud.getUsuario().getCorreo();
-        String message = aprobado ? "Tu solicitud ha sido aprobada." : "Tu solicitud ha sido rechazada.";
+        String message = aprobado ? "Tu solicitud de " + solicitud.getTipoSolicitud().toString().toLowerCase() + " ha sido aprobada. "
+                : "Tu solicitud de "  +  solicitud.getTipoSolicitud().toString().toLowerCase() + " ha sido rechazada.";
         String tipoSolicitud = solicitud.getTipoSolicitud().toString().toLowerCase();
 
         System.out.println("ENVIANDO CORREO...");
