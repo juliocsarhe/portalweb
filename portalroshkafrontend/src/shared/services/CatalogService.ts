@@ -1,7 +1,7 @@
 import type { RolItem, CargoItem } from '../../types'
 
 export async function getRoles(token: string): Promise<RolItem[]> {
-  const res = await fetch(`http://localhost:8080/api/v1/admin/th/roles?page=0&size=100`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/admin/th/roles?page=0&size=100`, {
     headers: { Authorization: `Bearer ${token}` },
   })
   if (!res.ok) throw new Error(await res.text())
@@ -11,7 +11,7 @@ export async function getRoles(token: string): Promise<RolItem[]> {
 }
 
 export async function getCargos(token: string): Promise<CargoItem[]> {
-  const res = await fetch(`http://localhost:8080/api/v1/admin/th/cargos?page=0&size=100`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/admin/th/cargos?page=0&size=100`, {
     headers: { Authorization: `Bearer ${token}` },
   })
   if (!res.ok) throw new Error(await res.text())
@@ -21,7 +21,7 @@ export async function getCargos(token: string): Promise<CargoItem[]> {
 }
 
 async function getTiposPermisoApi(token: string) {
-  const res = await fetch(`http://localhost:8080/api/v1/usuarios/tipospermisos`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/usuarios/tipospermisos`, {
     headers: { Authorization: `Bearer ${token}` },
   })
   if (!res.ok) throw new Error(await res.text())
@@ -29,7 +29,7 @@ async function getTiposPermisoApi(token: string) {
 }
 
 async function getTiposBeneficioApi(token: string) {
-  const res = await fetch(`http://localhost:8080/api/v1/usuarios/tiposbeneficios`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/usuarios/tiposbeneficios`, {
     headers: { Authorization: `Bearer ${token}` },
   })
   if (!res.ok) throw new Error(await res.text())

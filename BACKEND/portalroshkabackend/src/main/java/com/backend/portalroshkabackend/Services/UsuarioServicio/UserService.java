@@ -35,6 +35,9 @@ import com.backend.portalroshkabackend.Repositories.UsuarioRepositories.UsuarioR
 import com.backend.portalroshkabackend.Repositories.UsuarioRepositories.TipoDispositivosRepository;
 
 import com.backend.portalroshkabackend.notification.NotificationService;
+import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSolicitudSaEvent;
+import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSolicitudThEvent;
+import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSolicitudTlEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -425,7 +428,8 @@ public class UserService {
         solBeneficioDto.setComentario("Solicitud creada con éxito y enviada a Talento Humano");
 
         notificationService.sendNotificationToTH(nuevaSolicitud);
-
+        NotificarSolicitudThEvent event = new NotificarSolicitudThEvent(0);
+        notificationService.sendEvent(event);
 
         return solBeneficioDto;
     }
@@ -492,13 +496,15 @@ public class UserService {
         // Validar que haya al menos una asignación
         if (asignaciones == null || asignaciones.isEmpty()) {
             nuevaSolicitud.setLider(null); // Dirigido a Talento Humano
-            // throw new RuntimeException("El usuario no tiene asignaciones registradas");
-            //TODO: notificationService directo a TH
-        }else{
+            NotificarSolicitudThEvent event = new NotificarSolicitudThEvent(0);
+            notificationService.sendEvent(event);
+        }else {
+            NotificarSolicitudTlEvent event = new NotificarSolicitudTlEvent(0);
+            notificationService.sendEvent(event);
             // Ordenar por porcentaje de trabajo descendente
             //
             asignaciones.sort(
-                Comparator.comparing(AsignacionUsuarioEquipo::getPorcentajeTrabajo, Comparator.nullsLast(Integer::compareTo)).reversed()
+                    Comparator.comparing(AsignacionUsuarioEquipo::getPorcentajeTrabajo, Comparator.nullsLast(Integer::compareTo)).reversed()
             );
 
             // Validar que haya al menos dos equipos asignados para aplicar desempate
@@ -530,10 +536,11 @@ public class UserService {
             nuevaSolicitud.setLider(lider); // Asigna el líder correspondiente
             //enviar NotificationService sendtolider al lider.getUsuarioId
 
-            notificationService.sendNotificationToTeamLeader(nuevaSolicitud , lider.getCorreo());
+            notificationService.sendNotificationToTeamLeader(nuevaSolicitud, lider.getCorreo());
 
-            System.out.println("\n \n asignaciones: \n\n" + asignaciones + "\n \n");            
+            System.out.println("\n \n asignaciones: \n\n" + asignaciones + "\n \n");
         }
+
 
         System.out.println("\n \n nuevaSolicitud: \n\n" + nuevaSolicitud + "\n \n");
         solicitudesTHRepository.save(nuevaSolicitud);
@@ -578,6 +585,9 @@ public class UserService {
         solDispositivoDto.setComentario("Solicitud de Dispositivo creada con éxito y enviada a SysAdmin");
 
         notificationService.sendNotificationToSys(nuevaSolicitud);
+        NotificarSolicitudSaEvent event = new NotificarSolicitudSaEvent(0);
+        notificationService.sendEvent(event);
+
 
         return solDispositivoDto;
     }

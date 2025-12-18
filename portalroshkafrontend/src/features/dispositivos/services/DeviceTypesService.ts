@@ -2,8 +2,8 @@ import type { TipoDispositivoItem } from '../../../types'
 
 async function getDeviceTypes(token: string): Promise<TipoDispositivoItem[]> {
   const endpoints = [
-    'http://localhost:8080/api/v1/usuarios/tiposdispositivos',
-    '/api/v1/admin/sysadmin/devices/getDeviceTypes?page=0&size=100',
+    `${import.meta.env.VITE_API_URL}/api/v1/usuarios/tiposdispositivos`,
+    `${import.meta.env.VITE_API_URL}/api/v1/admin/sysadmin/devices/getDeviceTypes?page=0&size=100`,
   ]
 
   for (const url of endpoints) {
