@@ -224,6 +224,8 @@ export default function UserPage() {
         <Toast message={toastMessage} type={toastType} onClose={() => setToastMessage(null)} />
       )}
     </PageLayout>
+
+    {/*para ver historial*/}
     <UsuarioHistorialModal 
     open={openHistorial}
     usuarioId={usuarioHistorialId}
