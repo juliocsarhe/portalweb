@@ -1,6 +1,7 @@
 package com.backend.portalroshkabackend.notification.aws;
 
 import com.backend.portalroshkabackend.Models.Solicitud;
+import com.backend.portalroshkabackend.Models.Usuario;
 import com.backend.portalroshkabackend.Repositories.UsuarioRepositories.UsuarioRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.sns.SnsClient;
+
 
 @Service
 public class NotificacitionServiceAws {
@@ -59,6 +61,4 @@ public class NotificacitionServiceAws {
                 .topicArn(TOPIC_NOTIFICACION)
                 .message(message));
     }
-
-
 }

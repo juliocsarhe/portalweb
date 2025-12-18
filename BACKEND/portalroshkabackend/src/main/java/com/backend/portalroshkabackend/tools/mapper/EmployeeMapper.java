@@ -15,6 +15,7 @@ import java.time.Period;
 
 public class EmployeeMapper {
 
+
     // ------ ENTITY TO DTO ------
 
     public static DefaultResponseDto toDefaultResponseDto(Integer idUsuario, String message){
@@ -116,10 +117,8 @@ public class EmployeeMapper {
     // ------ DTO TO ENTITY ------
 
 
-    public static Usuario toUsuarioFromInsertDto(UserInsertDto insertDto){
+    public static Usuario toUsuarioFromInsertDto(UserInsertDto insertDto, String password){
         Usuario user = new Usuario();
-
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
         user.setNombre(insertDto.getNombre());
         user.setApellido(insertDto.getApellido());
@@ -128,12 +127,13 @@ public class EmployeeMapper {
         user.setRol(insertDto.getRol());
         user.setFechaIngreso(insertDto.getFechaIngreso());
         user.setEstado(insertDto.getEstado());
-        user.setContrasena(encoder.encode(insertDto.getNroCedula()));
         user.setTelefono(insertDto.getTelefono());
         user.setCargo(insertDto.getCargo());
         user.setFoco(insertDto.getFoco());
         user.setSeniority(insertDto.getSeniority());
         user.setFechaNacimiento(insertDto.getFechaNacimiento());
+
+        user.setContrasena(password);
 
         Period period = Period.between(insertDto.getFechaIngreso(), LocalDate.now());
 

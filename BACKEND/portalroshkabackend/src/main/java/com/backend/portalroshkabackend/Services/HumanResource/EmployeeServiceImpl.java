@@ -25,6 +25,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 import static com.backend.portalroshkabackend.tools.MessagesConst.*;
 
 @Service
@@ -115,10 +117,11 @@ public class EmployeeServiceImpl implements IEmployeeService {
     @Transactional
     @Override
     public DefaultResponseDto addEmployee(UserInsertDto insertDto) {
-
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         insertValidator.validate(insertDto);
-
-        Usuario user = EmployeeMapper.toUsuarioFromInsertDto(insertDto); // Para mapear el InserDto a entidad Usuario
+        String tempPassword = UUID.randomUUID().toString().substring(0, 8);
+        String password = encoder.encode(tempPassword);
+        Usuario user = EmployeeMapper.toUsuarioFromInsertDto(insertDto, password); // Para mapear el InserDto a entidad Usuario
 
         Usuario savedUser = repositoryService.save(
                 userRepository,
@@ -128,7 +131,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
         //para subscribir los correos de los nuevos usuarios
         notificacitionServiceAws.subscribeNewUserToTopic(savedUser.getCorreo());
-        System.out.println("CREANDO USUARIO NUEVO " + insertDto.getCorreo());
+        notificationService.sendPassword(user, tempPassword);
 
         return EmployeeMapper.toDefaultResponseDto(savedUser.getIdUsuario(), EMPLOYEE_CREATED_MESSAGE);
 
