@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { NovedadesDefaultResponseDto, NovedadesInsertDto, NovedadesResponseDto } from '@/types'
+import { NovedadesDefaultResponseDto, NovedadesInsertDto } from '@/types'
 import { novedadesService } from '../services/novedadesService'
 import { useAuth } from '@/app/providers/AuthContext'
 
@@ -22,8 +22,7 @@ export function useCrearNovedades() {
     try {
       return await novedadesService.create(dto, token)
     } catch (err: any) {
-      setError(err.message)
->>>>>>> feature/novedades-innovation
+      setError(err?.message || 'Error al crear novedad')
       return null
     } finally {
       setLoading(false)
