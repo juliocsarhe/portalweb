@@ -85,7 +85,6 @@ public class UsuariosController {
         // process POST request
         solBeneficioDto = userService.crearBeneficioUsuarioActual(solBeneficioDto);
 
-
         return ResponseEntity.ok(solBeneficioDto);
     }
 

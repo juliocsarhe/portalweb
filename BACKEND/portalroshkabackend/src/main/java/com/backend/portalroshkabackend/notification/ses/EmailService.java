@@ -3,13 +3,12 @@ package com.backend.portalroshkabackend.notification.ses;
 import com.backend.portalroshkabackend.Models.Solicitud;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.ses.SesClient;
 import software.amazon.awssdk.services.ses.SesClient;
 import software.amazon.awssdk.services.ses.model.*;
 
-@Profile("Prod")
+
 @Service
 public class EmailService {
 
@@ -30,7 +29,7 @@ public class EmailService {
                         .subject(Content.builder().data(subject).build()) // Asunto
                         .body(Body.builder().text(Content.builder().data(body).build()).build()) // Cuerpo del mensaje
                         .build())
-                .source(correoTH) // cambiar correo portal bla bla
+                .source("elias.benittz@gmail.com") // cambiar correo portal bla bla
                 .build();
 
         // Enviar el correo

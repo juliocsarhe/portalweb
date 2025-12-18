@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.sns.SnsClient;
 
 
-@Profile("Prod")
 @Service
 public class NotificacitionServiceAws {
 
@@ -19,7 +18,6 @@ public class NotificacitionServiceAws {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
-
 
     @Value("${topic.solicitud}")
     private String TOPIC_SOLICITUD;

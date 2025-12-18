@@ -8,7 +8,6 @@ import com.backend.portalroshkabackend.notification.ses.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.annotation.Profile;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -22,17 +21,22 @@ public class NotificationService {
         publisher.publishEvent(notification);
     }
 
-    @Autowired
     private UsuariosService usuariosService;
+    private SimpMessagingTemplate template; // WebSocket
+    private NotificacitionServiceAws snsService; // SNS
+    private EmailService emailService;
 
     @Autowired
-    private SimpMessagingTemplate template; // WebSocket
+    public NotificationService(UsuariosService usuariosService,
+                               SimpMessagingTemplate template,
+                               NotificacitionServiceAws  snsService,
+                               EmailService emailService) {
+        this.usuariosService = usuariosService;
+        this.template = template;
+        this.snsService = snsService;
+        this.emailService = emailService;
 
-    @Autowired(required = false)
-    private NotificacitionServiceAws snsService; // SNS
-
-    @Autowired(required = false)
-    private EmailService emailService;
+    }
 
     @Value("${correo.th}")
     private String correoTH;
@@ -55,13 +59,12 @@ public class NotificationService {
 
     public void sendNotificationToTH(Solicitud solicitud) {
 
-
         String username = solicitud.getUsuario().getNombre() + " " + solicitud.getUsuario().getApellido();
         String message = username + " realizo una solicitud: " + solicitud.getTipoSolicitud().toString().toLowerCase();
 
-        if (emailService != null) {
-            emailService.sendEmailToUser(correoTH, "NUEVA SOLICITUD", message);
-        }
+        System.out.println("Enviando correo a TH" + correoTH);
+        emailService.sendEmailToUser(correoTH, "NUEVA SOLICITUD", message);
+
     }
 
     public void sendNotificationToSys (Solicitud  solicitud) {
@@ -82,7 +85,7 @@ public class NotificationService {
                 : "Al usuario " + username + " se la ha rechazado la solicitud " + solicitud.getTipoSolicitud().toString().toLowerCase();
 
         if (emailService != null) {
-            emailService.sendEmailToUser("elias.benittz@gmail.com", "Solicitud aprobada por un Team Lider", message );
+            emailService.sendEmailToUser(correoTH, "Solicitud aprobada por un Team Lider", message );
         }
     }
 
