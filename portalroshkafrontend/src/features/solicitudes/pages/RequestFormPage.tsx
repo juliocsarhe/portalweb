@@ -177,9 +177,9 @@ export default function RequestFormPage() {
     }
 
     const iconMap = {
-      PERMISO: '📋',
-      BENEFICIO: '🎁',
-      VACACIONES: '🌴',
+      PERMISO: <span className="material-symbols-outlined text-gray-800 dark:text-gray-100">content_paste</span>,
+      BENEFICIO: <span className="material-symbols-outlined text-gray-800 dark:text-gray-100">local_florist</span>,
+      VACACIONES: <span className="material-symbols-outlined text-gray-800 dark:text-gray-100">chair_umbrella</span>,
     }
 
     return [
@@ -218,7 +218,15 @@ export default function RequestFormPage() {
     <FormLayout
       title={`${isEditing ? 'Editar' : 'Nueva'} Solicitud de ${titleMap[tipo]}`}
       subtitle={`Completa la información de tu solicitud de ${titleMap[tipo].toLowerCase()}`}
-      icon={tipo === 'PERMISO' ? '📋' : tipo === 'BENEFICIO' ? '🎁' : '🌴'}
+      icon={
+        tipo === 'PERMISO' ? (
+          <span className="material-symbols-outlined text-gray-800 dark:text-gray-100">content_paste</span>
+        ) : tipo === 'BENEFICIO' ? (
+          <span className="material-symbols-outlined text-gray-800 dark:text-gray-100">hand_package</span>
+        ) : (
+          <span className="material-symbols-outlined text-gray-800 dark:text-gray-100">chair_umbrella</span>
+        )
+      }
       onCancel={() => navigate(-1)}
       onSubmitLabel={isEditing ? 'Guardar cambios' : 'Enviar solicitud'}
     >

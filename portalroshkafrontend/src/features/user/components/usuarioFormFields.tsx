@@ -1,3 +1,4 @@
+import React from 'react'
 import type { FormSection } from '../../../shared/ui/components/DynamicForm'
 import type { RolItem, CargoItem } from '../../../types'
 import { EstadoLabels, SeniorityLabels, FocoLabels } from '../../../types'
@@ -6,7 +7,11 @@ export function buildUsuarioSections(roles: RolItem[], cargos: CargoItem[]): For
   return [
     {
       title: 'Información básica',
-      icon: '👤',
+      icon: (
+        <span className="material-symbols-outlined text-black dark:text-white">
+          identity_platform
+        </span>
+      ),
       fields: [
         { name: 'nombre', label: 'Nombre', type: 'text', required: true },
         { name: 'apellido', label: 'Apellido', type: 'text', required: true },
@@ -19,7 +24,7 @@ export function buildUsuarioSections(roles: RolItem[], cargos: CargoItem[]): For
     },
     {
       title: 'Rol y asignación',
-      icon: '🛠️',
+      icon: <span className="material-symbols-outlined text-black dark:text-white">engineering</span>,
       fields: [
         {
           name: 'idRol',
@@ -39,44 +44,26 @@ export function buildUsuarioSections(roles: RolItem[], cargos: CargoItem[]): For
     },
     {
       title: 'Configuración avanzada',
-      icon: '⚙️',
+      icon: <span className="material-symbols-outlined text-black dark:text-white">settings</span>,
       fields: [
         {
           name: 'estado',
           label: 'Estado',
           type: 'select',
           required: true,
-          options: Object.entries(EstadoLabels).map(([value, label]) => ({
-            value,
-            label,
-          })),
+          options: Object.entries(EstadoLabels).map(([value, label]) => ({ value, label })),
         },
         {
           name: 'seniority',
           label: 'Seniority',
           type: 'select',
-          options: Object.entries(SeniorityLabels).map(([value, label]) => ({
-            value,
-            label,
-          })),
+          options: Object.entries(SeniorityLabels).map(([value, label]) => ({ value, label })),
         },
         {
           name: 'foco',
           label: 'Foco principal',
           type: 'select',
-          options: Object.entries(FocoLabels).map(([value, label]) => ({
-            value,
-            label,
-          })),
-        },
-        {
-          name: 'requiereCambioContrasena',
-          label: 'Requiere cambio de contraseña',
-          type: 'select',
-          options: [
-            { value: 'true', label: 'Sí' },
-            { value: 'false', label: 'No' },
-          ],
+          options: Object.entries(FocoLabels).map(([value, label]) => ({ value, label })),
         },
         {
           name: 'disponibilidad',
@@ -87,12 +74,6 @@ export function buildUsuarioSections(roles: RolItem[], cargos: CargoItem[]): For
           step: 5,
           required: true,
         },
-        // {
-        //   name: "urlPerfil",
-        //   label: "URL Perfil",
-        //   type: "text",
-        //   placeholder: "https://...",
-        // },
       ],
     },
   ]

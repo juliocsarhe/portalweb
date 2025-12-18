@@ -25,8 +25,8 @@ export default function DevicePage() {
   const navigate = useNavigate()
 
   // 🔒 permisos
-  const puedeVer = tieneRol(user, Roles.ADMINISTRADOR_DEL_SISTEMA, Roles.OPERACIONES)
-  const puedeEditar = tieneRol(user, Roles.ADMINISTRADOR_DEL_SISTEMA)
+  const puedeVer = tieneRol(user, Roles.ADMINISTRADOR_DEL_SISTEMA, Roles.OPERACIONES, Roles.DIRECTIVO)
+  const puedeEditar = tieneRol(user, Roles.ADMINISTRADOR_DEL_SISTEMA, Roles.DIRECTIVO)
 
   // Filtros
   const [categoria, setCategoria] = useState('')
@@ -92,7 +92,7 @@ export default function DevicePage() {
         puedeEditar && (
           <IconButton
             label="Registrar Dispositivo"
-            icon={<span>➕</span>}
+            icon={<span className="material-symbols-outlined">add</span>}
             variant="primary"
             onClick={() => navigate('/dispositivos/nuevo')}
             className="h-10 text-sm px-4 flex items-center"

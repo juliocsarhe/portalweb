@@ -1,164 +1,608 @@
-import { useEffect, useState } from 'react'
-import { InsertDto, NovedadesResponseDto, NovedadesDefaultResponseDto } from '@/types'
+import { useState, useEffect } from 'react'
 import PageLayout from '@/layouts/PageLayout'
+import { NovedadesInsertDto, NovedadesResponseDto } from '@/types'
+import { useGetNovedades } from '../hooks/useGetNovedades'
+import { useCrearNovedades } from '../hooks/useCrearNovedades'
+import { useUpdateNovedades } from '../hooks/useUpdateNovedades'
+import { useDeleteNovedades } from '../hooks/useDeleteNovedades'
+import CarruselNovedades from '../components/CarruselNovedades'
+import AvisosList from '../components/AvisosList'
+import ModalNovedad from '../components/ModalNovedad'
+import Toast from '@/shared/ui/components/Toast'
+import { uploadImageToCloudinary } from '../services/uploadImageToCloudinary'
 
 export default function NovedadesPage() {
-  const [novedades, setNovedades] = useState<NovedadesResponseDto[]>([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const { data, refetch } = useGetNovedades()
+  const { create, loading: creating } = useCrearNovedades()
+  const { update } = useUpdateNovedades()
+  const { remove } = useDeleteNovedades()
 
-  const [form, setForm] = useState<InsertDto>({
+  const [toastMessage, setToastMessage] = useState<string | null>(null)
+  const [toastType, setToastType] = useState<'success' | 'error' | 'info' | 'warning'>('info')
+
+  const [carrusel, setCarrusel] = useState<NovedadesResponseDto[]>([])
+  const [avisos, setAvisos] = useState<NovedadesResponseDto[]>([])
+  const [isUploading, setIsUploading] = useState(false)
+  const [editItem, setEditItem] = useState<NovedadesResponseDto | null>(null)
+
+  const [searchTerm, setSearchTerm] = useState('')
+  const [searchDate, setSearchDate] = useState('')
+  const [filteredCarrusel, setFilteredCarrusel] = useState<NovedadesResponseDto[]>([])
+  const [filteredAvisos, setFilteredAvisos] = useState<NovedadesResponseDto[]>([])
+
+  const [formCarrusel, setFormCarrusel] = useState<NovedadesInsertDto>({
     titulo: '',
     descripcion: '',
     imagenUrl: '',
-    fechaExpiracion: new Date(),
-    categoria: '',
-    prioridad: '',
+    fechaExpiracion: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 días desde hoy
+    prioridad: false,
   })
 
-  // Traer todas las novedades
-  useEffect(() => {
-    setLoading(true)
-    fetch('http://localhost:8080/api/v1/admin/th')
-      .then(res => {
-        if (!res.ok) throw new Error('Error al cargar novedades')
-        return res.json()
-      })
-      .then((data: NovedadesResponseDto[]) => setNovedades(data))
-      .catch(err => setError(err.message))
-      .finally(() => setLoading(false))
-  }, [])
+  const [formAviso, setFormAviso] = useState<NovedadesInsertDto>({
+    titulo: '',
+    descripcion: '',
+    imagenUrl: '',
+    fechaExpiracion: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 días desde hoy
+    prioridad: false,
+  })
 
-  // Crear novedad
-  const crearNovedad = () => {
-    setLoading(true)
-    fetch('http://localhost:8080/api/v1/admin/th/novedades', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form),
-    })
-      .then(res => {
-        if (!res.ok) throw new Error('Error al crear novedad')
-        return res.json()
+  useEffect(() => {
+    setCarrusel(data.filter((n) => n.imagenUrl && n.imagenUrl.trim() !== ''))
+    setAvisos(data.filter((n) => !n.imagenUrl || n.imagenUrl.trim() === ''))
+  }, [data])
+
+  useEffect(() => {
+    let filteredC = carrusel
+    let filteredA = avisos
+
+    if (searchTerm) {
+      filteredC = filteredC.filter(
+        (n) =>
+          n.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          n.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+      filteredA = filteredA.filter(
+        (n) =>
+          n.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          n.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    }
+
+    if (searchDate) {
+      const targetDate = new Date(searchDate).toISOString().split('T')[0]
+      filteredC = filteredC.filter((n) => {
+        const createdDate = new Date(n.fechaCreacion).toISOString().split('T')[0]
+        return createdDate === targetDate
       })
-      .then((newNovedad: NovedadesDefaultResponseDto) => {
-        setNovedades(prev => [
-          ...prev,
-          { ...form, idNovedades: newNovedad.id, activo: true } as NovedadesResponseDto,
-        ])
-        // Reset form
-        setForm({
-          titulo: '',
-          descripcion: '',
-          imagenUrl: '',
-          fechaExpiracion: new Date(),
-          categoria: '',
-          prioridad: '',
-        })
+      filteredA = filteredA.filter((n) => {
+        const createdDate = new Date(n.fechaCreacion).toISOString().split('T')[0]
+        return createdDate === targetDate
       })
-      .catch(err => setError(err.message))
-      .finally(() => setLoading(false))
+    }
+
+    setFilteredCarrusel(filteredC)
+    setFilteredAvisos(filteredA)
+  }, [carrusel, avisos, searchTerm, searchDate])
+
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    if (!file.type.startsWith('image/')) {
+      console.error('Tipo de archivo no válido:', file.type)
+      e.target.value = ''
+      return
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      console.error(`Imagen muy grande: ${(file.size / 1024 / 1024).toFixed(2)}MB. Máximo: 5MB`)
+      e.target.value = ''
+      return
+    }
+
+    try {
+      setIsUploading(true)
+
+      const img = new Image()
+      const imageUrl = URL.createObjectURL(file)
+
+      img.onload = async () => {
+        URL.revokeObjectURL(imageUrl)
+
+        const width = img.width
+        const height = img.height
+
+        console.log('Dimensiones: ' + width + 'x' + height + 'px')
+
+        if (width < 800 || height < 600) {
+          const proceed = window.confirm(
+            `ADVERTENCIA: Imagen de baja resolución\n\n` +
+              `Dimensiones: ${width}x${height}px\n` +
+              `Recomendado: 800x600px mínimo\n\n` +
+              `La imagen se verá pixelada en el carrusel.\n\n` +
+              `¿Continuar de todos modos?`
+          )
+          if (!proceed) {
+            setIsUploading(false)
+            e.target.value = ''
+            return
+          }
+        }
+
+        try {
+          const url = await uploadImageToCloudinary(file)
+          console.log('URL de Cloudinary:', url)
+          console.log('Esta novedad irá al CARRUSEL')
+          setFormCarrusel({ ...formCarrusel, imagenUrl: url })
+        } catch (err) {
+          console.error('Error al subir imagen:', err)
+          e.target.value = ''
+        } finally {
+          setIsUploading(false)
+        }
+      }
+
+      img.onerror = () => {
+        URL.revokeObjectURL(imageUrl)
+        setIsUploading(false)
+        console.error('Error al cargar la imagen')
+        e.target.value = ''
+      }
+
+      img.src = imageUrl
+    } catch (err) {
+      console.error('Error al procesar la imagen:', err)
+      setIsUploading(false)
+      e.target.value = ''
+    }
   }
+
+  const submitCarrusel = async () => {
+    try {
+      if (!formCarrusel.titulo.trim()) {
+        setToastMessage('El título es obligatorio')
+        setToastType('warning')
+        return
+      }
+
+      if (!formCarrusel.imagenUrl.trim()) {
+        setToastMessage('Debes subir una imagen para el carrusel')
+        setToastType('warning')
+        return
+      }
+
+      const fechaLocal = formCarrusel.fechaExpiracion.toISOString().split('T')[0]
+
+      const dto: NovedadesInsertDto = {
+        titulo: formCarrusel.titulo.trim(),
+        descripcion: formCarrusel.descripcion.trim() || 'Sin descripción',
+        imagenUrl: formCarrusel.imagenUrl.trim(),
+        fechaExpiracion: fechaLocal as any,
+        prioridad: formCarrusel.prioridad,
+      }
+
+      console.log('Enviando al backend:', JSON.stringify(dto, null, 2))
+
+      const res = await create(dto)
+
+      if (!res) {
+        console.error('Error al crear la novedad.')
+        setToastMessage('Error al crear la novedad.')
+        setToastType('error')
+        return
+      }
+
+      console.log('Respuesta del backend:', res)
+
+      await refetch()
+
+      setFormCarrusel({
+        titulo: '',
+        descripcion: '',
+        imagenUrl: '',
+        fechaExpiracion: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        prioridad: false,
+      })
+
+      const fileInput = document.querySelector('#carrusel-image-input') as HTMLInputElement
+      if (fileInput) fileInput.value = ''
+
+      setToastMessage('Novedad creada exitosamente')
+      setToastType('success')
+      console.log('NOVEDAD CREADA y agregada al CARRUSEL')
+    } catch (err: any) {
+      console.error('Error completo:', err)
+      console.error('Mensaje de error:', err?.message)
+      console.error('Response:', err?.response)
+      setToastMessage('Error al crear la novedad.')
+      setToastType('error')
+    }
+  }
+
+  const submitAviso = async () => {
+    try {
+      if (!formAviso.titulo.trim()) {
+        setToastMessage('El título es obligatorio')
+        setToastType('warning')
+        return
+      }
+
+      const fechaLocal = formAviso.fechaExpiracion.toISOString().split('T')[0]
+
+      const dto: NovedadesInsertDto = {
+        titulo: formAviso.titulo.trim(),
+        descripcion: formAviso.descripcion.trim() || 'Sin descripción',
+        imagenUrl: '',
+        fechaExpiracion: fechaLocal as any,
+        prioridad: formAviso.prioridad,
+      }
+
+      console.log('Enviando al backend:', dto)
+
+      const res = await create(dto)
+
+      if (!res) {
+        setToastMessage('Error al crear el aviso')
+        setToastType('error')
+        return
+      }
+
+      console.log('Respuesta del backend:', res)
+
+      await refetch()
+
+      setFormAviso({
+        titulo: '',
+        descripcion: '',
+        imagenUrl: '',
+        fechaExpiracion: new Date(Date.now() + 7 * 24 * 60 * 1000),
+        prioridad: false,
+      })
+
+      setToastMessage(res?.message ?? 'Aviso creado exitosamente')
+      setToastType('success')
+      console.log('AVISO CREADO y agregado a la sección de AVISOS')
+    } catch (err) {
+      setToastMessage('Error al crear el aviso')
+      setToastType('error')
+    }
+  }
+
+  const handleUpdate = async (payload: any) => {
+    const res = await update(payload)
+    if (res) {
+      await refetch()
+      setEditItem(null)
+    }
+  }
+
+  const handleDelete = async (id: number) => {
+    if (!confirm('¿Eliminar esta novedad?')) return
+    const res = await remove(id)
+    if (res) await refetch()
+  }
+
+  const carruselSale = searchTerm || searchDate ? filteredCarrusel : carrusel
+  const avisosHome = searchTerm || searchDate ? filteredAvisos : avisos
 
   return (
     <PageLayout>
-    <div className="p-6 bg-gray-50 dark:bg-gray-950 min-h-screen">
-      <h1 className="text-2xl font-bold text-black dark:text-gray-200 mb-6">Novedades</h1>
+      <div className="p-6 max-w-6xl mx-auto">
+        <h1 className="text-3xl font-bold mb-6 text-brand-blue dark:text-white">
+          Crear Novedades
+        </h1>
 
-      {/* Formulario */}
-      <form
-        onSubmit={e => {
-          e.preventDefault()
-          crearNovedad()
-        }}
-        className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-md space-y-4 mb-8"
-      >
-        <input
-          type="text"
-          placeholder="Título"
-          value={form.titulo}
-          onChange={e => setForm({ ...form, titulo: e.target.value })}
-          className="w-full border border-gray-300 dark:border-gray-700 p-2 rounded"
-          required
-        />
-        <textarea
-          placeholder="Descripción"
-          value={form.descripcion}
-          onChange={e => setForm({ ...form, descripcion: e.target.value })}
-          className="w-full border border-gray-300 dark:border-gray-700 p-2 rounded"
-          required
-        />
-        <input
-          type="text"
-          placeholder="URL de la imagen"
-          value={form.imagenUrl}
-          onChange={e => setForm({ ...form, imagenUrl: e.target.value })}
-          className="w-full border border-gray-300 dark:border-gray-700 p-2 rounded"
-        />
-        <input
-          type="date"
-          value={form.fechaExpiracion.toISOString().slice(0, 10)}
-          onChange={e => setForm({ ...form, fechaExpiracion: new Date(e.target.value) })}
-          className="w-full border border-gray-300 dark:border-gray-700 p-2 rounded"
-          required
-        />
-        <select
-          value={form.categoria}
-          onChange={e => setForm({ ...form, categoria: e.target.value })}
-          className="w-full border border-gray-300 dark:border-gray-700 p-2 rounded"
-          required
-        >
-          <option value="">Seleccione categoría</option>
-          <option value="TH">TH</option>
-          <option value="OP">OP</option>
-          <option value="TL">TL</option>
-        </select>
-        <select
-          value={form.prioridad}
-          onChange={e => setForm({ ...form, prioridad: e.target.value })}
-          className="w-full border border-gray-300 dark:border-gray-700 p-2 rounded"
-          required
-        >
-          <option value="">Seleccione prioridad</option>
-          <option value="ALTA">ALTA</option>
-          <option value="MEDIA">MEDIA</option>
-          <option value="BAJA">BAJA</option>
-        </select>
-        <button
-          type="submit"
-          className="bg-[#ECB22E] hover:bg-yellow-500 text-black px-4 py-2 rounded font-semibold"
-        >
-          Crear Novedad
-        </button>
-      </form>
-
-      {/* Lista de novedades */}
-      {loading && <p className="text-black dark:text-gray-200">Cargando...</p>}
-      {error && <p className="text-red-500">{error}</p>}
-
-      <ul className="space-y-4">
-        {novedades.map(n => (
-          <li key={n.idNovedades} className="bg-white dark:bg-gray-900 p-4 rounded-xl shadow-md flex flex-col md:flex-row md:items-center md:justify-between space-y-2 md:space-y-0">
-            <div>
-              <h3 className="font-semibold text-black dark:text-gray-200">{n.titulo}</h3>
-              <p className="text-gray-700 dark:text-gray-400">{n.descripcion}</p>
-              <p className="text-sm text-gray-500 dark:text-gray-500">
-                Expira: {new Date(n.fechaExpiracion).toLocaleDateString()}
-              </p>
-              <p className="text-sm text-gray-500 dark:text-gray-500">Categoría: {n.categoria}</p>
-              <p className="text-sm text-gray-500 dark:text-gray-500">Prioridad: {n.prioridad}</p>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg flex flex-col">
+            <div className="flex items-center gap-2 mb-4">
+              <span className="material-symbols-outlined text-[#ECB22E] text-2xl">
+                photo_library
+              </span>
+              <h2 className="text-xl font-semibold text-brand-blue dark:text-white">
+                Crear Novedad con Imagen
+              </h2>
             </div>
-            {n.imagenUrl && (
-              <img
-                src={n.imagenUrl}
-                alt={n.titulo}
-                className="w-32 h-32 object-cover rounded"
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault()
+                submitCarrusel()
+              }}
+              className="space-y-4 flex-1 flex flex-col"
+            >
+              <div>
+                <label className="block text-sm font-medium mb-1 dark:text-gray-200">
+                  Título *
+                </label>
+                <input
+                  className="border border-gray-300 dark:border-gray-600 p-2 w-full rounded dark:bg-gray-700 dark:text-white"
+                  placeholder="Título del carrusel"
+                  value={formCarrusel.titulo}
+                  onChange={(e) => setFormCarrusel({ ...formCarrusel, titulo: e.target.value })}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-1 dark:text-gray-200">
+                  Imagen *
+                </label>
+                <input
+                  id="carrusel-image-input"
+                  type="file"
+                  accept="image/jpeg,image/jpg,image/png,image/webp"
+                  onChange={handleImageChange}
+                  disabled={isUploading}
+                  className="border border-gray-300 dark:border-gray-600 p-2 w-full rounded dark:bg-gray-700 dark:text-white"
+                  required
+                />
+                {isUploading && (
+                  <span className="text-sm text-blue-600 dark:text-blue-400 font-medium mt-1 block">
+                    Subiendo imagen...
+                  </span>
+                )}
+                {formCarrusel.imagenUrl && !isUploading && (
+                  <div className="flex items-center gap-2 mt-2">
+                    <span className="text-sm text-green-600 dark:text-green-400 font-medium">
+                      Imagen cargada
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setFormCarrusel({ ...formCarrusel, imagenUrl: '' })
+                        const fileInput = document.querySelector(
+                          '#carrusel-image-input'
+                        ) as HTMLInputElement
+                        if (fileInput) fileInput.value = ''
+                      }}
+                      className="text-sm text-red-600 hover:text-red-700 dark:text-red-400 hover:underline"
+                    >
+                      Quitar
+                    </button>
+                  </div>
+                )}
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  Dimensiones recomendadas: mínimo 800x600px | Máximo: 5MB
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-1 dark:text-gray-200">
+                  Descripción (opcional)
+                </label>
+                <textarea
+                  className="border border-gray-300 dark:border-gray-600 p-2 w-full rounded dark:bg-gray-700 dark:text-white"
+                  placeholder="Descripción breve..."
+                  maxLength={250}
+                  rows={2}
+                  value={formCarrusel.descripcion}
+                  onChange={(e) =>
+                    setFormCarrusel({ ...formCarrusel, descripcion: e.target.value })
+                  }
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1 dark:text-gray-200">
+                    Fecha expiración
+                  </label>
+                  <input
+                    type="date"
+                    className="border border-gray-300 dark:border-gray-600 p-2 w-full rounded dark:bg-gray-700 dark:text-white text-sm"
+                    value={formCarrusel.fechaExpiracion.toISOString().slice(0, 10)}
+                    onChange={(e) =>
+                      setFormCarrusel({
+                        ...formCarrusel,
+                        fechaExpiracion: new Date(e.target.value),
+                      })
+                    }
+                  />
+                </div>
+
+                <div className="flex items-center">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={formCarrusel.prioridad}
+                      onChange={(e) =>
+                        setFormCarrusel({ ...formCarrusel, prioridad: e.target.checked })
+                      }
+                    />
+                    <span className="text-sm dark:text-gray-200">Prioritaria</span>
+                  </label>
+                </div>
+              </div>
+
+              <div className="flex-1"></div>
+
+              <button
+                type="submit"
+                disabled={creating || isUploading || !formCarrusel.imagenUrl}
+                className="w-full bg-[#ECB22E] hover:bg-[#d9a429] px-6 py-2 rounded font-semibold text-white disabled:opacity-50 transition-colors"
+              >
+                {creating ? 'Creando...' : '+ Agregar al Carrusel'}
+              </button>
+            </form>
+          </div>
+
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg flex flex-col">
+            <div className="flex items-center gap-2 mb-4">
+              <span className="material-symbols-outlined text-[#ECB22E] text-2xl">campaign</span>
+              <h2 className="text-xl font-semibold text-brand-blue dark:text-white">Crear Aviso</h2>
+            </div>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault()
+                submitAviso()
+              }}
+              className="space-y-4 flex-1 flex flex-col"
+            >
+              <div>
+                <label className="block text-sm font-medium mb-1 dark:text-gray-200">
+                  Título *
+                </label>
+                <input
+                  className="border border-gray-300 dark:border-gray-600 p-2 w-full rounded dark:bg-gray-700 dark:text-white"
+                  placeholder="Título del aviso"
+                  value={formAviso.titulo}
+                  onChange={(e) => setFormAviso({ ...formAviso, titulo: e.target.value })}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-1 dark:text-gray-200">
+                  Descripción (opcional)
+                </label>
+                <textarea
+                  className="border border-gray-300 dark:border-gray-600 p-2 w-full rounded dark:bg-gray-700 dark:text-white"
+                  placeholder="Descripción del aviso"
+                  rows={4}
+                  value={formAviso.descripcion}
+                  onChange={(e) => setFormAviso({ ...formAviso, descripcion: e.target.value })}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1 dark:text-gray-200">
+                    Fecha expiración
+                  </label>
+                  <input
+                    type="date"
+                    className="border border-gray-300 dark:border-gray-600 p-2 w-full rounded dark:bg-gray-700 dark:text-white text-sm"
+                    value={formAviso.fechaExpiracion.toISOString().slice(0, 10)}
+                    onChange={(e) =>
+                      setFormAviso({ ...formAviso, fechaExpiracion: new Date(e.target.value) })
+                    }
+                  />
+                </div>
+
+                <div className="flex items-center">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={formAviso.prioridad}
+                      onChange={(e) => setFormAviso({ ...formAviso, prioridad: e.target.checked })}
+                    />
+                    <span className="text-sm dark:text-gray-200">Prioritaria</span>
+                  </label>
+                </div>
+              </div>
+
+              <div className="flex-1"></div>
+
+              <button
+                type="submit"
+                disabled={creating}
+                className="w-full bg-[#ECB22E] hover:bg-[#d9a429] px-6 py-2 rounded font-semibold text-white disabled:opacity-50 transition-colors"
+              >
+                {creating ? 'Creando...' : '+ Crear Aviso'}
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
+          <h2 className="text-xl font-semibold mb-4 text-brand-blue dark:text-white">
+            Gestionar Novedades
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-1 dark:text-gray-200">
+                Buscar por título o descripción
+              </label>
+              <input
+                type="text"
+                placeholder="Escribe aquí..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="border border-gray-300 dark:border-gray-600 p-2 w-full rounded dark:bg-gray-700 dark:text-white"
               />
-            )}
-          </li>
-        ))}
-      </ul>
-    </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1 dark:text-gray-200">
+                Buscar por fecha de creación
+              </label>
+              <input
+                type="date"
+                value={searchDate}
+                onChange={(e) => setSearchDate(e.target.value)}
+                className="border border-gray-300 dark:border-gray-600 p-2 w-full rounded dark:bg-gray-700 dark:text-white"
+              />
+            </div>
+          </div>
+          {(searchTerm || searchDate) && (
+            <button
+              onClick={() => {
+                setSearchTerm('')
+                setSearchDate('')
+              }}
+              className="mt-3 text-sm text-red-600 dark:text-red-400 hover:underline"
+            >
+              Limpiar filtros
+            </button>
+          )}
+        </div>
+
+        {carruselSale.length > 0 && (
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-6">
+            <div className="flex items-center gap-2 mb-4">
+              <span className="material-symbols-outlined text-[#ECB22E] text-2xl">
+                photo_library
+              </span>
+              <h2 className="text-xl font-semibold text-brand-blue dark:text-white">
+                Carrusel con imagen
+                {(searchTerm || searchDate) && ` - ${carruselSale.length} resultado(s)`}
+              </h2>
+            </div>
+            <CarruselNovedades items={carruselSale} />
+            <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+              <h3 className="text-lg font-semibold mb-3 text-brand-blue dark:text-white">
+                Gestionar Carrusel
+              </h3>
+              <AvisosList items={carruselSale} onEdit={setEditItem} onDelete={handleDelete} />
+            </div>
+          </div>
+        )}
+
+        {avisosHome.length > 0 && (
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+            <div className="flex items-center gap-2 mb-4">
+              <span className="material-symbols-outlined text-[#ECB22E] text-2xl">campaign</span>
+              <h2 className="text-xl font-semibold text-brand-blue dark:text-white">
+                Avisos sin imagen
+                {(searchTerm || searchDate) && ` - ${avisosHome.length} resultado(s)`}
+              </h2>
+            </div>
+            <AvisosList items={avisosHome} onEdit={setEditItem} onDelete={handleDelete} />
+          </div>
+        )}
+
+        {(searchTerm || searchDate) && carruselSale.length === 0 && avisosHome.length === 0 && (
+          <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg text-center">
+            <p className="text-gray-600 dark:text-gray-400">
+              No se encontraron novedades con los filtros aplicados
+            </p>
+          </div>
+        )}
+
+        <ModalNovedad
+          open={!!editItem}
+          onClose={() => setEditItem(null)}
+          item={editItem}
+          onSave={handleUpdate}
+        />
+      </div>
+      {toastMessage && (
+      <Toast
+      message={toastMessage}
+      type={toastType}
+      onClose={() => setToastMessage(null)}
+      />
+      )}
     </PageLayout>
   )
 }

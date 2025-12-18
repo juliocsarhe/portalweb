@@ -16,7 +16,7 @@ export default function CatalogoOpPage() {
   const { user } = useAuth()
 
   //  permisos
-  const puedeVer = tieneRol(user, Roles.OPERACIONES)
+  const puedeVer = tieneRol(user, Roles.OPERACIONES, Roles.DIRECTIVO)
 
   const rawTab = searchParams.get('tab')
   const activeTab: TabKey = useMemo<TabKey>(() => {

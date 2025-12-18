@@ -69,7 +69,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String token = Jwts.builder()
                 .subject(correo)
                 .claim("rol", rolId) // Solo guardamos el ID del rol
-                .expiration(Date.from(new Date().toInstant().plusSeconds(7200))) // 2 horas de validez
+                .expiration(Date.from(new Date().toInstant().plusSeconds(28800))) // 8 horas de validez
                 .issuedAt(Date.from(new Date().toInstant()))
                 .signWith(SECRET_KEY)
                 .compact();
@@ -98,9 +98,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String errorMessage = "Credenciales inválidas";
 
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.setContentType(CONTENT_TYPE); // application/json
+        response.setContentType("application/json;charset=UTF-8");
         response.getWriter().write(new ObjectMapper().writeValueAsString(errorMessage));
     }
-
 
 }
