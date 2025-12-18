@@ -55,6 +55,7 @@ public class NovedadesMapper {
         dto.setNombre(usuario.getNombre());
         dto.setApellido(usuario.getApellido());
         dto.setRol(toRolNovedadesDto(usuario));
+        dto.setUrlPerfil(usuario.getUrlPerfil());
         return dto;
     }
 

@@ -69,7 +69,7 @@ export default function SolicitudDispositivoPage({
   const newSolicitudButton = !embedded && !isGestionView && (
     <IconButton
       label="Nueva Solicitud"
-      icon={<span>➕</span>}
+      icon={<span className="material-symbols-outlined">add</span>}
       variant="primary"
       onClick={() => {
         setSelected(null)

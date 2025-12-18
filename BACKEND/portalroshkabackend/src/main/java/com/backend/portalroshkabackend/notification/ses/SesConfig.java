@@ -2,10 +2,13 @@ package com.backend.portalroshkabackend.notification.ses;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.core.parameters.P;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.ses.SesClient;
 import software.amazon.awssdk.services.sns.SnsClient;
 
+@Profile("Prod")
 @Configuration
 public class SesConfig {
 

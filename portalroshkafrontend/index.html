@@ -5,11 +5,13 @@
     <link id="favicon" rel="icon" type="image/svg+xml" href="/roshka-light.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Portal Roshka</title>
+
     <link
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,400..700,0..1,0..1"
       rel="stylesheet"
     />
 
+    <!--
     <script>
       const mq = window.matchMedia('(prefers-color-scheme: dark)')
       const link = document.getElementById('favicon')
@@ -18,12 +20,62 @@
         link.href = e.matches ? '/roshkaw.svg' : '/roshkab.svg'
       }
 
-      setFavicon(mq) // inicial
-      mq.addEventListener('change', setFavicon) // escucha cambios
+      setFavicon(mq)
+      mq.addEventListener('change', setFavicon)
+
+      (function() {
+        const saved = localStorage.getItem('darkMode');
+        if (saved === 'true') {
+          document.documentElement.classList.add('dark');
+        }
+      })();
     </script>
+    -->
+    
   </head>
+
   <body>
     <div id="root"></div>
+
+    <!-- SCRIPT SEGURO – DEBE IR EN BODY -->
+    <script>
+      (function () {
+        // Protección total
+        if (!window.matchMedia) return;
+
+        const mq = window.matchMedia('(prefers-color-scheme: dark)');
+        const link = document.getElementById('favicon');
+
+        if (!link) return;
+
+        function setFavicon(e) {
+          const matches =
+            e && typeof e.matches === 'boolean'
+              ? e.matches
+              : mq.matches;
+
+          link.href = matches ? '/roshkaw.svg' : '/roshkab.svg';
+        }
+
+        // Inicial
+        setFavicon(mq);
+
+        // Listener compatible (nuevo + legacy)
+        if (typeof mq.addEventListener === 'function') {
+          mq.addEventListener('change', setFavicon);
+        } else if (typeof mq.addListener === 'function') {
+          mq.addListener(setFavicon);
+        }
+
+        // Dark mode manual
+        const saved = localStorage.getItem('darkMode');
+        if (saved === 'true') {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
+
+    <!-- Entrada de React -->
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

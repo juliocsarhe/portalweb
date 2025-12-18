@@ -9,7 +9,9 @@ export function useDeleteNovedades() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const remove = async (id: number): Promise<NovedadesDefaultResponseDto | null> => {
+  const remove = async (
+    id: number
+  ): Promise<NovedadesDefaultResponseDto | null> => {
     if (!token) {
       setError('No hay token disponible')
       return null

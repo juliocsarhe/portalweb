@@ -1,8 +1,6 @@
 package com.backend.portalroshkabackend.Services.SysAdmin;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import com.backend.portalroshkabackend.tools.RepositoryService;
 import com.backend.portalroshkabackend.tools.errors.errorslist.asignacionDispositivos.DeviceAssignmentNotFoundException;
@@ -139,7 +137,7 @@ public class DeviceAssignmentService {
         if (encargadoOpt.isPresent()) {
             dispositivo.setEncargado(encargadoOpt.get());
         } else {
-            throw new UserNotFoundException(solicitud.getUsuario().getIdUsuario());
+            throw UserNotFoundException.byId(solicitud.getUsuario().getIdUsuario());
         }
 
         // Cambiar estado a No Disponible

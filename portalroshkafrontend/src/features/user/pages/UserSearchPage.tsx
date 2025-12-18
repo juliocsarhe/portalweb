@@ -25,7 +25,8 @@ export default function UserSearchPage() {
       const data = await getUsuarioByCedula(token, trimmedCedula)
 
       // Si encuentra ir a editar
-      navigate(`/usuarios/${data.idUsuario}`)
+      setToastMessage('Ya existe un usuario con ese número de cédula')
+      setToastType('error')
     } catch (err: unknown) {
       if (err instanceof Error && err.message === 'NOT_FOUND') {
         // Si no encuentra → ir a crear con la cédula precargada
@@ -67,6 +68,7 @@ export default function UserSearchPage() {
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
           placeholder="Ingrese número de cédula"
           className="w-full px-4 py-3 border rounded-lg focus:ring-3 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
+          
         />
 
         <button

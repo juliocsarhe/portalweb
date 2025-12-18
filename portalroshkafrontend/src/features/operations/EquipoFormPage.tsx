@@ -642,7 +642,9 @@ export default function EquipoFormPage() {
   const getSections = () => [
     {
       title: 'Crear Equipo',
-      icon: '📅',
+      icon: <span className="material-symbols-outlined">
+perm_contact_calendar
+</span>,
       fields: [
         { name: 'nombre', label: 'Nombre del equipo', type: 'text' as const, required: true },
         { name: 'fechaInicio', label: 'Fecha de inicio', type: 'date' as const, required: true },
@@ -671,7 +673,9 @@ export default function EquipoFormPage() {
             {errorGeneral && (
               <div className="p-4 rounded-lg text-sm border bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-700 mb-4">
                 <div className="flex items-center gap-2">
-                  <span>❌</span>
+                  <span className="material-symbols-outlined">
+close
+</span>
                   <span>{parseErrorMessage(errorGeneral)}</span>
                 </div>
               </div>
@@ -911,7 +915,9 @@ export default function EquipoFormPage() {
             {errorUsuarios && (
               <div className="p-4 rounded-lg text-sm border bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-700 mb-4">
                 <div className="flex items-center gap-2">
-                  <span>❌</span>
+                  <span className="material-symbols-outlined">
+close
+</span>
                   <span>{parseErrorMessage(errorUsuarios)}</span>
                 </div>
               </div>

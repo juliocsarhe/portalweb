@@ -16,13 +16,11 @@ import com.backend.portalroshkabackend.tools.RepositoryService;
 import com.backend.portalroshkabackend.tools.errors.errorslist.user.UserNotFoundException;
 import com.backend.portalroshkabackend.tools.mapper.EmployeeMapper;
 import com.backend.portalroshkabackend.tools.validator.ValidatorStrategy;
-import org.hibernate.boot.archive.scan.spi.ScanOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.config.observation.SecurityObservationSettings;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +36,9 @@ public class EmployeeServiceImpl implements IEmployeeService {
     private final ValidatorStrategy<UserUpdateDto> updateValidator;
 
     private final NotificationService notificationService;
-    private final NotificacitionServiceAws notificacitionServiceAws;
+
+    @Autowired(required = false)
+    private NotificacitionServiceAws notificacitionServiceAws;
 
     @Autowired
     public EmployeeServiceImpl(UserRepository userRepository,
@@ -46,11 +46,9 @@ public class EmployeeServiceImpl implements IEmployeeService {
                                @Qualifier("employeeInsertValidator") ValidatorStrategy<UserInsertDto> insertValidator,
                                @Qualifier("employeeDeleteValidator") ValidatorStrategy<Usuario> deleteValidator,
                                @Qualifier("employeeUpdateValidator") ValidatorStrategy<UserUpdateDto> updateValidator,
-                               NotificationService notificationService,
-                               NotificacitionServiceAws notificacitionServiceAws
+                               NotificationService notificationService
     ){
         this.notificationService = notificationService;
-        this.notificacitionServiceAws = notificacitionServiceAws;
         this.userRepository = userRepository;
         this.repositoryService = repositoryService;
         this.insertValidator = insertValidator;
@@ -63,7 +61,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
         Usuario user = repositoryService.findByIdOrThrow(
                 userRepository,
                 id,
-                () -> new UserNotFoundException(id)
+                () -> UserNotFoundException.byId(id)
         );
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -100,7 +98,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
         var user = repositoryService.findByIdOrThrow(
                 userRepository,
                 id,
-                () -> new UserNotFoundException(id)
+                () -> UserNotFoundException.byId(id)
         );
 
         return EmployeeMapper.toUserByIdDto(user);
@@ -109,7 +107,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
     @Override
     public UserDto getEmployeeByCedula(String cedula) {
-        Usuario user = userRepository.findByNroCedula(cedula).orElseThrow( () -> new UserNotFoundException(cedula));
+        Usuario user = userRepository.findByNroCedula(cedula).orElseThrow( () -> UserNotFoundException.byCedula(cedula));
 
         return EmployeeMapper.toUserDto(user);
     }
@@ -142,7 +140,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
         Usuario user = repositoryService.findByIdOrThrow(
                 userRepository,
                 id,
-                () -> new UserNotFoundException(id)
+                () -> UserNotFoundException.byId(id)
         );
 
         updateValidator.validate(updateDto);
@@ -167,7 +165,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
         Usuario user = repositoryService.findByIdOrThrow(
                 userRepository,
                 id,
-                () -> new UserNotFoundException(id)
+                () -> UserNotFoundException.byId(id)
         );
 
         deleteValidator.validate(user);

@@ -42,7 +42,17 @@ export default function DeviceAssignmentFormPage() {
             ? 'Modificá los datos de la asignación'
             : 'Completá los datos para asignar un dispositivo'
       }
-      icon={isEditing ? (readonly ? '👀' : '✏️') : '📦'}
+      icon={
+        isEditing ? (
+          readonly ? (
+            <span className="material-symbols-outlined">visibility</span>
+          ) : (
+            <span className="material-symbols-outlined">edit</span>
+          )
+        ) : (
+          <span className="material-symbols-outlined">box</span>
+        )
+      }
       onCancel={() => navigate('/gestion-dispositivos?tab=asignaciones')}
       onSubmitLabel={readonly ? undefined : isEditing ? 'Guardar cambios' : 'Asignar dispositivo'}
       onCancelLabel={readonly ? 'Volver' : 'Cancelar'}

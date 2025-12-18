@@ -566,7 +566,9 @@ export default function EditarEquipoPage() {
     () => [
       {
         title: 'Editar Equipo',
-        icon: '🛠️',
+        icon:<span className="material-symbols-outlined">
+diversity_3
+</span>,
         fields: [
           {
             name: 'nombre',
@@ -999,7 +1001,9 @@ export default function EditarEquipoPage() {
             {error && (
               <div className="p-4 rounded-lg text-sm border bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-700 mb-4">
                 <div className="flex items-center gap-2">
-                  <span>❌</span>
+           <span className="material-symbols-outlined">
+close
+</span>
                   <span>
                     {(() => {
                       try {

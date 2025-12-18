@@ -5,11 +5,12 @@ import com.backend.portalroshkabackend.Repositories.UsuarioRepositories.UsuarioR
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.sns.SnsClient;
 
-import static org.springframework.boot.availability.AvailabilityChangeEvent.publish;
+
+@Profile("Prod")
 @Service
 public class NotificacitionServiceAws {
 

@@ -22,7 +22,7 @@ public class SpringSecurityConfig {
     private AuthenticationConfiguration authenticationConfiguration;
 
     @Autowired
-    private UsuariosService userService; // ✅ inyectamos UserService
+    private UsuariosService userService; // inyectamos UserService
 
     // Bean de AuthenticationManager
     @Bean
@@ -72,16 +72,16 @@ public class SpringSecurityConfig {
                 // Reglas específicas ANTES de las generales - ORDEN IMPORTANTE
                 
                 // ROLE_1 - TALENTO HUMANO: Acceso a recursos humanos
-                .requestMatchers("/api/v1/admin/th/**").hasAnyAuthority("ROLE_1")
+                .requestMatchers("/api/v1/admin/th/**").hasAnyAuthority("ROLE_1", "ROLE_5")
                 
                 // ROLE_2 - OPERACIONES: Acceso a operaciones
-                .requestMatchers("/api/v1/admin/operations/**").hasAnyAuthority("ROLE_2")
+                .requestMatchers("/api/v1/admin/operations/**").hasAnyAuthority("ROLE_2", "ROLE_5")
                 
                 // ROLE_3 - ADMINISTRADOR DE SISTEMAS: Acceso a sysadmin
-                .requestMatchers("/api/v1/admin/sysadmin/**").hasAnyAuthority("ROLE_3")
+                .requestMatchers("/api/v1/admin/sysadmin/**").hasAnyAuthority("ROLE_3", "ROLE_5")
 
                 //role_6 - TEAM LIDER - acceso a team lider
-                .requestMatchers("/api/v1/teamleader/**").hasAuthority("ROLE_6")
+                .requestMatchers("/api/v1/admin/teamleader/**").hasAuthority("ROLE_6")
 
                 // ROLE_5 - DIRECTIVO: tiene acceso a TODOS(menos team lider)
                 .requestMatchers("/api/v1/admin/**").hasAnyAuthority("ROLE_5")

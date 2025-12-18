@@ -24,7 +24,7 @@ export default function DeviceAssignmentsPage({ embedded = false }: Props) {
 
   const puedeVerAsignaciones = tieneRol(user, Roles.ADMINISTRADOR_DEL_SISTEMA, Roles.OPERACIONES)
 
-  // ✅ Hook especializado con paginación real
+  // Hook especializado con paginación real
   const {
     data: asignaciones,
     totalPages,
@@ -79,7 +79,7 @@ export default function DeviceAssignmentsPage({ embedded = false }: Props) {
         <div className="mb-3 flex justify-end">
           <IconButton
             label="Asignar Dispositivo"
-            icon={<span>➕</span>}
+            icon={<span className="material-symbols-outlined">add</span>}
             variant="primary"
             onClick={() => navigate('/dispositivos-asignados/nuevo')}
             className="h-10 text-sm px-4 flex items-center"
@@ -97,7 +97,7 @@ export default function DeviceAssignmentsPage({ embedded = false }: Props) {
       actions={
         <IconButton
           label="Asignar Dispositivo"
-          icon={<span>➕</span>}
+          icon={<span className="material-symbols-outlined">add</span>}
           variant="primary"
           onClick={() => navigate('/dispositivos-asignados/nuevo')}
           className="h-10 text-sm px-4 flex items-center"

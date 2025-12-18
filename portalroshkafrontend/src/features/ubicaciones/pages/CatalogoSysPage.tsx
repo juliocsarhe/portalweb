@@ -16,7 +16,7 @@ export default function CatalogoSysPage() {
   const { user } = useAuth()
 
   // permisos (solo ADMIN DEL SISTEMA)
-  const puedeVer = tieneRol(user, Roles.ADMINISTRADOR_DEL_SISTEMA)
+  const puedeVer = tieneRol(user, Roles.ADMINISTRADOR_DEL_SISTEMA, Roles.DIRECTIVO)
 
   const rawTab = searchParams.get('tab')
   const activeTab: TabKey = useMemo<TabKey>(() => {

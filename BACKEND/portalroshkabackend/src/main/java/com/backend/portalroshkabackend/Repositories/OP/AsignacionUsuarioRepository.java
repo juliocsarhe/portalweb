@@ -3,6 +3,8 @@ package com.backend.portalroshkabackend.Repositories.OP;
 import java.util.List;
 import java.util.Optional;
 
+import com.backend.portalroshkabackend.Models.Enum.EstadoActivoInactivo;
+import com.backend.portalroshkabackend.Models.Equipos;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -18,4 +20,5 @@ public interface AsignacionUsuarioRepository extends JpaRepository<AsignacionUsu
     List<AsignacionUsuarioEquipo> findAllByEquipo_IdEquipo(Integer idEquipo);
     Optional<AsignacionUsuarioEquipo> findByEquipo_IdEquipoAndUsuario_IdUsuario(Integer idEquipo, Integer idUsuario);
     List<AsignacionUsuarioEquipo> findByUsuario_IdUsuario(Integer idUsuario);
+    boolean existsByEquipoInAndUsuario_IdUsuarioAndEstado(List<Equipos> equiposDelLider, Integer idUsuario, EstadoActivoInactivo estadoActivoInactivo);
 }
