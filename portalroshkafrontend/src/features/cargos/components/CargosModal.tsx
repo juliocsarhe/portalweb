@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { buildCargoSections } from '../components/cargosFormFields'
 import { useCargoForm } from '../hooks/useCargoForm'
 import { mapFormToCargoInsert } from '../../../mappers/cargoMapper'
-import { getCargoById } from '../services/CargosService' // ⬅️ asegúrate que exista
+import { getCargoById } from '../services/CargosService' // asegúrate que exista
 import { Alert } from '../../../shared/ui/components/Alert'
 import BaseModal from '../../../shared/ui/components/BaseModal'
 import DynamicModalForm from '../../../shared/ui/components/DynamicModalForm'

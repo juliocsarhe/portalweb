@@ -86,7 +86,7 @@ export default function RolesPage({ embedded = false }: Props) {
   const newRolButton = canEdit && (
     <IconButton
       label="Nuevo Rol"
-      icon={<span>➕</span>}
+      icon={<span className="material-symbols-outlined">add</span>}
       variant="primary"
       onClick={() => {
         setSelected(null)

@@ -53,13 +53,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null)
   const [token, setToken] = useState<string | null>(null)
 
-  useEffect(() => {
-    const storedToken = localStorage.getItem('auth_token')
-    if (storedToken) {
-      setToken(storedToken)
-      decodeAndSetUser(storedToken)
-    }
-  }, [])
+useEffect(() => {
+  const storedToken = localStorage.getItem('auth_token')
+
+  if (storedToken && storedToken.trim() !== '') {
+    setToken(storedToken)
+    decodeAndSetUser(storedToken)
+  } else {
+    setToken(null)
+    setUser(null)
+  }
+}, [])
+
 
   const decodeAndSetUser = async (jwtToken: string) => {
     try {
@@ -88,7 +93,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
               idRol: payload.rol.idRol ?? 0,
               nombre: payload.rol.nombre ?? '',
             }
-          : null, // 👈 si no viene, null
+          : null, // si no viene, null
       }
       setUser(basicUser)
 
@@ -101,8 +106,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(fullUser)
     } catch (e) {
       console.error('Error al decodificar el token:', e)
-      setUser(null)
-    }
+      logout() 
+  } 
+
   }
 
   const login = (jwtToken: string) => {

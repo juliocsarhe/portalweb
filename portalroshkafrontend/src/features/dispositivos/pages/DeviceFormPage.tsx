@@ -110,7 +110,17 @@ export default function DeviceFormPage() {
             ? 'Modificá los campos necesarios'
             : 'Completá la información del nuevo dispositivo'
       }
-      icon={isEditing ? (readonly ? '👀' : '✏️') : '💻'}
+      icon={
+        isEditing ? (
+          readonly ? (
+            <span className="material-symbols-outlined">visibility</span>
+          ) : (
+            <span className="material-symbols-outlined">edit</span>
+          )
+        ) : (
+          <span className="material-symbols-outlined">desktop_windows</span>
+        )
+      }
       onCancel={() => navigate('/dispositivos')}
       onSubmitLabel={readonly ? undefined : isEditing ? 'Guardar cambios' : 'Crear dispositivo'}
       onCancelLabel={readonly ? 'Volver' : 'Cancelar'}

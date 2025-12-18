@@ -92,7 +92,7 @@ export default function ClientesPage({ embedded = false }: Props) {
   const newClienteButton = canEdit && (
     <IconButton
       label="Nuevo Cliente"
-      icon={<span>➕</span>}
+      icon={<span className="material-symbols-outlined">add</span>}
       variant="primary"
       onClick={() => {
         setSelected(null)

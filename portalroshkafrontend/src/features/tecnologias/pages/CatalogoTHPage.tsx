@@ -16,7 +16,7 @@ export default function CatalogoTHPage() {
   const { user } = useAuth()
 
   // permisos
-  const puedeVer = tieneRol(user, Roles.TALENTO_HUMANO)
+  const puedeVer = tieneRol(user, Roles.TALENTO_HUMANO, Roles.DIRECTIVO)
 
   const rawTab = (searchParams.get('tab') || '').toLowerCase()
   const activeTab: TabKey = useMemo<TabKey>(() => {

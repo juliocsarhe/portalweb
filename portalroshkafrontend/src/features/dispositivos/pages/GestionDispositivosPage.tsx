@@ -16,8 +16,8 @@ export default function GestionDispositivosPage() {
   const { user } = useAuth()
 
   // permisos
-  const puedeVerSolicitudes = tieneRol(user, Roles.ADMINISTRADOR_DEL_SISTEMA)
-  const puedeVerAsignaciones = tieneRol(user, Roles.ADMINISTRADOR_DEL_SISTEMA, Roles.OPERACIONES)
+  const puedeVerSolicitudes = tieneRol(user, Roles.ADMINISTRADOR_DEL_SISTEMA, Roles.DIRECTIVO)
+  const puedeVerAsignaciones = tieneRol(user, Roles.ADMINISTRADOR_DEL_SISTEMA, Roles.OPERACIONES, Roles.DIRECTIVO)
 
   // Tab activa, forzando a la primera disponible según permisos
   const rawTab = searchParams.get('tab')
