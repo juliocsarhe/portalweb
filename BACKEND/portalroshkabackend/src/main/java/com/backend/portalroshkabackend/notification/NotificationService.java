@@ -55,11 +55,12 @@ public class NotificationService {
 
     public void sendNotificationToTH(Solicitud solicitud) {
 
+
         String username = solicitud.getUsuario().getNombre() + " " + solicitud.getUsuario().getApellido();
         String message = username + " realizo una solicitud: " + solicitud.getTipoSolicitud().toString().toLowerCase();
 
         if (emailService != null) {
-            emailService.sendEmailToUser(correo, "NUEVA SOLICITUD", message);
+            emailService.sendEmailToUser(correoTH, "NUEVA SOLICITUD", message);
         }
     }
 
@@ -69,7 +70,7 @@ public class NotificationService {
         String message = username + " realizo una solicitud: " + solicitud.getTipoSolicitud().toString().toLowerCase();
 
         if (emailService != null) {
-            emailService.sendEmailToUser(correo, "NUEVA SOLICITUD", message);
+            emailService.sendEmailToUser(correoSA, "NUEVA SOLICITUD", message);
         }
 
     }

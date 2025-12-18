@@ -2,6 +2,7 @@ package com.backend.portalroshkabackend.notification.ses;
 
 import com.backend.portalroshkabackend.Models.Solicitud;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.ses.SesClient;
@@ -13,6 +14,9 @@ import software.amazon.awssdk.services.ses.model.*;
 public class EmailService {
 
     private final SesClient sesClient;
+
+    @Value("${correo.th}")
+    private String correoTH;
 
     @Autowired
     public EmailService(SesClient sesClient){
@@ -26,7 +30,7 @@ public class EmailService {
                         .subject(Content.builder().data(subject).build()) // Asunto
                         .body(Body.builder().text(Content.builder().data(body).build()).build()) // Cuerpo del mensaje
                         .build())
-                .source("elias.benittz@gmail.com") // cambiar correo portal bla bla
+                .source(correoTH) // cambiar correo portal bla bla
                 .build();
 
         // Enviar el correo

@@ -110,22 +110,16 @@ useEffect(() => {
       console.log('FULL USER BACKEND:', fullUser);
       const mappedUser: User = {
         ...fullUser,
-        idUsuario: fullUser.idUsuario, // 🔥 ESTE ES EL FIX
+        idUsuario: fullUser.idUsuario, 
       }
       
       setUser(mappedUser)
       setUserLoaded(true);
     } catch (e) {
       console.error('Error al decodificar el token:', e)
-<<<<<<< HEAD
       setUser(null)
       setUserLoaded(true);
     }
-=======
-      logout() 
-  } 
-
->>>>>>> origin/develop
   }
 
   const login = (jwtToken: string) => {
