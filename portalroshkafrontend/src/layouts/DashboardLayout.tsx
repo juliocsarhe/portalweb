@@ -164,7 +164,7 @@ const menuOptions = [
   id: 'operaciones',
   label: <span className="font-semibold text-[15px]">Operaciones</span>,
   icon: <span className="material-symbols-outlined">precision_manufacturing</span>,
-  available: disponiblePara(Roles.OPERACIONES, Roles.TEAM_LEADER, Roles.DESARROLLO),
+  available: disponiblePara(Roles.OPERACIONES),
   children: [
     {
       id: '/operations/equipos',
@@ -176,7 +176,11 @@ const menuOptions = [
       label: <span className="font-semibold text-[14px]">Gestionar Proyectos</span>,
       available: disponiblePara(Roles.OPERACIONES),
     },
-    {
+
+  ],
+},
+
+{
   id: '/mi-equipo',
   label: <span className="font-semibold text-[15px]">Mis Equipos</span>,
   icon: <span className="material-symbols-outlined">groups</span>,
@@ -187,9 +191,6 @@ const menuOptions = [
   label: <span className="font-semibold text-[15px]">Mis Proyectos</span>,
   icon: <span className="material-symbols-outlined">work</span>,
   available: disponiblePara(Roles.DESARROLLO, Roles.TEAM_LEADER),
-},
-
-  ],
 },
 
   {

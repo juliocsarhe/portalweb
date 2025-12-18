@@ -31,7 +31,6 @@
         estado: "ACTIVO",
     })
 
-    // Clientes
     useEffect(() => {
         if (!token) return
 
@@ -112,7 +111,7 @@
         setForm({ ...form, [e.target.name]: e.target.value })
     }
 
-    //  GUARDAR 
+    //  Guardar
     const handleSubmit = async (e: any) => {
         e.preventDefault()
         setError(null)
