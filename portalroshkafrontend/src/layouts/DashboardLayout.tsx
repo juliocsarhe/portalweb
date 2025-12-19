@@ -198,7 +198,7 @@ const menuOptions = [
           <NavLink to="/profile" className="flex items-center space-x-3 cursor-pointer hover:opacity-80 transition">
             <div className="w-20 h-20 rounded-full overflow-hidden flex items-center justify-center">
               {user?.urlPerfil ? (
-                <img src={`data:image/png;base64,${user.urlPerfil}`} className="w-full h-full object-cover" />
+                <img src={user.urlPerfil} className="w-full h-full object-cover" />
               ) : (
                 <span className="material-symbols-outlined text-6xl text-white">account_circle</span>
               )}

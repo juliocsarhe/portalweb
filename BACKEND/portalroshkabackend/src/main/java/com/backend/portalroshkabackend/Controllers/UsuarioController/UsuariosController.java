@@ -2,7 +2,6 @@ package com.backend.portalroshkabackend.Controllers.UsuarioController;
 
 import java.util.List;
 
-import com.backend.portalroshkabackend.DTO.common.DefaultResponseDto;
 import com.backend.portalroshkabackend.notification.NotificationService;
 import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSolicitudSaEvent;
 import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSolicitudThEvent;
@@ -134,8 +133,8 @@ public class UsuariosController {
     }
 
     @PostMapping("/actualizarfoto")
-    public ResponseEntity<DefaultResponseDto> actualizarFoto(@RequestBody UserUpdateFoto dto) {
 
+    public ResponseEntity<?> actualizarFoto(@RequestBody UserUpdateFoto dto) {
         return ResponseEntity.ok(userService.actualizarFoto(dto));
     }
 
@@ -155,5 +154,4 @@ public class UsuariosController {
         List<tiposDispositivosDto> dispositivos = userService.getTiposDispositivos();
         return ResponseEntity.ok(dispositivos);
     }
-
 }

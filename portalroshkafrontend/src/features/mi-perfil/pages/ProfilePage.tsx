@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useAuth } from '../../../app/providers/AuthContext'
 import EditableField from '../../../shared/ui/components/EditableField'
 import UploadImageButton from '../../../shared/ui/components/UploadImageButton'
+import { uploadImageToCloudinary } from '../../novedades/services/uploadImageToCloudinary'
 
 function formatDate(d?: string | Date) {
   if (!d) return ''
@@ -28,14 +29,6 @@ function namesFrom(input: any, key = 'nombre'): string[] {
   return []
 }
 
-// 🔧 función para convertir archivo a Base64
-const toBase64 = (file: File): Promise<string> =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.readAsDataURL(file)
-    reader.onload = () => resolve(reader.result as string)
-    reader.onerror = (error) => reject(error)
-  })
 
 export default function ProfilePage() {
   const { user, token, refreshUser } = useAuth()
@@ -64,52 +57,48 @@ export default function ProfilePage() {
   const diasVacRest = user?.diasVacacionesRestante
 
   const handleImageChange = async (file: File) => {
-    try {
-      setIsUploading(true)
-      setUploadError(null)
-      setSuccessMessage(null)
+  try {
+    setIsUploading(true)
+    setUploadError(null)
+    setSuccessMessage(null)
 
-      console.log('=== FRONTEND DEBUG ===')
-      console.log('Archivo:', file.name, file.size, file.type)
+    if (!user) {
+      throw new Error('Usuario no está cargado')
+    }
 
-      const base64Image = await toBase64(file)
-      const cleanBase64 = base64Image.split(',')[1] // solo el puro contenido
+    const imageUrl = await uploadImageToCloudinary(file)
 
-      console.log('Base64 longitud:', base64Image.length)
-      console.log('Base64 inicia con:', base64Image.substring(0, 30))
-      console.log('Contiene data:image:', base64Image.startsWith('data:image'))
 
-      console.log('Usuario actual:', user)
-
-      if (!user) {
-        throw new Error('Usuario no está cargado')
-      }
-
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/usuarios/actualizarfoto`, {
+    const res = await fetch(
+      'http://localhost:8080/api/v1/usuarios/actualizarfoto',
+      {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('auth_token')}`, // 🔑 token de auth
+          Authorization: `Bearer ${localStorage.getItem('auth_token')}`,
         },
-        body: JSON.stringify({ foto: cleanBase64 }),
-      })
-
-      if (!res.ok) {
-        throw new Error('Error al actualizar la imagen')
+        body: JSON.stringify({
+          urlPerfil: imageUrl,
+        }),
       }
+    )
 
-      refreshUser()
-      console.log('Usuario desde refresUser:', user)
-
-      setSuccessMessage('Imagen actualizada correctamente')
-      setTimeout(() => setSuccessMessage(null), 3000)
-    } catch (err) {
-      setUploadError(err instanceof Error ? err.message : 'Error al subir la imagen')
-      console.error('Error al subir la imagen:', err)
-    } finally {
-      setIsUploading(false)
+    if (!res.ok) {
+      throw new Error('Error guardando la imagen')
     }
+
+    await refreshUser()
+
+    setSuccessMessage('Imagen actualizada correctamente')
+    setTimeout(() => setSuccessMessage(null), 3000)
+  } catch (err) {
+    setUploadError(err instanceof Error ? err.message : 'Error al subir la imagen')
+    console.error(err)
+  } finally {
+    setIsUploading(false)
   }
+}
+
 
   return (
     <div className="h-full flex flex-col overflow-hidden">
@@ -146,7 +135,7 @@ export default function ProfilePage() {
 
                   {user.urlPerfil ? (
                     <img
-                      src={`data:image/png;base64,${user.urlPerfil}`}
+                      src={user.urlPerfil}
                       alt={fullName}
                       className="h-16 w-16 md:h-20 md:w-20 rounded-2xl object-cover shrink-0 shadow-sm"
                     />

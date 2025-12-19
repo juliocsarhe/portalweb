@@ -6,5 +6,5 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class UserUpdateFoto {
-    String urlFoto;
+    String urlPerfil;
 }

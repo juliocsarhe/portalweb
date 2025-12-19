@@ -50,7 +50,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Base64;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -712,7 +711,7 @@ public class UserService {
             throw new RuntimeException("Usuario no encontrado"); //TODO: refactorizar novedades
         }
 
-        usuario.setUrlPerfil(dto.getUrlFoto()); // Actualiza la foto con la nueva codificada
+        usuario.setUrlPerfil(dto.getUrlPerfil()); // Actualiza la foto con la nueva codificada
 
         repositoryService.save(
                 usuarioRepository,
