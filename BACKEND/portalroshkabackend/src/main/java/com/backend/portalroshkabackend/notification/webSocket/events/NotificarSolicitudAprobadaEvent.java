@@ -7,9 +7,7 @@ public class NotificarSolicitudAprobadaEvent implements Notification{
     private int id;
 
     public NotificarSolicitudAprobadaEvent(int id) {
-
         this.id = id;
-
     }
 
     @Override

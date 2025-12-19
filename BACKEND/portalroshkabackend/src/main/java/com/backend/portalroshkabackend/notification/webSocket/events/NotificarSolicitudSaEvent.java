@@ -16,7 +16,7 @@ public class NotificarSolicitudSaEvent implements Notification{
 
         dto.setIdUsuario(id); ;
 
-        dto.setMessage("Solicitud Realizada SysAdmin");
+        dto.setMessage("Nueva Solicitud");
 
         return dto;
     }
