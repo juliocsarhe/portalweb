@@ -179,11 +179,18 @@ const menuOptions = [
       label: <span className="font-semibold text-[14px]">Gestionar Proyectos</span>,
       available: disponiblePara(Roles.OPERACIONES),
     },
+<<<<<<< Updated upstream
 
   ],
 },
 
 {
+=======
+    
+
+  ],
+},{
+>>>>>>> Stashed changes
   id: '/mi-equipo',
   label: <span className="font-semibold text-[15px]">Mis Equipos</span>,
   icon: <span className="material-symbols-outlined">groups</span>,
