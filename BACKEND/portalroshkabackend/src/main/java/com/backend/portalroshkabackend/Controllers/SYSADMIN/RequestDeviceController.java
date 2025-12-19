@@ -68,9 +68,6 @@ public class RequestDeviceController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Solicitud no encontrada");
         }
 
-        NotificarSolicitudAprobadaEvent event = new NotificarSolicitudAprobadaEvent();
-        notificationService.sendEvent(event);
-
 
         return ResponseEntity.ok(updatedRequest);
     }
@@ -85,9 +82,6 @@ public class RequestDeviceController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Solicitud no encontrada");
         }
 
-        NotificarSolicitudRechazadaEvent event =  new NotificarSolicitudRechazadaEvent();
-
-        notificationService.sendEvent(event);
 
         return ResponseEntity.ok(updatedRequest);
     }

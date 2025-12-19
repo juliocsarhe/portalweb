@@ -93,7 +93,7 @@ export default function ProfilePage() {
         throw new Error('Usuario no está cargado')
       }
 
-      const res = await fetch(`http://localhost:8080/api/v1/usuarios/actualizarfoto`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/usuarios/actualizarfoto`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -142,7 +142,7 @@ export default function ProfilePage() {
 
           {/* Contenido */}
           <div className="flex-1 overflow-auto p-4 md:p-6">
-            <div className="overflow-hidden rounded-2xl border border-white/40 dark:border-gray-700 bg-white/50 dark:bg-gray-800/70 
+            <div className="overflow-hidden rounded-2xl border border-white/40 dark:border-gray-700 bg-white/50 dark:bg-gray-800/70
             backdrop-blur-xs shadow-xs">
 
 
@@ -174,7 +174,7 @@ export default function ProfilePage() {
                       {/* Pills: rol + email */}
                       <div className="mt-1 flex flex-wrap items-center gap-2 text-xs md:text-sm text-gray-600 dark:text-gray-400">
                         {rolNombre && (
-                          <span className="inline-flex items-center rounded-full border border-gray-300 dark:border-gray-600 bg-white/60 
+                          <span className="inline-flex items-center rounded-full border border-gray-300 dark:border-gray-600 bg-white/60
                         dark:bg-gray-700/70 px-2 py-0.5 text-gray-700 dark:text-gray-200">
                             {rolNombre}
                           </span>
@@ -214,7 +214,7 @@ export default function ProfilePage() {
                           Cargo
                         </span>
                       </div>
-                      <span className="inline-flex items-center rounded-full border border-gray-300 dark:border-gray-600 bg-white/70 
+                      <span className="inline-flex items-center rounded-full border border-gray-300 dark:border-gray-600 bg-white/70
                                           dark:bg-gray-800/80 px-1 py-0.5 text-xs text-gray-700 dark:text-gray-200">
                         {cargoNombre}
                       </span>
@@ -223,7 +223,7 @@ export default function ProfilePage() {
 
                   {/* Equipos */}
                   {getEquipos.length > 0 && (
-                    <div className="flex items-center justify-between rounded-xl border border-gray-300 dark:border-gray-600 bg-white/60 
+                    <div className="flex items-center justify-between rounded-xl border border-gray-300 dark:border-gray-600 bg-white/60
                                       dark:bg-gray-700/70 backdrop-blur-xs p-3 min-w-0">
 
                       <div className="flex items-center gap-3 shrink-0">
@@ -233,7 +233,7 @@ export default function ProfilePage() {
                         </span>
                       </div>
                       <span
-                        className="inline-flex items-center rounded-full border border-gray-300 dark:border-gray-600 bg-white/70 
+                        className="inline-flex items-center rounded-full border border-gray-300 dark:border-gray-600 bg-white/70
                                     dark:bg-gray-800/80px-2 py-0.5 text-xs text-gray-700 dark:text-gray-200 truncate max-w-[180px]"
                         title={namesFrom(getEquipos).join(', ')} // tooltip
                       >
@@ -361,7 +361,7 @@ export default function ProfilePage() {
       )}
       </div>
 
-     
+
 
     </>
   )

@@ -21,6 +21,26 @@
     requiereCambioContrasena?: boolean
     urlPerfil?: string
   }
+export type User = {
+  idUsuario: number
+  nombre: string
+  apellido: string
+  correo: string
+  rol: {
+    idRol: number
+    nombre: string
+  } | null
+  cargo?: { idCargo: number; nombre: string }
+  equipos?: { idEquipo: number; nombre: string }[]
+  diasVacaciones?: number
+  diasVacacionesRestante?: number
+  telefono?: string
+  fechaIngreso?: string
+  nroCedula?: string
+  estado?: string
+  requiereCambioContrasena?: boolean
+  urlPerfil?: string
+}
 
   type AuthContextType = {
     user: User | null
@@ -30,6 +50,15 @@
     logout: () => void
     refreshUser: () => void
   }
+type AuthContextType = {
+  user: User | null
+  userLoaded: boolean
+  token: string | null
+  isAuthenticated: boolean
+  login: (token: string) => void
+  logout: () => void
+  refreshUser: () => void
+}
 
   const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
@@ -80,6 +109,10 @@
   export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<User | null>(null)
     const [token, setToken] = useState<string | null>(null)
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [user, setUser] = useState<User | null>(null)
+  const [token, setToken] = useState<string | null>(null)
+  const [userLoaded, setUserLoaded] = useState(false);
 
   useEffect(() => {
     const storedToken = localStorage.getItem('auth_token')
@@ -107,7 +140,7 @@
         }
       }
       const basicUser: User = {
-        id: payload.id ?? 0,
+        idUsuario: payload.idUsuario ?? undefined,
         nombre: payload.nombre ?? '',
         apellido: payload.apellido ?? '',
         correo: payload.email ?? payload.sub ?? '',
@@ -124,13 +157,31 @@
       const res = await fetch('http://localhost:8080/api/v1/usuarios/me', {
         headers: { Authorization: `Bearer ${jwtToken}` },
       })
+
       if (!res.ok) throw new Error('No se pudo obtener datos completos del usuario')
+
       const fullUser: User = await res.json()
-      setUser(fullUser)
+      console.log('FULL USER BACKEND:', fullUser);
+      const mappedUser: User = {
+        ...fullUser,
+        idUsuario: fullUser.idUsuario, // 🔥 ESTE ES EL FIX
+      }
+
+      setUser(mappedUser)
+      setUserLoaded(true);
     } catch (e) {
       console.error('Error al decodificar el token:', e)
       setUser(null)
     }
+<<<<<<< HEAD
+      setUser(null)
+      setUserLoaded(true);
+    }
+=======
+      logout()
+  }
+
+>>>>>>> origin/develop
   }
 
     const login = (jwtToken: string) => {
@@ -149,21 +200,23 @@
       if (token) decodeAndSetUser(token)
     }
 
-    return (
-      <AuthContext.Provider
-        value={{
-          user,
-          token,
-          isAuthenticated: !!token,
-          login,
-          logout,
-          refreshUser,
-        }}
-      >
-        {children}
-      </AuthContext.Provider>
-    )
   }
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        userLoaded,
+        token,
+        isAuthenticated: !!token,
+        login,
+        logout,
+        refreshUser,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  )
+}
 
   /* ===============================
     HOOK

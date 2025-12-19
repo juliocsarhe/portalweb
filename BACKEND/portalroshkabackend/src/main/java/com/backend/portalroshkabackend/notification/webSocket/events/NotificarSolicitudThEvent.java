@@ -1,12 +1,24 @@
 package com.backend.portalroshkabackend.notification.webSocket.events;
 
 
+import com.backend.portalroshkabackend.DTO.notification.NotificationDTO;
 
 public class NotificarSolicitudThEvent implements Notification {
 
-    @Override
-    public String getMessage() {
-        return "SOLICITUD CREADA";
+    private int id;
+
+    public NotificarSolicitudThEvent(int id) {
+        this.id = id;
     }
 
+    @Override
+    public NotificationDTO getMessageDTO() {
+        NotificationDTO dto = new NotificationDTO();
+
+        dto.setIdUsuario(id); ;
+
+        dto.setMessage("Nueva Solicitud");
+
+        return dto;
+    }
 }

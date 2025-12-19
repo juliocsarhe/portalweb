@@ -104,22 +104,15 @@ export default function AppRoutes() {
 
         
 
-
-          {/* ------------------------------------
-                -- EQUIPOS
-          ------------------------------------- */}
           <Route path="/operations/equipos" element={<EquiposPage />} />
           <Route path="/operations/equipos/nuevo" element={<EquipoFormPageOps />} />
           <Route path="/operations/equipos/:id/edit" element={<EditarEquipoPageOps />} />
 
-          {/*Mi-Equipo/ Mi- Proyecto*/ }
+          {/*Mi equipo Mi proyecto*/ }
 
           <Route path="/mi-equipo" element={<MiEquipoPage />} />
           <Route path="/mi-proyecto" element={<MiProyectoPage />} />
 
-          {/* ------------------------------------
-                NUEVAS RUTAS OFICIALES – PROYECTOS
-          ------------------------------------- */}
           <Route path="/operations/proyectos" element={<ProyectosPage />} />
           <Route path="/operations/proyectos/nuevo" element={<ProyectoFormPage />} />
           <Route path="/operations/proyectos/:id/edit" element={<ProyectoFormPage />} />
