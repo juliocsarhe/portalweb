@@ -51,9 +51,9 @@ public class NotificationService {
 
         System.out.println("ENVIANDO CORREO AL LIDER");
 
-        if (emailService != null) {
-            emailService.sendEmailToUser(correo, "NUEVA SOLICITUD RECIBIDA", message);
-        }
+
+        emailService.sendEmailToUser(correo, "NUEVA SOLICITUD RECIBIDA", message);
+
 
     }
 
@@ -72,9 +72,7 @@ public class NotificationService {
         String username = solicitud.getUsuario().getNombre() + " " + solicitud.getUsuario().getApellido();
         String message = username + " realizo una solicitud: " + solicitud.getTipoSolicitud().toString().toLowerCase();
 
-        if (emailService != null) {
-            emailService.sendEmailToUser(correoSA, "NUEVA SOLICITUD", message);
-        }
+        emailService.sendEmailToUser(correoSA, "NUEVA SOLICITUD", message);
 
     }
 
@@ -84,9 +82,8 @@ public class NotificationService {
         String message = aprobado ? "Al usuario " + username + " se la ha aprobado la solicitud " + solicitud.getTipoSolicitud().toString().toLowerCase()
                 : "Al usuario " + username + " se la ha rechazado la solicitud " + solicitud.getTipoSolicitud().toString().toLowerCase();
 
-        if (emailService != null) {
-            emailService.sendEmailToUser(correoTH, "Solicitud aprobada por un Team Lider", message );
-        }
+        emailService.sendEmailToUser(correoTH, "Solicitud aprobada por un Team Lider", message );
+
     }
 
     public void notifyUser(Solicitud solicitud, boolean aprobado) {
@@ -94,11 +91,9 @@ public class NotificationService {
         String usuarioCorreo = solicitud.getUsuario().getCorreo();
 
         template.convertAndSendToUser(usuarioCorreo, "/topic/notification", message); //WebSocket
+        snsService.sendSolicitudNotification(message); //SNS
 
-        if(snsService != null) {
-            snsService.sendSolicitudNotification(message); //SNS
 
-        }
     }
 
     public void notifyUserses(Solicitud solicitud, boolean aprobado) {
@@ -109,9 +104,7 @@ public class NotificationService {
 
         System.out.println("ENVIANDO CORREO...");
 
-        if (emailService != null) {
-            emailService.sendEmailToUser(usuarioCorreo, "Estado de solicitud de " + tipoSolicitud, message);
-        }
+        emailService.sendEmailToUser(usuarioCorreo, "Estado de solicitud de " + tipoSolicitud, message);
     }
 }
 
