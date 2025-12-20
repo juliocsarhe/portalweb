@@ -100,7 +100,7 @@ useEffect(() => {
       setUser(basicUser)
 
       // Ahora pedimos los datos completos al backend
-      const res = await fetch('http://localhost:8080/api/v1/usuarios/me', {
+      const res = await fetch(`http://localhost:8080/api/v1/usuarios/me`, {
         headers: { Authorization: `Bearer ${jwtToken}` },
       })
 
@@ -110,22 +110,16 @@ useEffect(() => {
       console.log('FULL USER BACKEND:', fullUser);
       const mappedUser: User = {
         ...fullUser,
-        idUsuario: fullUser.idUsuario, // 🔥 ESTE ES EL FIX
+        idUsuario: fullUser.idUsuario, 
       }
       
       setUser(mappedUser)
       setUserLoaded(true);
     } catch (e) {
       console.error('Error al decodificar el token:', e)
-<<<<<<< HEAD
       setUser(null)
       setUserLoaded(true);
     }
-=======
-      logout() 
-  } 
-
->>>>>>> origin/develop
   }
 
   const login = (jwtToken: string) => {

@@ -8,7 +8,6 @@ import com.backend.portalroshkabackend.notification.ses.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.annotation.Profile;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -22,17 +21,22 @@ public class NotificationService {
         publisher.publishEvent(notification);
     }
 
-    @Autowired
     private UsuariosService usuariosService;
+    private SimpMessagingTemplate template; // WebSocket
+    private NotificacitionServiceAws snsService; // SNS
+    private EmailService emailService;
 
     @Autowired
-    private SimpMessagingTemplate template; // WebSocket
+    public NotificationService(UsuariosService usuariosService,
+                               SimpMessagingTemplate template,
+                               NotificacitionServiceAws  snsService,
+                               EmailService emailService) {
+        this.usuariosService = usuariosService;
+        this.template = template;
+        this.snsService = snsService;
+        this.emailService = emailService;
 
-    @Autowired(required = false)
-    private NotificacitionServiceAws snsService; // SNS
-
-    @Autowired(required = false)
-    private EmailService emailService;
+    }
 
     @Value("${correo.th}")
     private String correoTH;
@@ -47,9 +51,9 @@ public class NotificationService {
 
         System.out.println("ENVIANDO CORREO AL LIDER");
 
-        if (emailService != null) {
-            emailService.sendEmailToUser(correo, "NUEVA SOLICITUD RECIBIDA", message);
-        }
+
+        emailService.sendEmailToUser(correo, "NUEVA SOLICITUD RECIBIDA", message);
+
 
     }
 
@@ -58,9 +62,9 @@ public class NotificationService {
         String username = solicitud.getUsuario().getNombre() + " " + solicitud.getUsuario().getApellido();
         String message = username + " realizo una solicitud: " + solicitud.getTipoSolicitud().toString().toLowerCase();
 
-        if (emailService != null) {
-            emailService.sendEmailToUser(correo, "NUEVA SOLICITUD", message);
-        }
+        System.out.println("Enviando correo a TH" + correoTH);
+        emailService.sendEmailToUser(correoTH, "NUEVA SOLICITUD", message);
+
     }
 
     public void sendNotificationToSys (Solicitud  solicitud) {
@@ -68,9 +72,7 @@ public class NotificationService {
         String username = solicitud.getUsuario().getNombre() + " " + solicitud.getUsuario().getApellido();
         String message = username + " realizo una solicitud: " + solicitud.getTipoSolicitud().toString().toLowerCase();
 
-        if (emailService != null) {
-            emailService.sendEmailToUser(correo, "NUEVA SOLICITUD", message);
-        }
+        emailService.sendEmailToUser(correoSA, "NUEVA SOLICITUD", message);
 
     }
 
@@ -80,9 +82,8 @@ public class NotificationService {
         String message = aprobado ? "Al usuario " + username + " se la ha aprobado la solicitud " + solicitud.getTipoSolicitud().toString().toLowerCase()
                 : "Al usuario " + username + " se la ha rechazado la solicitud " + solicitud.getTipoSolicitud().toString().toLowerCase();
 
-        if (emailService != null) {
-            emailService.sendEmailToUser("elias.benittz@gmail.com", "Solicitud aprobada por un Team Lider", message );
-        }
+        emailService.sendEmailToUser(correoTH, "Solicitud aprobada por un Team Lider", message );
+
     }
 
     public void notifyUser(Solicitud solicitud, boolean aprobado) {
@@ -90,11 +91,9 @@ public class NotificationService {
         String usuarioCorreo = solicitud.getUsuario().getCorreo();
 
         template.convertAndSendToUser(usuarioCorreo, "/topic/notification", message); //WebSocket
+        snsService.sendSolicitudNotification(message); //SNS
 
-        if(snsService != null) {
-            snsService.sendSolicitudNotification(message); //SNS
 
-        }
     }
 
     public void notifyUserses(Solicitud solicitud, boolean aprobado) {
@@ -105,9 +104,7 @@ public class NotificationService {
 
         System.out.println("ENVIANDO CORREO...");
 
-        if (emailService != null) {
-            emailService.sendEmailToUser(usuarioCorreo, "Estado de solicitud de " + tipoSolicitud, message);
-        }
+        emailService.sendEmailToUser(usuarioCorreo, "Estado de solicitud de " + tipoSolicitud, message);
     }
 }
 

@@ -9,8 +9,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.sns.SnsClient;
 
-
-@Profile("Prod")
 @Service
 public class NotificacitionServiceAws {
 
@@ -20,11 +18,10 @@ public class NotificacitionServiceAws {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-
     @Value("${topic.solicitud}")
     private String TOPIC_SOLICITUD;
 
-    @Value("${TOPIC.notificacion}")
+    @Value("${topic.notificacion}")
     private String TOPIC_NOTIFICACION;
 
     private void subscribeEmailToTopic(String correo) {

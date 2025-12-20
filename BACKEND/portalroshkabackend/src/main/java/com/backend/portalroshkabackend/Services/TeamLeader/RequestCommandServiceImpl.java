@@ -131,7 +131,7 @@ public class RequestCommandServiceImpl implements IRequestsCommandService {
 
         notificationService.notifyUserses(request, false);
         notificationService.alertTH(request, false);
-        NotificarSolicitudRechazadaEvent event = new NotificarSolicitudRechazadaEvent();
+        NotificarSolicitudRechazadaEvent event = new NotificarSolicitudRechazadaEvent(0);
 
         repositoryService.save(
                 solicitudRepository,
