@@ -4,10 +4,8 @@ const DEFAULT_ITEMS = [
   {
     id: 'default-1',
     imagenUrl: 'src/assets/roshka.jpg',
-  },
-  {
-    id: 'default-2',
-    imagenUrl: 'src/assets/roshka.jpg',
+    titulo: 'Estás al día con las novedades',
+    descripcion: 'Ya estás informado con lo más reciente! ',
   },
 ]
 
@@ -19,8 +17,10 @@ export default function CarruselNovedades({ items }) {
 
   const currentItem = displayItems[index]
 
+  const siesDefault = displayItems.length == 1 && displayItems[0].id === 'default-1'
+
   useEffect(() => {
-    if (paused) return
+    if (paused || siesDefault) return
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % displayItems.length)
       setShowFull(false)
@@ -50,7 +50,7 @@ export default function CarruselNovedades({ items }) {
         href="${url}" 
         target="_blank" 
         rel="noopener noreferrer"
-        class="text-blue-500 hover:underline break-all"
+        class="text-blue-900 dark:text-blue-500 hover:underline break-all"
       >
         ${url}
       </a>`
@@ -59,16 +59,23 @@ export default function CarruselNovedades({ items }) {
 
   return (
     <div className="relative w-full">
-      <button
-        onClick={prevSlide}
-        className="absolute left-[-53px] top-1/2 -translate-y-1/2 hover:bg-black/70 text-white rounded-full p-3 transition z-10"
-        aria-label="Anterior"
-      >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-        </svg>
-      </button>
-
+      
+      {!siesDefault && (
+        <button
+          onClick={prevSlide}
+          className="absolute left-[-53px] top-1/2 -translate-y-1/2 hover:bg-black/70 text-white rounded-full p-3 transition z-10"
+          aria-label="Anterior"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+        </button>
+      )}
       <div
         className="relative w-full rounded-2xl shadow-xl p-6 pb-16 flex flex-col md:flex-row items-center gap-6"
         onMouseEnter={() => setPaused(true)}
@@ -96,6 +103,7 @@ export default function CarruselNovedades({ items }) {
             />
           )}
         </div>
+
         <div className="flex-1 relative">
           <div className="aspect-[16/9] rounded-xl overflow-hidden shadow-2xl bg-gray-200 dark:bg-gray-800">
             <img
@@ -106,35 +114,38 @@ export default function CarruselNovedades({ items }) {
           </div>
         </div>
 
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-          {displayItems.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => {
-                setIndex(i)
-                setShowFull(false)
-              }}
-              className={`transition-all rounded-full ${
-                i === index
-                  ? 'w-8 h-3 bg-blue-600 dark:bg-white'
-                  : 'w-3 h-3 bg-gray-300 dark:bg-gray-600 hover:bg-gray-400'
-              }`}
-              aria-label={`Ir a novedad ${i + 1}`}
-            />
-          ))}
-        </div>
+        {!siesDefault && (
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+            {displayItems.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => {
+                  setIndex(i)
+                  setShowFull(false)
+                }}
+                className={`transition-all rounded-full ${
+                  i === index
+                    ? 'w-8 h-3 bg-blue-600 dark:bg-white'
+                    : 'w-3 h-3 bg-gray-300 dark:bg-gray-600 hover:bg-gray-400'
+                }`}
+                aria-label={`Ir a novedad ${i + 1}`}
+              />
+            ))}
+          </div>
+        )}
       </div>
-
       {/* flecha-siguiente */}
-      <button
-        onClick={nextSlide}
-        className="absolute right-[-53px] top-1/2 -translate-y-1/2 hover:bg-black/70 text-white rounded-full p-3 transition z-10"
-        aria-label="Siguiente"
-      >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-        </svg>
-      </button>
+      {!siesDefault && (
+        <button
+          onClick={nextSlide}
+          className="absolute right-[-53px] top-1/2 -translate-y-1/2 hover:bg-black/70 text-white rounded-full p-3 transition z-10"
+          aria-label="Siguiente"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      )}
     </div>
   )
 }

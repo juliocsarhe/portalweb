@@ -66,7 +66,6 @@ export default function AvisosList({
                 )}
               </div>
 
-              {/* Botones de edición/eliminación (solo para admin) */}
               {(onEdit || onDelete) && (
                 <div className="flex flex-col gap-2">
                   {onEdit && (
