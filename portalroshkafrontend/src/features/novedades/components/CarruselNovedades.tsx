@@ -1,6 +1,19 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
-const DEFAULT_ITEMS = [
+export interface NovedadItem {
+  id: string | number
+  imagenUrl: string
+  titulo: string
+  descripcion?: string
+  contenido?: string
+}
+
+interface CarruselNovedadesProps {
+  items: NovedadItem[]
+  onImageClick?: (imgUrl: string) => void
+}
+
+const DEFAULT_ITEMS: NovedadItem[] = [
   {
     id: 'default-1',
     imagenUrl: 'src/assets/roshka.jpg',
@@ -9,15 +22,14 @@ const DEFAULT_ITEMS = [
   },
 ]
 
-export default function CarruselNovedades({ items }) {
+export default function CarruselNovedades({ items, onImageClick }: CarruselNovedadesProps) {
   const displayItems = items && items.length > 0 ? items : DEFAULT_ITEMS
   const [index, setIndex] = useState(0)
   const [showFull, setShowFull] = useState(false)
   const [paused, setPaused] = useState(false)
 
   const currentItem = displayItems[index]
-
-  const siesDefault = displayItems.length == 1 && displayItems[0].id === 'default-1'
+  const siesDefault = displayItems.length === 1 && displayItems[0].id === 'default-1'
 
   useEffect(() => {
     if (paused || siesDefault) return
@@ -40,9 +52,7 @@ export default function CarruselNovedades({ items }) {
 
   const textoLink = (text: string | undefined) => {
     if (!text) return ''
-
     const urlRegex = /(https?:\/\/[^\s]+)/g
-
     return text.replace(
       urlRegex,
       (url) =>
@@ -59,7 +69,7 @@ export default function CarruselNovedades({ items }) {
 
   return (
     <div className="relative w-full">
-      
+      {/* Flechas */}
       {!siesDefault && (
         <button
           onClick={prevSlide}
@@ -67,15 +77,11 @@ export default function CarruselNovedades({ items }) {
           aria-label="Anterior"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </button>
       )}
+
       <div
         className="relative w-full rounded-2xl shadow-xl p-6 pb-16 flex flex-col md:flex-row items-center gap-6"
         onMouseEnter={() => setPaused(true)}
@@ -89,29 +95,25 @@ export default function CarruselNovedades({ items }) {
             className={`self-center text-black dark:text-gray-300 ${
               showFull ? '' : 'line-clamp-3'
             } text-center`}
-            dangerouslySetInnerHTML={{
-              __html: textoLink(currentItem.descripcion),
-            }}
+            dangerouslySetInnerHTML={{ __html: textoLink(currentItem.descripcion) }}
           />
-
           {showFull && currentItem.contenido && (
             <div
               className="self-center text-gray-800 dark:text-gray-200 p-4 bg-gray-100 dark:bg-gray-800/50 rounded-md border border-gray-300 dark:border-gray-700 w-full"
-              dangerouslySetInnerHTML={{
-                __html: currentItem.contenido,
-              }}
+              dangerouslySetInnerHTML={{ __html: currentItem.contenido }}
             />
           )}
         </div>
 
-        <div className="flex-1 relative">
-          <div className="aspect-[16/9] rounded-xl overflow-hidden shadow-2xl bg-gray-200 dark:bg-gray-800">
-            <img
-              src={currentItem.imagenUrl}
-              alt={currentItem.titulo}
-              className="w-full h-full object-cover" // la foto
-            />
-          </div>
+        <div
+          className="flex-1 relative aspect-[16/9] rounded-xl overflow-hidden shadow-2xl bg-gray-200 dark:bg-gray-800 cursor-pointer"
+          onClick={() => onImageClick && onImageClick(currentItem.imagenUrl)}
+        >
+          <img
+            src={currentItem.imagenUrl}
+            alt={currentItem.titulo}
+            className="w-full h-full object-cover"
+          />
         </div>
 
         {!siesDefault && (
@@ -134,7 +136,6 @@ export default function CarruselNovedades({ items }) {
           </div>
         )}
       </div>
-      {/* flecha-siguiente */}
       {!siesDefault && (
         <button
           onClick={nextSlide}

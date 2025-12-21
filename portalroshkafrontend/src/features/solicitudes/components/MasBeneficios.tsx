@@ -1,7 +1,10 @@
-import { Beneficio } from "@/types"
+import { useState } from 'react'
+import { Beneficio } from '@/types'
 
 export default function MasBeneficios() {
-  const beneficiosAdicionales = [
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
+
+  const beneficiosAdicionales: Beneficio[] = [
     {
       id: 1,
       nombre: 'Horarios',
@@ -65,48 +68,77 @@ export default function MasBeneficios() {
   ]
 
   return (
-    <div className="mt-8 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-700">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-12 h-12 bg-gradient-to-br from-[#3949AB] to-[#5E35B1] rounded-full flex items-center justify-center">
-          <span className="material-symbols-outlined text-white text-2xl">
-            star
-          </span>
+    <>
+      <div>
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-12 h-12 bg-gradient-to-br from-[#3949AB] to-[#5E35B1] rounded-full flex items-center justify-center">
+            <span className="material-symbols-outlined text-white text-2xl">star</span>
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-gray-900 dark:text-white">Más Beneficios</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Descubre otros beneficios que tenemos para ti
+            </p>
+          </div>
         </div>
-        <div>
-          <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-            Más Beneficios
-          </h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            Descubre otros beneficios que tenemos para ti
-          </p>
-        </div>
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {beneficiosAdicionales.map((beneficio) => (
-          <div
-            key={beneficio.id}
-            className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 hover:border-[#3949AB] hover:shadow-lg transition-all group"
-          >
-            <div className="flex items-start gap-3">
-              <div className="w-10 h-10 bg-[#3949AB]/10 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-[#3949AB] transition-colors">
-                <span className="material-symbols-outlined text-[#3949AB] group-hover:text-white transition-colors">
-                  
-                </span>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {beneficiosAdicionales.map((beneficio) => (
+            <div
+              key={beneficio.id}
+              className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 hover:border-[#3949AB] hover:shadow-lg transition-all cursor-pointer"
+              onClick={() => setImagePreview(beneficio.imagen)}
+            >
+              <div className="flex items-start gap-3">
+                
+                <div>
+                  <h4 className="font-semibold text-gray-900 dark:text-white mb-1">
+                    {beneficio.nombre}
+                  </h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    {beneficio.descripcion}
+                  </p>
+                </div>
               </div>
 
-              <div className="flex-1">
-                <h4 className="font-semibold text-gray-900 dark:text-white mb-1">
-                  {beneficio.nombre}
-                </h4>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {beneficio.descripcion}
-                </p>
+              <div className="mt-2 w-full h-40 rounded-lg overflow-hidden relative group">
+                <img
+                  src={beneficio.imagen}
+                  alt={beneficio.nombre}
+                  className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                  onError={(e) => {
+                    e.currentTarget.src =
+                      'https://via.placeholder.com/400x300?text=' + beneficio.nombre
+                  }}
+                />
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <span className="material-symbols-outlined text-white text-4xl">zoom_in</span>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+      {imagePreview && (
+        <>
+          <div className="fixed inset-0 bg-black/90 z-50" onClick={() => setImagePreview(null)} />
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-8">
+            <div className="relative max-w-5xl max-h-full animate-scale-in">
+              <button
+                onClick={() => setImagePreview(null)}
+                className="absolute -top-12 right-0 p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
+              >
+                <span className="material-symbols-outlined text-white text-2xl">close</span>
+              </button>
+              <img
+                src={imagePreview}
+                alt="Preview"
+                className="max-w-full max-h-[85vh] rounded-lg shadow-2xl object-contain"
+              />
+            </div>
+          </div>
+        </>
+      )}
+    </>
   )
 }

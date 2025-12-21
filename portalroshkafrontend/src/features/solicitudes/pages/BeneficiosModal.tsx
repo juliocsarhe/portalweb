@@ -19,54 +19,6 @@ export default function BeneficiosModal({ show, onClose, onSelect, selectedId }:
 
   const beneficios: Beneficio[] = [
     {
-      id: 1,
-      nombre: 'Horarios',
-      descripcion: 'Esquemas flexibles mientras no afecte tu productividad',
-      imagen: '/src/assets/image1.png',
-    },
-    {
-      id: 2,
-      nombre: 'Reposos',
-      descripcion: 'Roshka cubre el otro 50% que ips no cubre!',
-      imagen: '/src/assets/image2.png',
-    },
-    {
-      id: 3,
-      nombre: 'Cumpleaños',
-      descripcion: 'Día libre por tu cumpleaños!',
-      imagen: '/src/assets/image3.png',
-    },
-    {
-      id: 4,
-      nombre: 'Examenes Finales o Tesis',
-      descripcion: 'Días libres para concentrarte en tus estudios',
-      imagen: '/src/assets/image4.png',
-    },
-    {
-      id: 5,
-      nombre: 'Matrimonio',
-      descripcion: 'Días libres y bonos!',
-      imagen: '/src/assets/image5.png',
-    },
-    {
-      id: 6,
-      nombre: 'Luto',
-      descripcion: 'Días de licencia para apoyar al trabajador y ayuda social',
-      imagen: '/src/assets/image6.png',
-    },
-    {
-      id: 7,
-      nombre: 'Permiso por nacimiento',
-      descripcion: 'Días libres y obsequios!',
-      imagen: '/src/assets/image7.png',
-    },
-    {
-      id: 8,
-      nombre: 'Viernes 4 you',
-      descripcion: 'Un viernes de salida temprana al mes!',
-      imagen: '/src/assets/image8.png',
-    },
-    {
       id: 9,
       nombre: 'Préstamos',
       descripcion: 'Préstamos sin intereses!',
@@ -89,18 +41,6 @@ export default function BeneficiosModal({ show, onClose, onSelect, selectedId }:
       nombre: 'Gym',
       descripcion: 'Convenio con el gym FITTEST',
       imagen: '/src/assets/image12.png',
-    },
-    {
-      id: 13,
-      nombre: 'Graduación',
-      descripcion: 'Regalos para los nuevos egresados',
-      imagen: '/src/assets/image13.png',
-    },
-    {
-      id: 14,
-      nombre: 'Frutas y snacks',
-      descripcion: 'Snacks para merienda y desayuno saludable',
-      imagen: '/src/assets/image14.png',
     },
   ]
 

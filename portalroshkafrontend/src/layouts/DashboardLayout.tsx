@@ -138,14 +138,6 @@ export default function DashboardLayout() {
       icon: <span className="material-symbols-outlined">engineering</span>,
       available: disponiblePara(Roles.OPERACIONES),
     },
-
-    {
-      id: '/benefits',
-      label: <span className="font-semibold text-[15px]">Beneficios</span>,
-      icon: <span className="material-symbols-outlined">redeem</span>,
-      available: true,
-    },
-
     {
       id: '/crear-novedadesTH',
       label: <span className="font-semibold text-[15px]">Crear Novedades</span>,
