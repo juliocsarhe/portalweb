@@ -47,11 +47,11 @@ type ITeam = {
   leadId?: number | null
   leadNombre?: string | null
 }
-const METADATAS_PATH = 'http://localhost:8080/api/v1/admin/operations/metadatas'
-const CREATE_TEAM_PATH = 'http://localhost:8080/api/v1/admin/operations/team'
-const DIAS_PATH = 'http://localhost:8080/api/v1/admin/operations/diaslaborales'
-const LIBRES_PATH = 'http://localhost:8080/api/v1/admin/operations/asignacion/libres'
-const USERS_PATH = 'http://localhost:8080/api/v1/admin/operations/users'
+const METADATAS_PATH = `${import.meta.env.VITE_API_URL}/api/v1/admin/operations/metadatas`
+const CREATE_TEAM_PATH = `${import.meta.env.VITE_API_URL}/api/v1/admin/operations/team`
+const DIAS_PATH = `${import.meta.env.VITE_API_URL}/api/v1/admin/operations/diaslaborales`
+const LIBRES_PATH = `${import.meta.env.VITE_API_URL}/api/v1/admin/operations/asignacion/libres`
+const USERS_PATH = `${import.meta.env.VITE_API_URL}/api/v1/admin/operations/users`
 
 function useIsDark() {
   const [isDark, setIsDark] = useState(

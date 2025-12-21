@@ -40,7 +40,8 @@ public class SpringSecurityConfig {
     @Bean
     public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
         org.springframework.web.cors.CorsConfiguration config = new org.springframework.web.cors.CorsConfiguration();
-        config.setAllowedOrigins(java.util.List.of("http://localhost:5173")); // Origen del frontend
+
+        config.setAllowedOrigins(java.util.List.of("http://localhost:5174"));// Origen del frontend
         config.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         config.setAllowCredentials(true);
         config.setAllowedHeaders(java.util.List.of("Authorization","Content-Type","Accept","Origin","X-Requested-With"));
@@ -91,7 +92,7 @@ public class SpringSecurityConfig {
             .addFilter(jwtAuthenticationFilter) // Authentication filter for login
             .addFilter(new JwtValidationFilter(authenticationManager())) // Validation filter for all other requests
             .csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.configure(http)) // Habilitar CORS
+            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Habilitar CORS
             .sessionManagement(session ->
                 session.sessionCreationPolicy(org.springframework.security.config.http.SessionCreationPolicy.STATELESS)
             );

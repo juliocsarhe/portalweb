@@ -5,6 +5,8 @@ import '../shared/ui/styles/scrollbar.css'
 import { useState } from 'react'
 import { tieneRol } from '../shared/utils/permisos'
 
+
+
 export default function DashboardLayout() {
   const { user, logout } = useAuth()
   const [openMenu, setOpenMenu] = useState<string | null>(null)

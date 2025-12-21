@@ -10,5 +10,6 @@ public class UsuarioNovedadesDto {
     private String nombre;
     private String apellido;
     private RolNovedadesDto rol;
+    private String urlPerfil;
 }
 

@@ -1,8 +1,9 @@
 package com.backend.portalroshkabackend.notification.webSocket.events;
 
+import com.backend.portalroshkabackend.DTO.notification.NotificationDTO;
+
 public interface Notification {
 
-    String getMessage();
-
+    NotificationDTO getMessageDTO();
 
 }

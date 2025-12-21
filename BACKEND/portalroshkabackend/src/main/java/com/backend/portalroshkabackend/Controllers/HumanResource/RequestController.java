@@ -85,9 +85,6 @@ public class RequestController {
 
         RequestResponseDto response = requestService.acceptRequest(idRequest);
 
-        NotificarSolicitudAprobadaEvent event = new NotificarSolicitudAprobadaEvent();
-        notificationService.sendEvent(event);
-
         return ResponseEntity.ok(response);
     }
 
@@ -96,8 +93,6 @@ public class RequestController {
 
         RequestResponseDto response  = requestService.rejectRequest(idRequest);
 
-        NotificarSolicitudRechazadaEvent event = new NotificarSolicitudRechazadaEvent();
-        notificationService.sendEvent(event);
 
         return ResponseEntity.ok(response);
     }

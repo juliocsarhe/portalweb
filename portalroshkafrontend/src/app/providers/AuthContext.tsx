@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect } from 'react'
 import type { ReactNode } from 'react'
 
 export type User = {
-  id: number
+  idUsuario: number
   nombre: string
   apellido: string
   correo: string
@@ -24,6 +24,7 @@ export type User = {
 
 type AuthContextType = {
   user: User | null
+  userLoaded: boolean
   token: string | null
   isAuthenticated: boolean
   login: (token: string) => void
@@ -52,6 +53,7 @@ function parseJwt(token: string): any {
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null)
   const [token, setToken] = useState<string | null>(null)
+  const [userLoaded, setUserLoaded] = useState(false);
 
 useEffect(() => {
   const storedToken = localStorage.getItem('auth_token')
@@ -84,7 +86,7 @@ useEffect(() => {
         }
       }
       const basicUser: User = {
-        id: payload.id ?? 0,
+        idUsuario: payload.idUsuario ?? undefined,
         nombre: payload.nombre ?? '',
         apellido: payload.apellido ?? '',
         correo: payload.email ?? payload.sub ?? '',
@@ -98,17 +100,26 @@ useEffect(() => {
       setUser(basicUser)
 
       // Ahora pedimos los datos completos al backend
-      const res = await fetch('http://localhost:8080/api/v1/usuarios/me', {
+      const res = await fetch(`http://localhost:8080/api/v1/usuarios/me`, {
         headers: { Authorization: `Bearer ${jwtToken}` },
       })
+
       if (!res.ok) throw new Error('No se pudo obtener datos completos del usuario')
+
       const fullUser: User = await res.json()
-      setUser(fullUser)
+      console.log('FULL USER BACKEND:', fullUser);
+      const mappedUser: User = {
+        ...fullUser,
+        idUsuario: fullUser.idUsuario, 
+      }
+      
+      setUser(mappedUser)
+      setUserLoaded(true);
     } catch (e) {
       console.error('Error al decodificar el token:', e)
-      logout() 
-  } 
-
+      setUser(null)
+      setUserLoaded(true);
+    }
   }
 
   const login = (jwtToken: string) => {
@@ -131,6 +142,7 @@ useEffect(() => {
     <AuthContext.Provider
       value={{
         user,
+        userLoaded,
         token,
         isAuthenticated: !!token,
         login,

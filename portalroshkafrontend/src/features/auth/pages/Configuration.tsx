@@ -267,7 +267,7 @@ useEffect(() => {
     currentPassword: string,
     newPassword: string
   ): Promise<void> => {
-    const API_URL = 'http://localhost:8080/api/v1/usuarios/cambiarcontrasena'
+    const API_URL = `${import.meta.env.VITE_API_URL}/api/v1/usuarios/cambiarcontrasena`
 
     try {
       const response = await fetch(API_URL, {
