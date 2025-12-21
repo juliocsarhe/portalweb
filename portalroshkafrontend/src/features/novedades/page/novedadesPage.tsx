@@ -9,6 +9,7 @@ import NovedadesTable from '../components/NovedadesTable'
 import ModalNovedad from '../components/ModalNovedad'
 import Toast from '@/shared/ui/components/Toast'
 import { uploadImageToCloudinary } from '../services/uploadImageToCloudinary'
+import AvisosList from '../components/AvisosList'
 
 export default function NovedadesPage() {
   const { data, refetch } = useGetNovedades()
@@ -261,19 +262,27 @@ export default function NovedadesPage() {
       setToastType('success')
     }
   }
+    const sortAvisos = (avisosList: NovedadesResponseDto[]) => {
+    return [...avisosList].sort((a, b) => {
+      const prioridadA = !!a.prioridad
+      const prioridadB = !!b.prioridad
 
- const sortAvisos = (avisosList: NovedadesResponseDto[]) => {
-  return [...avisosList]
-    .sort((a, b) => {
-      if (a.prioridad && !b.prioridad) return 1
-      if(!a.prioridad && b.prioridad) return -1
+      if (prioridadA && !prioridadB) return -1
+      if (!prioridadA && prioridadB) return 1
 
-      const fechaA = new Date(a.fechaExpiracion).getTime()
-      const fechaB = new Date(b.fechaExpiracion).getTime()
-      return fechaB - fechaA
+    const fechaA = new Date(a.fechaExpiracion + 'T00:00:00').getTime()
+    const fechaB = new Date(b.fechaExpiracion + 'T00:00:00').getTime()
+
+      return fechaA - fechaB
     })
-    
-}
+  }
+
+  useEffect(() => {
+    console.log('Data recibida:', data)
+    setCarrusel(data.filter((n) => n.imagenUrl && n.imagenUrl.trim() !== ''))
+    setAvisos(data.filter((n) => !n.imagenUrl || n.imagenUrl.trim() === ''))
+  }, [data])
+
   const carruselSale = searchTerm ? filteredCarrusel : carrusel
   const avisosHome = sortAvisos(searchTerm ? filteredAvisos : avisos)
   const allNovedades = searchTerm ? [...filteredCarrusel, ...filteredAvisos] : data

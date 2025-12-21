@@ -18,6 +18,23 @@ export default function HomePage() {
 
   if (!user) return <p>Cargando usuario...</p>
 
+  const sortAvisos = (avisosList: typeof avisos) => {
+    return [...avisosList].sort((a, b) => {
+      const prioridadA = !!a.prioridad
+      const prioridadB = !!b.prioridad
+
+      if (prioridadA && !prioridadB) return -1
+      if (!prioridadA && prioridadB) return 1
+
+      const fechaA = new Date(a.fechaExpiracion + 'T00:00').getTime()
+      const fechaB = new Date(b.fechaExpiracion + 'T00:00').getTime()
+
+      return fechaA - fechaB
+    })
+  }
+
+  const avisosOrdenados = sortAvisos(avisos ?? [])
+
   return (
     <div className="relative h-screen overflow-hidden">
       <div
@@ -85,9 +102,9 @@ export default function HomePage() {
                 <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-4">
                   <p className="text-red-600">Error al cargar avisos: {errorAvisos}</p>
                 </div>
-              ) : avisos.length > 0 ? (
+              ) : avisosOrdenados.length > 0 ? (
                 <div className="space-y-3 max-h-96 overflow-y-auto pr-2">
-                  <AvisosList items={avisos} />
+                  <AvisosList items={avisosOrdenados} />
                 </div>
               ) : (
                 <div className="bg-gray-100 dark:bg-gray-800/50 rounded-lg p-8 text-center">
