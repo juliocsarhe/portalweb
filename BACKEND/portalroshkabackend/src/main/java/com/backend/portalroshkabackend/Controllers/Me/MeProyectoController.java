@@ -34,15 +34,12 @@ public class MeProyectoController {
         Usuario usuario = usuarioRepository.findByCorreo(correo)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        // 1️⃣ Proyectos donde participa como MIEMBRO
         List<Proyecto> proyectosComoMiembro =
                 proyectoRepository.findAllByEquipos_Usuarios_IdUsuario(usuario.getIdUsuario());
 
-        // 2️⃣ Proyectos donde es LÍDER del equipo
         List<Proyecto> proyectosComoLider =
                 proyectoRepository.findAllByEquipos_Lider_IdUsuario(usuario.getIdUsuario());
 
-        // 3️⃣ Unir sin duplicados
         Set<Proyecto> proyectosFinales = new HashSet<>();
         proyectosFinales.addAll(proyectosComoMiembro);
         proyectosFinales.addAll(proyectosComoLider);

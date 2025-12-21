@@ -14,12 +14,12 @@ public class ProyectoMapper {
 
         Proyecto entity  = new Proyecto();
 
-        entity.setNombre(proyectoRequestDto.getNombre());
-        entity.setDescripcion(proyectoRequestDto.getDescripcion());
-        entity.setFechaInicio(proyectoRequestDto.getFechaInicio());
-        entity.setFechaLimite(proyectoRequestDto.getFechaLimite());
-        entity.setEstado(proyectoRequestDto.getEstado());
-        return entity;
+            entity.setNombre(proyectoRequestDto.getNombre());
+            entity.setDescripcion(proyectoRequestDto.getDescripcion());
+            entity.setFechaInicio(proyectoRequestDto.getFechaInicio());
+            entity.setFechaLimite(proyectoRequestDto.getFechaLimite());
+            entity.setEstado(proyectoRequestDto.getEstado());
+            return entity;
     }
     public static ProyectoResponseDto toDto(Proyecto entity) {
         if (entity == null) return null;
@@ -57,11 +57,11 @@ public class ProyectoMapper {
             );
         }
 
-        proyectoResponseDto.setDescripcion(entity.getDescripcion());
-        proyectoResponseDto.setFechaInicio(entity.getFechaInicio());
-        proyectoResponseDto.setFechaLimite(entity.getFechaLimite());
-        proyectoResponseDto.setEstado(entity.getEstado());
-        proyectoResponseDto.setActivo(entity.getActivo());
-        return proyectoResponseDto;
+            proyectoResponseDto.setDescripcion(entity.getDescripcion());
+            proyectoResponseDto.setFechaInicio(entity.getFechaInicio());
+            proyectoResponseDto.setFechaLimite(entity.getFechaLimite());
+            proyectoResponseDto.setEstado(entity.getEstado());
+            proyectoResponseDto.setActivo(entity.getActivo());
+            return proyectoResponseDto;
     }
 }

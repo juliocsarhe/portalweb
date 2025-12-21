@@ -22,9 +22,9 @@ public class HistorialServiceImpl implements IHistorialService {
     private final HistorialTrabajoMapper historialMapper;
 
     @Override
-    public List<HistorialResponseDTO> listarHistorialPorUsuario(Integer idUsuario){
-        return historialRepository.findByUsuario_IdUsuarioOrderByFechaInicioDesc(idUsuario).stream()
-                .map(historialMapper::toDto).toList();
+        public List<HistorialResponseDTO> listarHistorialPorUsuario(Integer idUsuario){
+         return historialRepository.findByUsuario_IdUsuarioOrderByFechaInicioDesc(idUsuario).stream()
+                    .map(historialMapper::toDto).toList();
     }
 
     @Override

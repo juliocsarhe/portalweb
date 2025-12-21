@@ -35,15 +35,12 @@ public class MeEquipoController {
         Usuario usuario = usuarioRepository.findByCorreo(correo)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        // 1️⃣ Equipos donde es MIEMBRO
         List<Equipos> equiposComoMiembro =
                 equiposRepository.findAllByUsuarios_IdUsuario(usuario.getIdUsuario());
 
-        // 2️⃣ Equipos donde es LÍDER
         List<Equipos> equiposComoLider =
                 equiposRepository.findAllByLider_IdUsuario(usuario.getIdUsuario());
 
-        // 3️⃣ Unir sin duplicar
         Set<Equipos> equiposFinales = new HashSet<>();
         equiposFinales.addAll(equiposComoMiembro);
         equiposFinales.addAll(equiposComoLider);

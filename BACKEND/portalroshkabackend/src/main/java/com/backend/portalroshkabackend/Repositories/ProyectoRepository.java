@@ -24,7 +24,6 @@ public interface ProyectoRepository extends JpaRepository<Proyecto, Integer> {
     Optional<Proyecto> findByEquipos(Equipos equipos);
 
     List<Proyecto> findAllByEquipos_Usuarios_IdUsuario(Integer idUsuario);
+
     List<Proyecto> findAllByEquipos_Lider_IdUsuario(Integer idUsuario);
-
-
 }

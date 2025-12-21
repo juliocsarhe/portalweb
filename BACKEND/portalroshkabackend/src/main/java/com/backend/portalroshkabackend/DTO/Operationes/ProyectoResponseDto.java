@@ -24,7 +24,6 @@ public class ProyectoResponseDto {
     private String nombreCliente;
 
     private List<TecnologiasDto> tecnologias;
-
     private String descripcion;
 
     private LocalDate fechaInicio;

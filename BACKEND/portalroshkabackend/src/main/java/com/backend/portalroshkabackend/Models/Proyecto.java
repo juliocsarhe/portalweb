@@ -25,38 +25,37 @@ public class Proyecto {
 
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "id_lider_equipo", nullable = false)
-        private Usuario liderEquipo;
+            private Usuario liderEquipo;
 
+         @OneToOne
+         @JoinColumn(name="id_cliente", unique = true)
+            private Clientes clientes;
 
-        @OneToOne
-        @JoinColumn(name="id_cliente",unique = true)
-        private Clientes clientes;
-
-        @OneToOne
-        @JoinColumn(name="id_equipos", unique = true)
-        private Equipos equipos;
+         @OneToOne
+            @JoinColumn(name="id_equipos", unique = true)
+                private Equipos equipos;
 
         @ManyToMany
         @JoinTable(
-                name = "proyecto_tecnologias", joinColumns = @JoinColumn(name = "id_proyecto"),
-                inverseJoinColumns = @JoinColumn(name = "id_tecnologia")
+                    name = "proyecto_tecnologias", joinColumns = @JoinColumn(name = "id_proyecto"),
+                    inverseJoinColumns = @JoinColumn(name = "id_tecnologia")
         )
-        private Set<Tecnologias> tecnologias = new HashSet<>();
+            private Set<Tecnologias> tecnologias = new HashSet<>();
 
         @Column(columnDefinition = "TEXT")
-        private String descripcion;
+            private String descripcion;
 
         @Column(name = "fecha_inicio")
-        private LocalDate fechaInicio;
+            private LocalDate fechaInicio;
 
         @Column(name = "fecha_limite")
-        private LocalDate fechaLimite;
+            private LocalDate fechaLimite;
 
         public enum EstadoProyectoEnum {
             ACTIVO,
             PAUSADO,
             FINALIZADO
-        } // ACTIVO, FINALIZADO, PAUSADO
+        }
 
         @Enumerated(EnumType.STRING)
         @Column(name = "estado", nullable = false)
