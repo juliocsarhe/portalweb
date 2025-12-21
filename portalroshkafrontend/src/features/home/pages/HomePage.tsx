@@ -1,4 +1,3 @@
-// src/pages/HomePage.tsx
 import { useAuth } from '../../../app/providers/AuthContext'
 import {
   useGetCarruselPublic,
@@ -16,7 +15,6 @@ export default function HomePage() {
 
   return (
     <div className="relative h-screen overflow-hidden">
-      {/* Fondo ilustrativo */}
       <div
         className="absolute inset-0 bg-brand-blue"
         style={{
@@ -29,10 +27,8 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-brand-blue/70 dark:bg-brand-blue/80"></div>
       </div>
 
-      {/* Contenido principal con scroll */}
       <div className="relative z-10 h-full overflow-y-auto">
         <div className="p-6 space-y-6">
-          {/* Header con bienvenida y botón de notificación */}
           <div className="flex items-start justify-between">
             <div>
               <h2 className="text-[32px] font-bold text-white dark:text-white mb-1">
@@ -41,7 +37,6 @@ export default function HomePage() {
               <p className="text-white/90 dark:text-gray-300 text-lg">Últimas Novedades</p>
             </div>
 
-            {/* Botón de notificación */}
             <button className="bg-white/20 backdrop-blur-sm border border-white/30 p-3 rounded-full hover:bg-[#ECB22E] hover:border-[#ECB22E] transition-all duration-300 shadow-lg group">
               <svg
                 className="w-6 h-6 text-white"
@@ -59,7 +54,6 @@ export default function HomePage() {
             </button>
           </div>
 
-          {/* Carrusel de Novedades */}
           <div className="bg-white/45 dark:bg-gray-900/70 backdrop-blur-xs rounded-2xl shadow-lg border border-white/20 pl-15 pr-15 pb-4 pt-4">
             {loadingCarrusel ? (
               <div className="ml-5 flex items-center justify-center h-48">
@@ -78,10 +72,9 @@ export default function HomePage() {
             )}
           </div>
 
-          {/* Avisos Importantes */}
           <div className="bg-white/45 dark:bg-gray-900/70 backdrop-blur-xs rounded-2xl shadow-lg border border-white/20 overflow-hidden">
             <div className="flex items-center gap-3 p-6 pb-4 border-b border-gray-200 dark:border-gray-700">
-              <span className="material-symbols-outlined text-gray-900 dark:text-white text-2xl">
+              <span className="material-symbols-outlined text-gray-900 dark:text-[#ECB22E] text-2xl">
                 campaign
               </span>
               <h2 className="text-xl font-bold text-gray-900 dark:text-white">AVISOS</h2>

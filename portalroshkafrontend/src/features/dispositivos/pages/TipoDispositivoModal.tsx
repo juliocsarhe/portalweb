@@ -28,7 +28,6 @@ export default function TipoDispositivoModal({
 
   const sections = buildTipoDispositivoSections()
 
-  // bloquear solo mientras no hay data y está cargando
   const hasData = useMemo(() => !!data && Object.keys(data).length > 0, [data])
   const formLoading = !readonly && loading && !hasData
 
@@ -38,7 +37,6 @@ export default function TipoDispositivoModal({
       : 'Editar tipo de dispositivo'
     : 'Nuevo tipo de dispositivo'
 
-  // si tus fields requieren nombres exactos, podés mapear aquí:
   const initial = data ?? {}
 
   return (
@@ -63,7 +61,6 @@ export default function TipoDispositivoModal({
 
       {error && <Alert kind="error">{error}</Alert>}
 
-      {/* Footer con Guardar / Cancelar (igual a Roles) */}
       <div className="flex justify-end gap-2 mt-4">
         {!readonly && (
           <button

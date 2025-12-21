@@ -86,7 +86,7 @@ export default function CarruselNovedades({ items }) {
             {currentItem.titulo}
           </h3>
           <div
-            className={`self-center text-gray-700 dark:text-gray-300 ${
+            className={`self-center text-black dark:text-gray-300 ${
               showFull ? '' : 'line-clamp-3'
             } text-center`}
             dangerouslySetInnerHTML={{
