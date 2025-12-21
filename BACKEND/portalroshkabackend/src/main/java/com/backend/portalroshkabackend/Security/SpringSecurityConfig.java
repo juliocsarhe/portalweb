@@ -88,6 +88,9 @@ public class SpringSecurityConfig {
                     // ROLE_4 - DESARROLLO y ROLE_6 - TEAM LIDER
                     .requestMatchers("/api/v1/me/**")
                     .hasAnyAuthority("ROLE_4", "ROLE_6")
+
+                    .requestMatchers(HttpMethod.POST,"/api/v1/historial/**")
+                    .hasAnyAuthority("ROLE_6","ROLE_2")
                 // Cualquier otra request requiere autenticación
                 .anyRequest().authenticated()
             )

@@ -176,18 +176,16 @@ const menuOptions = [
       label: <span className="font-semibold text-[14px]">Gestionar Proyectos</span>,
       available: disponiblePara(Roles.OPERACIONES),
     },
-<<<<<<< Updated upstream
-
-  ],
-},
-
-{
-=======
     
 
   ],
 },{
->>>>>>> Stashed changes
+  id: '/asignar-tareas',
+  label: <span className="font-semibold text-[15px]">Asignar Tareas</span>,
+  icon: <span className="material-symbols-outlined">assignment</span>,
+  available: disponiblePara(Roles.TEAM_LEADER),
+}
+,{
   id: '/mi-equipo',
   label: <span className="font-semibold text-[15px]">Mis Equipos</span>,
   icon: <span className="material-symbols-outlined">groups</span>,

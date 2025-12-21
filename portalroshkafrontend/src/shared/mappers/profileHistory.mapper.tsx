@@ -1,4 +1,4 @@
-import { ProfileHistoryItem } from "@/types/profileHistory.types";
+import { ProfileHistoryItem } from "@/features/asignacion-equipo/types/ProfileHistory.types";
 
 export function mapHistorialToProfileHistory(
   apiItems: any[]

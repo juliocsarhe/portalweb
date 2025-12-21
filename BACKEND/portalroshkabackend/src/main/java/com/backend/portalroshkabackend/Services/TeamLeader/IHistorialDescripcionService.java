@@ -1,12 +1,10 @@
 package com.backend.portalroshkabackend.Services.TeamLeader;
 
 import com.backend.portalroshkabackend.DTO.TeamLeader.HistorialDescripcionDTO;
-import com.backend.portalroshkabackend.Models.Usuario;
+import org.springframework.security.core.Authentication;
 
 public interface IHistorialDescripcionService {
 
-    void registrarDescripcion(HistorialDescripcionDTO dto, Usuario usuarioLogueado);
-
-
+    void registrarDescripcion(HistorialDescripcionDTO dto, Authentication usuarioLogueado);
 
 }
