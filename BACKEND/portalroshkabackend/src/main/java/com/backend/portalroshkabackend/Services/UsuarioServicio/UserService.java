@@ -708,7 +708,7 @@ public class UserService {
         Usuario usuario = securityUtils.getUsuarioActual();
 
         if (usuario == null) {
-            throw new RuntimeException("Usuario no encontrado"); //TODO: refactorizar novedades
+            throw new RuntimeException("Usuario no encontrado"); //TODO: refactorizar excepciones
         }
 
         usuario.setUrlPerfil(dto.getUrlPerfil()); // Actualiza la foto con la nueva codificada
