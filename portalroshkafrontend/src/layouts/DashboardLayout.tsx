@@ -70,12 +70,12 @@ export default function DashboardLayout() {
           available: true,
         },
         {
-          id: '/requests/beneficio',
+          id: '/request/beneficio',
           label: <span className="font-semibold text-[14px]">Solicitar Beneficios</span>,
           available: true,
         },
         {
-          id: '/requests/permiso',
+          id: '/request/permiso',
           label: <span className="font-semibold text-[14px]">Solicitar Permisos</span>,
           available: true,
         },
