@@ -28,6 +28,9 @@ public class JpaUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String correo) throws UsernameNotFoundException {
         // Buscar usuario por correo
         Optional<Usuario> optionalUser = userRepository.findByCorreoOrNroCedula(correo);
+        // Nota: aunque se permita login por cédula,
+        // el username interno se mantiene como correo
+        // para compatibilidad con SecurityUtils y el core del sistema.
 
         // Verificar si existe el usuario
         if (optionalUser.isEmpty()) {
