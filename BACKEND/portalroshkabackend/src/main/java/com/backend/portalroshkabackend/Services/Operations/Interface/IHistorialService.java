@@ -7,11 +7,14 @@ import java.util.List;
 
 public interface IHistorialService {
 
-        List<HistorialResponseDTO> listarHistorialPorUsuario(Integer idUsuario);
 
-        List<HistorialResponseDTO> listarHistorialPorProyecto(Integer idProyecto);
+    List<HistorialResponseDTO> listarHistorialPorUsuario(Integer idUsuario);
 
-        HistorialResponseDTO obtenerHistorialPorId(Integer idHistorial);
+
+    List<HistorialResponseDTO> listarHistorialPorProyecto(Integer idProyecto);
+
+
+    HistorialResponseDTO obtenerHistorialPorId(Integer idHistorial);
 
 
 }

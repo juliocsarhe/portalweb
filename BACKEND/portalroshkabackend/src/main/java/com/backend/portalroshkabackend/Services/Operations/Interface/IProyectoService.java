@@ -7,14 +7,18 @@ import java.util.List;
 
 public interface IProyectoService {
 
-        ProyectoResponseDto crearProyecto(ProyectoRequestDto proyectoRequestDto);
+    ProyectoResponseDto crearProyecto(ProyectoRequestDto proyectoRequestDto);
 
-        ProyectoResponseDto obtenerProyectoPorId(Integer idProyecto);
 
-        List<ProyectoResponseDto> listarProyectos();
+    ProyectoResponseDto obtenerProyectoPorId(Integer idProyecto);
 
-        ProyectoResponseDto actualizarProyectos(Integer idProyecto, ProyectoRequestDto proyectoRequestDto);
 
-        void eliminarProyecto(Integer idProyecto);
+    List<ProyectoResponseDto> listarProyectos();
+
+
+    ProyectoResponseDto actualizarProyectos(Integer idProyecto, ProyectoRequestDto proyectoRequestDto);
+
+
+    void eliminarProyecto(Integer idProyecto);
 
 }
