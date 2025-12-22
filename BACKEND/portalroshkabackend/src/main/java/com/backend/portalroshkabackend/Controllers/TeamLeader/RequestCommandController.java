@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/admin/teamleader")
+@RequestMapping("/api/v1/teamleader")
 public class RequestCommandController {
 
     private final IRequestsCommandService requestsTeamLeaderService;
