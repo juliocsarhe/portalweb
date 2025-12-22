@@ -6,8 +6,14 @@ import FormLayout from '../../../layouts/FormLayout'
 import { useCatalogosSolicitudes } from '../hooks/useCatalogosSolicitudes'
 import { useRequestForm } from '../hooks/useRequestForm'
 import DynamicForm, { type FormSection } from '../../../shared/ui/components/DynamicForm'
+import BeneficiosModal from './BeneficiosModal'
+import MasBeneficios from '../components/MasBeneficios'
+import { Beneficio } from '@/types'
 
 export default function RequestFormPage() {
+  const [showBeneficiosModal, setShowBeneficiosModal] = useState(false)
+  const [beneficioSeleccionado, setBeneficioSeleccionado] = useState<Beneficio | null>(null)
+
   const { id } = useParams()
   const location = useLocation()
   const navigate = useNavigate()
@@ -50,7 +56,6 @@ export default function RequestFormPage() {
           }))
         } else {
           console.log(' Permiso editable, dejo cantDias sin tocar:', data.cantDias)
-          //aseguramos que exista inicial
           if (data.cantDias == null) {
             setData((prev) => ({
               ...prev,
@@ -104,18 +109,6 @@ export default function RequestFormPage() {
 
     if (tipo === 'BENEFICIO') {
       fields.push({
-        name: 'idSubtipo',
-        label: 'Tipo de beneficio',
-        type: 'select',
-        required: true,
-        options: tiposBeneficio.map((t) => ({
-          value: t.idTipoBeneficio,
-          label: t.nombre,
-        })),
-        value: data.idSubtipo,
-        disabled: !editable,
-      })
-      fields.push({
         name: 'monto',
         label: 'Monto',
         type: 'number',
@@ -125,7 +118,6 @@ export default function RequestFormPage() {
         error: beneficioError || undefined,
       })
     }
-    //Monto ahora solo para Prestamo
 
     // Campos para todas las solicitudes
     fields.push({
@@ -160,7 +152,7 @@ export default function RequestFormPage() {
         type: 'number',
         required: true,
         value: data.cantDias ?? 0,
-        disabled: !editable || diasFijos, // editable si es 0, bloqueado si > 0
+        disabled: !editable || diasFijos,
       })
     }
 
@@ -177,9 +169,21 @@ export default function RequestFormPage() {
     }
 
     const iconMap = {
-      PERMISO: <span className="material-symbols-outlined text-gray-800 dark:text-gray-100">content_paste</span>,
-      BENEFICIO: <span className="material-symbols-outlined text-gray-800 dark:text-gray-100">local_florist</span>,
-      VACACIONES: <span className="material-symbols-outlined text-gray-800 dark:text-gray-100">chair_umbrella</span>,
+      PERMISO: (
+        <span className="material-symbols-outlined text-gray-800 dark:text-gray-100">
+          content_paste
+        </span>
+      ),
+      BENEFICIO: (
+        <span className="material-symbols-outlined text-gray-800 dark:text-gray-100">
+          local_florist
+        </span>
+      ),
+      VACACIONES: (
+        <span className="material-symbols-outlined text-gray-800 dark:text-gray-100">
+          chair_umbrella
+        </span>
+      ),
     }
 
     return [
@@ -202,6 +206,18 @@ export default function RequestFormPage() {
   const handleFormSubmit = async () => {
     if (beneficioError) return
 
+    // Validar fecha de inicio
+    if (data.fechaInicio) {
+      const fechaInicio = new Date(data.fechaInicio)
+      const hoy = new Date()
+      hoy.setHours(0, 0, 0, 0)
+
+      if (fechaInicio < hoy) {
+        alert('La fecha de inicio no puede ser anterior a hoy')
+        return
+      }
+    }
+
     // Limpiar campos que no correspondan al tipo
     const formData = { ...data }
     if (tipo !== 'VACACIONES') {
@@ -215,31 +231,100 @@ export default function RequestFormPage() {
   }
 
   return (
-    <FormLayout
-      title={`${isEditing ? 'Editar' : 'Nueva'} Solicitud de ${titleMap[tipo]}`}
-      subtitle={`Completa la información de tu solicitud de ${titleMap[tipo].toLowerCase()}`}
-      icon={
-        tipo === 'PERMISO' ? (
-          <span className="material-symbols-outlined text-gray-800 dark:text-gray-100">content_paste</span>
-        ) : tipo === 'BENEFICIO' ? (
-          <span className="material-symbols-outlined text-gray-800 dark:text-gray-100">hand_package</span>
-        ) : (
-          <span className="material-symbols-outlined text-gray-800 dark:text-gray-100">chair_umbrella</span>
-        )
-      }
-      onCancel={() => navigate(-1)}
-      onSubmitLabel={isEditing ? 'Guardar cambios' : 'Enviar solicitud'}
-    >
-      <DynamicForm
-        id="dynamic-form"
-        sections={getSections()}
-        initialData={data}
-        onChange={(newData) => setData((prev) => ({ ...prev, ...newData }))}
-        onSubmit={handleFormSubmit}
-        loading={loading}
+    <>
+      <FormLayout
+        title={`${isEditing ? 'Editar' : 'Nueva'} Solicitud de ${titleMap[tipo]}`}
+        subtitle={`Completa la información de tu solicitud de ${titleMap[tipo].toLowerCase()}`}
+        icon={
+          tipo === 'PERMISO' ? (
+            <span className="material-symbols-outlined text-gray-800 dark:text-gray-100">
+              content_paste
+            </span>
+          ) : tipo === 'BENEFICIO' ? (
+            <span className="material-symbols-outlined text-gray-800 dark:text-gray-100">
+              hand_package
+            </span>
+          ) : (
+            <span className="material-symbols-outlined text-gray-800 dark:text-gray-100">
+              chair_umbrella
+            </span>
+          )
+        }
+        onCancel={() => navigate(-1)}
+        onSubmitLabel={isEditing ? 'Guardar cambios' : 'Enviar solicitud'}
+      >
+        {/* Selector de beneficio con dropdown */}
+        {tipo === 'BENEFICIO' && editable && (
+          <div className="mb-6">
+            <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-200">
+              Tipo de beneficio *
+            </label>
+
+            <button
+              type="button"
+              onClick={() => setShowBeneficiosModal(true)}
+              className="w-full px-4 py-3 bg-white dark:bg-gray-700 border-2 border-gray-300 dark:border-gray-600 rounded-lg text-left hover:border-[#3949AB] transition-colors flex items-center justify-between group"
+            >
+              <div className="flex items-center gap-3">
+                {beneficioSeleccionado ? (
+                  <>
+                    <img
+                      src={beneficioSeleccionado.imagen}
+                      alt={beneficioSeleccionado.nombre}
+                      className="w-10 h-10 rounded object-cover"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none'
+                      }}
+                    />
+                    <div>
+                      <p className="font-semibold text-gray-900 dark:text-white">
+                        {beneficioSeleccionado.nombre}
+                      </p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        {beneficioSeleccionado.descripcion}
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <span className="material-symbols-outlined text-gray-400">card_giftcard</span>
+                    <p className="text-gray-500 dark:text-gray-400">Selecciona un beneficio...</p>
+                  </>
+                )}
+              </div>
+
+              <span className="material-symbols-outlined text-gray-400 transition-transform group-hover:text-[#3949AB]">
+                expand_more
+              </span>
+            </button>
+          </div>
+        )}
+
+        <DynamicForm
+          id="dynamic-form"
+          sections={getSections()}
+          initialData={data}
+          onChange={(newData) => setData((prev) => ({ ...prev, ...newData }))}
+          onSubmit={handleFormSubmit}
+          loading={loading}
+        />
+        {beneficioError && <p className="text-red-500 text-sm mt-2">{beneficioError}</p>}
+        {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+
+        {/* Componente de más beneficios */}
+        {tipo === 'BENEFICIO' && <MasBeneficios />}
+      </FormLayout>
+
+      {/* Modal de beneficios */}
+      <BeneficiosModal
+        show={showBeneficiosModal}
+        onClose={() => setShowBeneficiosModal(false)}
+        onSelect={(beneficio) => {
+          setBeneficioSeleccionado(beneficio)
+          setData((prev) => ({ ...prev, idSubtipo: beneficio.id }))
+        }}
+        selectedId={beneficioSeleccionado?.id}
       />
-      {beneficioError && <p className="text-red-500 text-sm mt-2">{beneficioError}</p>}
-      {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-    </FormLayout>
+    </>
   )
 }

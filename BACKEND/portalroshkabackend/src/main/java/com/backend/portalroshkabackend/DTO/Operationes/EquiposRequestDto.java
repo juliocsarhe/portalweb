@@ -26,19 +26,19 @@ public class EquiposRequestDto {
     @NotBlank(message = "El nombre no puede estar vacio")
     private String nombre;
 
-    @NotNull(message = "La fecha de inicio es obligatoria")
-    private LocalDate fechaInicio;
+    //@NotNull(message = "La fecha de inicio es obligatoria")
+    //private LocalDate fechaInicio;
 
-    private LocalDate fechaLimite;
+    //private LocalDate fechaLimite;
 
-    private Integer idCliente;
+    //private Integer idCliente;
 
-    private List<Integer> idTecnologias;
+    //private List<Integer> idTecnologias;
 
     @NotNull(message = "El estado es obligatorio")
     private EstadoActivoInactivo estado;
 
-    private List<UsuarioAsignacionDto> usuarios;
+    private List<Integer> usuarios;
 
-    private List<DiaUbicacionDto> equipoDiaUbicacion;
+    //private List<DiaUbicacionDto> equipoDiaUbicacion;
 }

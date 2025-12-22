@@ -129,10 +129,10 @@ export default function Login() {
 
       {/* Contenedor del login */}
       <div
-        className={`relative z-10 w-full max-w-md bg-white/95 dark:bg-gray-900/90 backdrop-blur-xs shadow-2xl rounded-2xl p-10 transform transition-all duration-1000
+        className={`relative z-10 w-full max-w-md bg-white/95 dark:bg-gray-900/90 backdrop-blur-xs shadow-2xl rounded-2xl p-10 transform transition-all
           ${
             phase === 'move' || phase === 'done'
-              ? 'translate-y-0 opacity-100 delay-500'
+              ? 'translate-y-0 opacity-100'
               : 'translate-y-12 opacity-0'
           }
         `}
