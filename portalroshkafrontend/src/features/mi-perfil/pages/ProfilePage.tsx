@@ -4,7 +4,7 @@ import { useAuth } from '../../../app/providers/AuthContext'
 import EditableField from '../../../shared/ui/components/EditableField'
 import UploadImageButton from '../../../shared/ui/components/UploadImageButton'
 import ProfileHistory from '@/shared/ui/components/ProfileHistory'
-import { ProfileHistoryItem } from '@/types/profileHistory.types'
+import { ProfileHistoryItem } from '@/features/asignacion-equipo/types/ProfileHistory.types'
 import { useProfileHistory } from '@/shared/hooks/useProfileHistory'
 
 function formatDate(d?: string | Date) {

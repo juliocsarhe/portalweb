@@ -1,6 +1,6 @@
 import React from "react";
 import DataTable from "./DataTable";
-import { ProfileHistoryItem } from "@/types/profileHistory.types";
+import { ProfileHistoryItem } from "@/features/asignacion-equipo/types/ProfileHistory.types";
 
 type Props = {
     data: ProfileHistoryItem[]
@@ -22,11 +22,6 @@ export default function ProfileHistory({ data }: Props) {
         key: 'equipo',
         label: 'Equipo',
         render: (row: ProfileHistoryItem) => row.equipo.nombre
-    }, {
-        key: 'tecnologias',
-        label: 'Tecnologias',
-        render: (row: ProfileHistoryItem) => row.tecnologias.length > 0 ? row.tecnologias.join(",") : "-",
-        className: 'text-sm text-gray-600 dark:text-gray-300',
     }, {
         key: 'fechaInicio',
         label: 'Inicio',

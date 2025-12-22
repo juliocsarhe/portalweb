@@ -63,6 +63,7 @@ import ProyectoFormPage from '../../features/operations/proyectos/ProyectoFormPa
 
 import MiEquipoPage from '../../features/me-equipo/MiEquipoPage'
 import MiProyectoPage from '@/features/me-proyecto/MiProyectoPage'
+import AsignarTareasPage from '@/features/asignacion-equipo/pages/AsignarTareasPage.js'
 
 export default function AppRoutes() {
   return (
@@ -85,6 +86,8 @@ export default function AppRoutes() {
           <Route path="/solicitudesTL" element={<RequestTLPage />} />
           <Route path="/solicitudesTL/:id/ver" element={<RequestViewTL />} />
           <Route path="/solicitudesTL/:id/evaluar" element={<RequestViewTL />} />
+          <Route path="/asignar-tareas" element={<AsignarTareasPage/>} />
+
 
           {/* TH */}
           <Route path="/seleccion-solicitudesTH" element={<RequestSearchPage />} />
