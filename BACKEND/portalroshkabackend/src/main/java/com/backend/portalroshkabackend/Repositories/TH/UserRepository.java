@@ -1,6 +1,5 @@
 package com.backend.portalroshkabackend.Repositories.TH;
 
-import com.backend.portalroshkabackend.Models.Enum.EstadoActivoInactivo;
 import com.backend.portalroshkabackend.Models.Usuario;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +17,7 @@ public interface UserRepository extends JpaRepository<Usuario, Integer>, JpaSpec
 
     List<Usuario> findAllByCargo_IdCargo(Integer idCargo);
 
-    ;// Por Vladimir
+    // Por Vladimir
 
     @Query("SELECT u FROM Usuario u WHERE u.rol.idRol = 4  AND u.disponibilidad > 0")
     List<Usuario> findAllUsuariosByRol4();
@@ -64,5 +63,11 @@ public interface UserRepository extends JpaRepository<Usuario, Integer>, JpaSpec
 
     List<Usuario> findAllByRol_IdRol(int idRol);
 
+    @Query("""
+    SELECT u FROM Usuario u
+    WHERE LOWER(u.correo) = LOWER(:username)
+       OR u.nroCedula = :username
+    """)
+    Optional<Usuario> findByCorreoOrNroCedula(@Param("username") String username);
 
 }

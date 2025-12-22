@@ -86,6 +86,12 @@ public class SpringSecurityConfig {
                 // ROLE_5 - DIRECTIVO: tiene acceso a TODOS(menos team lider)
                 .requestMatchers("/api/v1/admin/**").hasAnyAuthority("ROLE_5")
 
+                    // ROLE_4 - DESARROLLO y ROLE_6 - TEAM LIDER
+                    .requestMatchers("/api/v1/me/**")
+                    .hasAnyAuthority("ROLE_4", "ROLE_6")
+
+                    .requestMatchers(HttpMethod.POST,"/api/v1/historial/**")
+                    .hasAnyAuthority("ROLE_6","ROLE_2")
                 // Cualquier otra request requiere autenticación
                 .anyRequest().authenticated()
             )
