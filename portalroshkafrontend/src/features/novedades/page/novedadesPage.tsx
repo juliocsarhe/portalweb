@@ -9,26 +9,19 @@ import NovedadesTable from '../components/NovedadesTable'
 import ModalNovedad from '../components/ModalNovedad'
 import Toast from '@/shared/ui/components/Toast'
 import { uploadImageToCloudinary } from '../services/uploadImageToCloudinary'
-import AvisosList from '../components/AvisosList'
 
 export default function NovedadesPage() {
-  const { data, refetch } = useGetNovedades()
+  const { data: rawData, refetch } = useGetNovedades()
   const { create, loading: creating } = useCrearNovedades()
   const { update } = useUpdateNovedades()
   const { remove } = useDeleteNovedades()
 
+  const [localData, setLocalData] = useState<NovedadesResponseDto[]>([])
   const [toastMessage, setToastMessage] = useState<string | null>(null)
   const [toastType, setToastType] = useState<'success' | 'error' | 'info' | 'warning'>('info')
-
-  const [carrusel, setCarrusel] = useState<NovedadesResponseDto[]>([])
-  const [avisos, setAvisos] = useState<NovedadesResponseDto[]>([])
   const [isUploading, setIsUploading] = useState(false)
   const [editItem, setEditItem] = useState<NovedadesResponseDto | null>(null)
-
-  const [prioridad, setPrioridad] = useState<NovedadesInsertDto[]>([])
   const [searchTerm, setSearchTerm] = useState('')
-  const [filteredCarrusel, setFilteredCarrusel] = useState<NovedadesResponseDto[]>([])
-  const [filteredAvisos, setFilteredAvisos] = useState<NovedadesResponseDto[]>([])
 
   const [formCarrusel, setFormCarrusel] = useState<NovedadesInsertDto>({
     titulo: '',
@@ -47,30 +40,18 @@ export default function NovedadesPage() {
   })
 
   useEffect(() => {
-    setCarrusel(data.filter((n) => n.imagenUrl && n.imagenUrl.trim() !== ''))
-    setAvisos(data.filter((n) => !n.imagenUrl || n.imagenUrl.trim() === ''))
-  }, [data])
+    setLocalData(rawData)
+  }, [rawData])
 
-  useEffect(() => {
-    let filteredC = carrusel
-    let filteredA = avisos
+  const getFilteredData = () => {
+    if (!searchTerm) return localData
 
-    if (searchTerm) {
-      filteredC = filteredC.filter(
-        (n) =>
-          n.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          n.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-      filteredA = filteredA.filter(
-        (n) =>
-          n.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          n.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    }
-
-    setFilteredCarrusel(filteredC)
-    setFilteredAvisos(filteredA)
-  }, [carrusel, avisos, searchTerm])
+    return localData.filter(
+      (n) =>
+        n.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        n.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  }
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -231,7 +212,7 @@ export default function NovedadesPage() {
         titulo: '',
         descripcion: '',
         imagenUrl: '',
-        fechaExpiracion: new Date(Date.now() + 7 * 24 * 60 * 1000),
+        fechaExpiracion: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
         prioridad: false,
       })
 
@@ -255,37 +236,22 @@ export default function NovedadesPage() {
 
   const handleDelete = async (id: number) => {
     if (!confirm('¿Eliminar esta novedad?')) return
+    
+    setLocalData(prev => prev.filter(n => n.idNovedades !== id))
+    
     const res = await remove(id)
+    
     if (res) {
-      await refetch()
       setToastMessage('Novedad eliminada exitosamente')
       setToastType('success')
+    } else {
+      setToastMessage('Error al eliminar la novedad')
+      setToastType('error')
+      await refetch()
     }
   }
-    const sortAvisos = (avisosList: NovedadesResponseDto[]) => {
-    return [...avisosList].sort((a, b) => {
-      const prioridadA = !!a.prioridad
-      const prioridadB = !!b.prioridad
 
-      if (prioridadA && !prioridadB) return -1
-      if (!prioridadA && prioridadB) return 1
-
-    const fechaA = new Date(a.fechaExpiracion + 'T00:00:00').getTime()
-    const fechaB = new Date(b.fechaExpiracion + 'T00:00:00').getTime()
-
-      return fechaA - fechaB
-    })
-  }
-
-  useEffect(() => {
-    console.log('Data recibida:', data)
-    setCarrusel(data.filter((n) => n.imagenUrl && n.imagenUrl.trim() !== ''))
-    setAvisos(data.filter((n) => !n.imagenUrl || n.imagenUrl.trim() === ''))
-  }, [data])
-
-  const carruselSale = searchTerm ? filteredCarrusel : carrusel
-  const avisosHome = sortAvisos(searchTerm ? filteredAvisos : avisos)
-  const allNovedades = searchTerm ? [...filteredCarrusel, ...filteredAvisos] : data
+  const allNovedades = getFilteredData()
 
   return (
     <PageLayout>
@@ -535,11 +501,15 @@ export default function NovedadesPage() {
           )}
 
           <div className="overflow-x-auto max-h-96">
-            <NovedadesTable items={allNovedades} onEdit={setEditItem} onDelete={handleDelete} />
+            <NovedadesTable 
+              items={allNovedades} 
+              onEdit={setEditItem} 
+              onDelete={handleDelete} 
+            />
           </div>
         </div>
 
-        {searchTerm && carruselSale.length === 0 && avisosHome.length === 0 && (
+        {searchTerm && allNovedades.length === 0 && (
           <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-lg text-center">
             <p className="text-gray-600 dark:text-gray-400">
               No se encontraron novedades con la búsqueda aplicada

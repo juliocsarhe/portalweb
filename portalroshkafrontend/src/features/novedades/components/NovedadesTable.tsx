@@ -13,13 +13,14 @@ export default function NovedadesTable({ items, onEdit, onDelete }: Props) {
       data={items}
       rowKey={(n) => n.idNovedades}
       scrollable={false}
+      enableSearch={false}
       columns={[
         { key: 'titulo', label: 'Título' },
         { key: 'descripcion', label: 'Descripción' },
-        {key: 'fechaExpiracion', label: 'Fecha de Expiracion'}
+        { key: 'fechaExpiracion', label: 'Fecha de Expiración'}
       ]}
       actions={(n) => (
-        <div className="flex gap-10 text-center">
+        <div className="flex gap-2">
           <button
             onClick={() => onEdit(n)}
             className="px-3 py-1.5 text-sm bg-blue-400 hover:bg-blue-700 text-white rounded-md transition-colors font-medium"
