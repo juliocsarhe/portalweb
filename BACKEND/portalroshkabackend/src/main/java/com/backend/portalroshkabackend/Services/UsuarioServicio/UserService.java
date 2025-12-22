@@ -1,21 +1,22 @@
 package com.backend.portalroshkabackend.Services.UsuarioServicio;
 
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.SolicitudUserDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserCambContrasDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserCargoDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserEquiposDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserHomeDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserRolDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserSolBeneficioDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserSolDispositivoDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserSolPermisoDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserSolVacacionDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserUpdateDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserUpdateFoto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.tiposBeneficiosDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.tiposDispositivosDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.tiposPermisosDto;
+import com.backend.portalroshkabackend.DTO.Usuario.SolicitudUserDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserCambContrasDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserCargoDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserEquiposDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserHomeDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserRolDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserSolBeneficioDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserSolDispositivoDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserSolPermisoDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserSolVacacionDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserUpdateDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserUpdateFoto;
+import com.backend.portalroshkabackend.DTO.Usuario.tiposBeneficiosDto;
+import com.backend.portalroshkabackend.DTO.Usuario.tiposDispositivosDto;
+import com.backend.portalroshkabackend.DTO.Usuario.tiposPermisosDto;
+import com.backend.portalroshkabackend.DTO.common.DefaultResponseDto;
 import com.backend.portalroshkabackend.Models.*;
 import com.backend.portalroshkabackend.Models.Enum.EstadoActivoInactivo;
 import com.backend.portalroshkabackend.Models.Enum.EstadoSolicitudEnum;
@@ -30,12 +31,13 @@ import com.backend.portalroshkabackend.Repositories.UsuarioRepositories.UsuarioR
 import com.backend.portalroshkabackend.Repositories.UsuarioRepositories.TipoDispositivosRepository;
 
 import com.backend.portalroshkabackend.notification.NotificationService;
+import com.backend.portalroshkabackend.tools.RepositoryService;
+import com.backend.portalroshkabackend.tools.mapper.DefaultResponseMapper;
+import com.backend.portalroshkabackend.tools.security.SecurityUtils;
 import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSolicitudSaEvent;
 import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSolicitudThEvent;
 import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSolicitudTlEvent;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
-import org.springframework.cglib.core.Local;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -43,7 +45,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Base64;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -51,6 +52,9 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import static com.backend.portalroshkabackend.tools.MessagesConst.DATABASE_DEFAULT_ERROR;
+import static com.backend.portalroshkabackend.tools.MessagesConst.USUARIO_UPDATED_MESSAGE;
 
 @Service
 public class UserService {
@@ -73,6 +77,13 @@ public class UserService {
     private NotificationService notificationService;
 
     @Autowired
+    private SecurityUtils securityUtils;
+
+    @Autowired
+    private RepositoryService repositoryService;
+
+    @Autowired
+    private DefaultResponseMapper defaultResponseMapper;
     private ProyectoRepository proyectoRepository;
 
 
@@ -704,37 +715,24 @@ public class UserService {
         return true;
     }
 
-    public boolean actualizarFoto(UserUpdateFoto dto){
+    public DefaultResponseDto actualizarFoto(UserUpdateFoto dto){
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String correo;
-        if (principal instanceof UserDetails) {
-            correo = ((UserDetails) principal).getUsername();
-        } else {
-            correo = principal.toString();
-        }
+        Usuario usuario = securityUtils.getUsuarioActual();
 
-        Usuario usuario = getUserByCorreo(correo);
         if (usuario == null) {
-            throw new RuntimeException("Usuario no encontrado");
+            throw new RuntimeException("Usuario no encontrado"); //TODO: refactorizar excepciones
         }
 
-        if (!esBase64(dto.getFoto())) { // Verifica si la cadena es una imagen en base64
-            return false;
-        }
-        usuario.setUrlPerfil(dto.getFoto()); // Actualiza la foto con la nueva codificada
-        usuarioRepository.save(usuario);
-        return true;
+        usuario.setUrlPerfil(dto.getUrlPerfil()); // Actualiza la foto con la nueva codificada
+
+        repositoryService.save(
+                usuarioRepository,
+                usuario,
+                DATABASE_DEFAULT_ERROR);
+
+        return defaultResponseMapper.build(usuario.getIdUsuario(), USUARIO_UPDATED_MESSAGE);
     }
 
-    public boolean esBase64(String texto) {
-        try {
-            Base64.getDecoder().decode(texto);
-            return true;
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
-    }
 
     // Mapeo de Solicitud a SolicitudUserDto según el nuevo modelo
     private SolicitudUserDto mapSolicitudToDto(Solicitud solicitud) {

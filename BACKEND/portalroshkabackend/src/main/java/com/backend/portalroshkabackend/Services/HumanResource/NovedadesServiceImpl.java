@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.backend.portalroshkabackend.tools.MessagesConst.*;
@@ -58,9 +57,6 @@ public class NovedadesServiceImpl implements INovedadesService {
 
         // Mapear DTO a entidad
         Novedades novedad = NovedadesMapper.toEntityFromInsertDto(dto, user);
-
-        // Fecha de creación automática
-        novedad.setFechaCreacion(LocalDateTime.now());
 
         // Guardar en BD
         Novedades savedNovedad = repositoryService.save(
