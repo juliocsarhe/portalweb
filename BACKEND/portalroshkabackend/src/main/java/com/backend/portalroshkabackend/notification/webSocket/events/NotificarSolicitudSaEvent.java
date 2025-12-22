@@ -1,22 +1,23 @@
 package com.backend.portalroshkabackend.notification.webSocket.events;
 
 import com.backend.portalroshkabackend.DTO.notification.NotificationDTO;
+import com.backend.portalroshkabackend.Models.Enum.SolicitudesEnum;
 
 public class NotificarSolicitudSaEvent implements Notification{
 
-    private int id;
+    private final SolicitudesEnum tipoSolicitud;
 
-    public NotificarSolicitudSaEvent(int id) {
-        this.id = id;
+    public NotificarSolicitudSaEvent(SolicitudesEnum tipoSolicitud) {
+        this.tipoSolicitud = tipoSolicitud;
     }
 
     @Override
     public NotificationDTO getMessageDTO() {
         NotificationDTO dto = new NotificationDTO();
 
-        dto.setIdUsuario(id); ;
+        String mensaje = "Nueva solicitud de " + tipoSolicitud.name().toLowerCase();
 
-        dto.setMessage("Nueva Solicitud");
+        dto.setMessage(mensaje);
 
         return dto;
     }
