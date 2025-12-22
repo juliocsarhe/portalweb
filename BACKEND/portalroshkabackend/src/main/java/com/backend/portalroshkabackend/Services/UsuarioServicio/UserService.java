@@ -1,32 +1,26 @@
 package com.backend.portalroshkabackend.Services.UsuarioServicio;
 
-import com.backend.portalroshkabackend.DTO.Usuario.SolicitudUserDto;
-import com.backend.portalroshkabackend.DTO.Usuario.UserCambContrasDto;
-import com.backend.portalroshkabackend.DTO.Usuario.UserCargoDto;
-import com.backend.portalroshkabackend.DTO.Usuario.UserDto;
-import com.backend.portalroshkabackend.DTO.Usuario.UserEquiposDto;
-import com.backend.portalroshkabackend.DTO.Usuario.UserHomeDto;
-import com.backend.portalroshkabackend.DTO.Usuario.UserRolDto;
-import com.backend.portalroshkabackend.DTO.Usuario.UserSolBeneficioDto;
-import com.backend.portalroshkabackend.DTO.Usuario.UserSolDispositivoDto;
-import com.backend.portalroshkabackend.DTO.Usuario.UserSolPermisoDto;
-import com.backend.portalroshkabackend.DTO.Usuario.UserSolVacacionDto;
-import com.backend.portalroshkabackend.DTO.Usuario.UserUpdateDto;
-import com.backend.portalroshkabackend.DTO.Usuario.UserUpdateFoto;
-import com.backend.portalroshkabackend.DTO.Usuario.tiposBeneficiosDto;
-import com.backend.portalroshkabackend.DTO.Usuario.tiposDispositivosDto;
-import com.backend.portalroshkabackend.DTO.Usuario.tiposPermisosDto;
-import com.backend.portalroshkabackend.DTO.common.DefaultResponseDto;
-import com.backend.portalroshkabackend.Models.AsignacionUsuarioEquipo;
-import com.backend.portalroshkabackend.Models.Equipos;
-import com.backend.portalroshkabackend.Models.Solicitud;
-import com.backend.portalroshkabackend.Models.TipoBeneficios;
-import com.backend.portalroshkabackend.Models.TipoDispositivo;
-import com.backend.portalroshkabackend.Models.TipoPermisos;
-import com.backend.portalroshkabackend.Models.Usuario;
+import com.backend.portalroshkabackend.DTO.UsuarioDTO.SolicitudUserDto;
+import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserCambContrasDto;
+import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserCargoDto;
+import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserDto;
+import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserEquiposDto;
+import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserHomeDto;
+import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserRolDto;
+import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserSolBeneficioDto;
+import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserSolDispositivoDto;
+import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserSolPermisoDto;
+import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserSolVacacionDto;
+import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserUpdateDto;
+import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserUpdateFoto;
+import com.backend.portalroshkabackend.DTO.UsuarioDTO.tiposBeneficiosDto; 
+import com.backend.portalroshkabackend.DTO.UsuarioDTO.tiposDispositivosDto;
+import com.backend.portalroshkabackend.DTO.UsuarioDTO.tiposPermisosDto;
+import com.backend.portalroshkabackend.Models.*;
 import com.backend.portalroshkabackend.Models.Enum.EstadoActivoInactivo;
 import com.backend.portalroshkabackend.Models.Enum.EstadoSolicitudEnum;
 import com.backend.portalroshkabackend.Models.Enum.SolicitudesEnum;
+import com.backend.portalroshkabackend.Repositories.ProyectoRepository;
 import com.backend.portalroshkabackend.Repositories.UsuarioRepositories.AsigUsuarioEquipoRepository;
 // import com.backend.portalroshkabackend.Repositories.UsuarioRepositories.BeneficiosAsignadosRepository;
 import com.backend.portalroshkabackend.Repositories.UsuarioRepositories.SolicitudesTHRepository;
@@ -43,6 +37,8 @@ import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSo
 import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSolicitudThEvent;
 import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSolicitudTlEvent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
+import org.springframework.cglib.core.Local;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -89,6 +85,7 @@ public class UserService {
 
     @Autowired
     private DefaultResponseMapper defaultResponseMapper;
+    private ProyectoRepository proyectoRepository;
 
 
     // @Autowired
@@ -358,8 +355,17 @@ public class UserService {
 
                 if (Objects.equals(porcentaje1, porcentaje2)) {
                     LocalDate hoy = LocalDate.now();
-                    long tiempoRestante1 = equipoPrincipal.getFechaLimite() != null ? ChronoUnit.DAYS.between(hoy, equipoPrincipal.getFechaLimite()) : -1;
-                    long tiempoRestante2 = equipoSecundario.getFechaLimite() != null ? ChronoUnit.DAYS.between(hoy, equipoSecundario.getFechaLimite()) : -1;
+
+                    Proyecto proyecto1 = proyectoRepository.findByEquipos(equipoPrincipal).orElse(null);
+                    Proyecto proyecto2 = proyectoRepository.findByEquipos(equipoSecundario).orElse(null);
+
+                    LocalDate fechaLimite1 = proyecto1 != null ? proyecto1.getFechaLimite():null;
+                    LocalDate fechaLimite2 = proyecto2 != null ? proyecto2.getFechaLimite():null;
+
+
+                    long tiempoRestante1 = fechaLimite1 != null ? ChronoUnit.DAYS.between(hoy, fechaLimite1):-1;
+
+                    long tiempoRestante2 = fechaLimite2 != null ? ChronoUnit.DAYS.between(hoy, fechaLimite2):-1;
 
                     lider = tiempoRestante1 >= tiempoRestante2 ? equipoPrincipal.getLider() : equipoSecundario.getLider();
                 } else {
@@ -538,8 +544,15 @@ public class UserService {
 
                 if (Objects.equals(porcentaje1, porcentaje2)) { // si tienen el mismo porcentaje de trabajo se desempata por fecha limite del equipo
                     LocalDate hoy = LocalDate.now();
-                    long tiempoRestante1 = equipoPrincipal.getFechaLimite() != null ? ChronoUnit.DAYS.between(hoy, equipoPrincipal.getFechaLimite()) : -1;
-                    long tiempoRestante2 = equipoSecundario.getFechaLimite() != null ? ChronoUnit.DAYS.between(hoy, equipoSecundario.getFechaLimite()) : -1;
+
+                    Proyecto proyecto1 = proyectoRepository.findByEquipos(equipoPrincipal).orElse(null);
+                    Proyecto proyecto2 = proyectoRepository.findByEquipos(equipoSecundario).orElse(null);
+
+                    LocalDate fechaLimite1 = proyecto1 != null ? proyecto1.getFechaLimite():null;
+                    LocalDate fechaLimite2 = proyecto2 != null ? proyecto2.getFechaLimite():null;
+
+                    long tiempoRestante1 = fechaLimite1 != null ? ChronoUnit.DAYS.between(hoy,fechaLimite1) : -1;
+                    long tiempoRestante2 = fechaLimite2 != null ? ChronoUnit.DAYS.between(hoy, fechaLimite2): -1;
 
                     lider = tiempoRestante1 >= tiempoRestante2 ? equipoPrincipal.getLider() : equipoSecundario.getLider();
                 } else {

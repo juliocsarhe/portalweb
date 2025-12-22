@@ -11,7 +11,7 @@ export default function Login() {
   const { login, user } = useAuth()
   const nav = useNavigate()
 
-  const [correo, setCorreo] = useState('')
+  const [userName, setUserName] = useState('')
   const [contrasena, setContrasena] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -70,7 +70,7 @@ export default function Login() {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ correo, contrasena }),
+        body: JSON.stringify({ correo: userName, contrasena }),
       })
 
       if (!res.ok) {
@@ -129,10 +129,10 @@ export default function Login() {
 
       {/* Contenedor del login */}
       <div
-        className={`relative z-10 w-full max-w-md bg-white/95 dark:bg-gray-900/90 backdrop-blur-xs shadow-2xl rounded-2xl p-10 transform transition-all duration-1000
+        className={`relative z-10 w-full max-w-md bg-white/95 dark:bg-gray-900/90 backdrop-blur-xs shadow-2xl rounded-2xl p-10 transform transition-all
           ${
             phase === 'move' || phase === 'done'
-              ? 'translate-y-0 opacity-100 delay-500'
+              ? 'translate-y-0 opacity-100'
               : 'translate-y-12 opacity-0'
           }
         `}
@@ -149,7 +149,7 @@ export default function Login() {
 
         {/* Formulario */}
         <form onSubmit={onSubmit} className="space-y-6">
-          {/* Input correo */}
+          {/* Input userName */}
           <div className="relative">
             <div className="absolute left-5 top-1/2 -translate-y-1/2 text-blue-400 dark:text-gray-400">
               <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
@@ -157,11 +157,11 @@ export default function Login() {
               </svg>
             </div>
             <input
-              type="email"
-              value={correo}
-              onChange={(e) => setCorreo(e.target.value)}
+              type="text"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
               required
-              placeholder="Correo electrónico"
+              placeholder="Correo o cédula"
               className="w-full border-0 rounded-full px-14 py-4 text-blue-900 dark:text-gray-100 placeholder-blue-400 dark:placeholder-gray-500 focus:outline-hidden focus:ring-2 focus:ring-blue-500 shadow-inner text-lg
                          bg-linear-to-r from-blue-50 to-blue-100 dark:from-gray-700 dark:to-gray-800"
             />
