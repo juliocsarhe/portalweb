@@ -16,16 +16,11 @@ import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserUpdateFoto;
 import com.backend.portalroshkabackend.DTO.UsuarioDTO.tiposBeneficiosDto;
 import com.backend.portalroshkabackend.DTO.UsuarioDTO.tiposDispositivosDto;
 import com.backend.portalroshkabackend.DTO.UsuarioDTO.tiposPermisosDto;
-import com.backend.portalroshkabackend.Models.AsignacionUsuarioEquipo;
-import com.backend.portalroshkabackend.Models.Equipos;
-import com.backend.portalroshkabackend.Models.Solicitud;
-import com.backend.portalroshkabackend.Models.TipoBeneficios;
-import com.backend.portalroshkabackend.Models.TipoDispositivo;
-import com.backend.portalroshkabackend.Models.TipoPermisos;
-import com.backend.portalroshkabackend.Models.Usuario;
+import com.backend.portalroshkabackend.Models.*;
 import com.backend.portalroshkabackend.Models.Enum.EstadoActivoInactivo;
 import com.backend.portalroshkabackend.Models.Enum.EstadoSolicitudEnum;
 import com.backend.portalroshkabackend.Models.Enum.SolicitudesEnum;
+import com.backend.portalroshkabackend.Repositories.ProyectoRepository;
 import com.backend.portalroshkabackend.Repositories.UsuarioRepositories.AsigUsuarioEquipoRepository;
 // import com.backend.portalroshkabackend.Repositories.UsuarioRepositories.BeneficiosAsignadosRepository;
 import com.backend.portalroshkabackend.Repositories.UsuarioRepositories.SolicitudesTHRepository;
@@ -39,6 +34,8 @@ import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSo
 import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSolicitudThEvent;
 import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSolicitudTlEvent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
+import org.springframework.cglib.core.Local;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -74,6 +71,10 @@ public class UserService {
 
     @Autowired
     private NotificationService notificationService;
+
+    @Autowired
+    private ProyectoRepository proyectoRepository;
+
 
     // @Autowired
     // private BeneficiosAsignadosRepository beneficiosAsignadosRepository;
@@ -342,8 +343,17 @@ public class UserService {
 
                 if (Objects.equals(porcentaje1, porcentaje2)) {
                     LocalDate hoy = LocalDate.now();
-                    long tiempoRestante1 = equipoPrincipal.getFechaLimite() != null ? ChronoUnit.DAYS.between(hoy, equipoPrincipal.getFechaLimite()) : -1;
-                    long tiempoRestante2 = equipoSecundario.getFechaLimite() != null ? ChronoUnit.DAYS.between(hoy, equipoSecundario.getFechaLimite()) : -1;
+
+                    Proyecto proyecto1 = proyectoRepository.findByEquipos(equipoPrincipal).orElse(null);
+                    Proyecto proyecto2 = proyectoRepository.findByEquipos(equipoSecundario).orElse(null);
+
+                    LocalDate fechaLimite1 = proyecto1 != null ? proyecto1.getFechaLimite():null;
+                    LocalDate fechaLimite2 = proyecto2 != null ? proyecto2.getFechaLimite():null;
+
+
+                    long tiempoRestante1 = fechaLimite1 != null ? ChronoUnit.DAYS.between(hoy, fechaLimite1):-1;
+
+                    long tiempoRestante2 = fechaLimite2 != null ? ChronoUnit.DAYS.between(hoy, fechaLimite2):-1;
 
                     lider = tiempoRestante1 >= tiempoRestante2 ? equipoPrincipal.getLider() : equipoSecundario.getLider();
                 } else {
@@ -522,8 +532,15 @@ public class UserService {
 
                 if (Objects.equals(porcentaje1, porcentaje2)) { // si tienen el mismo porcentaje de trabajo se desempata por fecha limite del equipo
                     LocalDate hoy = LocalDate.now();
-                    long tiempoRestante1 = equipoPrincipal.getFechaLimite() != null ? ChronoUnit.DAYS.between(hoy, equipoPrincipal.getFechaLimite()) : -1;
-                    long tiempoRestante2 = equipoSecundario.getFechaLimite() != null ? ChronoUnit.DAYS.between(hoy, equipoSecundario.getFechaLimite()) : -1;
+
+                    Proyecto proyecto1 = proyectoRepository.findByEquipos(equipoPrincipal).orElse(null);
+                    Proyecto proyecto2 = proyectoRepository.findByEquipos(equipoSecundario).orElse(null);
+
+                    LocalDate fechaLimite1 = proyecto1 != null ? proyecto1.getFechaLimite():null;
+                    LocalDate fechaLimite2 = proyecto2 != null ? proyecto2.getFechaLimite():null;
+
+                    long tiempoRestante1 = fechaLimite1 != null ? ChronoUnit.DAYS.between(hoy,fechaLimite1) : -1;
+                    long tiempoRestante2 = fechaLimite2 != null ? ChronoUnit.DAYS.between(hoy, fechaLimite2): -1;
 
                     lider = tiempoRestante1 >= tiempoRestante2 ? equipoPrincipal.getLider() : equipoSecundario.getLider();
                 } else {

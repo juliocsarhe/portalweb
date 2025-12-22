@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import com.backend.portalroshkabackend.tools.exception.DuplicateResourceException;
+
 
 import java.util.HashMap;
 import java.util.Map;
@@ -57,6 +59,13 @@ public class GlobalExceptionHandler extends BaseExceptionHandler {
         );
         return buildError(HttpStatus.BAD_REQUEST, errors.toString());
     }
+
+    // --- DUPLICATE RESOURCE ---
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ResponseEntity<ErrorResponseDto> handleDuplicateResource(DuplicateResourceException ex) {
+        return buildError(HttpStatus.CONFLICT, ex.getMessage());
+    }
+
 
 
 }

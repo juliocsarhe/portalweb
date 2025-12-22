@@ -1,5 +1,4 @@
 import { useEffect, useState, useCallback } from 'react'
-
 import { getUsuarios } from '../services/UserService'
 import type { UsuarioItem, FiltrosUsuarios } from '../../../types'
 
