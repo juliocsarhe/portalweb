@@ -1,6 +1,7 @@
 package com.backend.portalroshkabackend.notification;
 
 import com.backend.portalroshkabackend.Models.Solicitud;
+import com.backend.portalroshkabackend.Models.Usuario;
 import com.backend.portalroshkabackend.Services.UsuariosService;
 import com.backend.portalroshkabackend.notification.aws.NotificacitionServiceAws;
 import com.backend.portalroshkabackend.notification.webSocket.events.Notification;
@@ -106,4 +107,25 @@ public class NotificationService {
 
         emailService.sendEmailToUser(usuarioCorreo, "Estado de solicitud de " + tipoSolicitud, message);
     }
+
+    public void sendPassword(Usuario usuario, String password) {
+        String usuarioCorreo = usuario.getCorreo();
+        String message = "Bienvenido al Portal Roshka\n\n" +
+                "Hola " + usuarioCorreo + ",\n\n" +
+                "Se ha creado tu cuenta en el Portal Roshka. A continuación tus credenciales de acceso temporales:\n\n" +
+                "Usuario: " + usuario.getCorreo() + "\n" +
+                "Contraseña temporal: " + password + "\n\n" +
+                "Importante: Esta contraseña es temporal y puedes cambiarla en tu primer inicio de sesión.\n\n" +
+                "Si no solicitaste esta cuenta, ignora este correo.\n\n" +
+                "Saludos,\n" +
+                "Equipo Portal Roshka";
+
+        if (emailService != null) {
+            emailService.sendEmailToUser(usuarioCorreo,
+                    "Acceso al Portal Roshka: Credenciales Temporales",
+                    message);
+        }
+    }
+
 }
+
