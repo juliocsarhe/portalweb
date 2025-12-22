@@ -1,4 +1,4 @@
-package com.backend.portalroshkabackend.DTO.UsuarioDTO;
+package com.backend.portalroshkabackend.DTO.Usuario;
 
 
 import lombok.Data;

@@ -1,10 +1,10 @@
 package com.backend.portalroshkabackend.Services.HumanResource;
 
 
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserDto;
 import com.backend.portalroshkabackend.DTO.common.UserInsertDto;
 import com.backend.portalroshkabackend.DTO.common.UserUpdateDto;
-import com.backend.portalroshkabackend.DTO.th.employees.DefaultResponseDto;
+import com.backend.portalroshkabackend.DTO.common.DefaultResponseDto;
 import com.backend.portalroshkabackend.DTO.th.employees.UserByIdResponseDto;
 import com.backend.portalroshkabackend.DTO.th.employees.UserResponseDto;
 

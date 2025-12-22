@@ -5,6 +5,8 @@ import com.backend.portalroshkabackend.Models.Novedades;
 import com.backend.portalroshkabackend.Models.Roles;
 import com.backend.portalroshkabackend.Models.Usuario;
 
+import java.time.LocalDateTime;
+
 public class NovedadesMapper {
 
     public static Novedades toEntityFromInsertDto(NovedadesInsertDto dto, Usuario usuario){
@@ -16,6 +18,7 @@ public class NovedadesMapper {
         novedad.setFechaExpiracion(dto.getFechaExpiracion());
         novedad.setActivo(true);
         novedad.setUsuario(usuario);
+        novedad.setFechaCreacion(LocalDateTime.now());
         return novedad;
     }
 
