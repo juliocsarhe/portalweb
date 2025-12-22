@@ -1,4 +1,3 @@
-// src/pages/HomePage.tsx
 
 import { useAuth } from '../../../app/providers/AuthContext'
 import {
@@ -8,7 +7,7 @@ import {
 import CarruselNovedades from '@/features/novedades/components/CarruselNovedades'
 import AvisosList from '@/features/novedades/components/AvisosList'
 
-// 🔔 notificaciones
+// notificaciones
 import NotificationBell from '../../../features/notificaciones/components/NotificationBell'
 
 export default function HomePage() {
@@ -48,11 +47,11 @@ export default function HomePage() {
               </p>
             </div>
 
-            {/* CAMPANA DE NOTIFICACIONES (MISMO DISEÑO) */}
+              {/* campana de notificaciones*/}
             <div className="bg-white/20 backdrop-blur-sm border border-white/30 p-3 rounded-full hover:bg-[#ECB22E] hover:border-[#ECB22E] transition-all duration-300 shadow-lg">
               <NotificationBell
                 userId={user.idUsuario}
-                userRol={user.rol?.idRol}
+                userRol={user.rol?.idRol} 
               />
             </div>
           </div>

@@ -7,6 +7,8 @@ import { tieneRol } from '../shared/utils/permisos'
 
 
 
+
+
 export default function DashboardLayout() {
   const { user, logout } = useAuth()
   const [openMenu, setOpenMenu] = useState<string | null>(null)
@@ -208,6 +210,7 @@ const menuOptions = [
               <p className="text-sm text-gray-700 dark:text-gray-400">{user?.rol?.nombre}</p>
             </div>
           </NavLink>
+         
         </div>
 
         {/* Menú */}
