@@ -1,26 +1,6 @@
-  import { createContext, useContext, useState, useEffect } from 'react'
-  import type { ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect } from 'react'
+import type { ReactNode } from 'react'
 
-  export type User = {
-    id: number
-    nombre: string
-    apellido: string
-    correo: string
-    rol: {
-      idRol: number
-      nombre: string
-    } | null
-    cargo?: { idCargo: number; nombre: string }
-    equipos?: { idEquipo: number; nombre: string }[]
-    diasVacaciones?: number
-    diasVacacionesRestante?: number
-    telefono?: string
-    fechaIngreso?: string
-    nroCedula?: string
-    estado?: string
-    requiereCambioContrasena?: boolean
-    urlPerfil?: string
-  }
 export type User = {
   idUsuario: number
   nombre: string
@@ -42,14 +22,6 @@ export type User = {
   urlPerfil?: string
 }
 
-  type AuthContextType = {
-    user: User | null
-    token: string | null
-    isAuthenticated: boolean
-    login: (token: string) => void
-    logout: () => void
-    refreshUser: () => void
-  }
 type AuthContextType = {
   user: User | null
   userLoaded: boolean
@@ -60,7 +32,7 @@ type AuthContextType = {
   refreshUser: () => void
 }
 
-  const AuthContext = createContext<AuthContextType | undefined>(undefined)
+const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 // decode JWT payload
 function parseJwt(token: string): any {
@@ -78,33 +50,6 @@ function parseJwt(token: string): any {
   }
 }
 
-  // Mapear ID de rol → nombre (CLAVE DEL PROBLEMA)
-  function mapRolNombre(idRol: number): string {
-    switch (idRol) {
-      case 1:
-        return 'TALENTO_HUMANO'
-      case 2:
-        return 'OPERACIONES'
-      case 3:
-        return 'ADMINISTRADOR_DEL_SISTEMA'
-      case 4:
-        return 'DESARROLLO'
-      case 5:
-        return 'DIRECTIVO'
-      case 6:
-        return 'TEAM_LEADER'
-      default:
-        return ''
-    }
-  }
-
-  /* ===============================
-    PROVIDER
-  ================================ */
-
-  export const AuthProvider = ({ children }: { children: ReactNode }) => {
-    const [user, setUser] = useState<User | null>(null)
-    const [token, setToken] = useState<string | null>(null)
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null)
   const [token, setToken] = useState<string | null>(null)
@@ -121,6 +66,7 @@ useEffect(() => {
     setUser(null)
   }
 }, [])
+
 
   const decodeAndSetUser = async (jwtToken: string) => {
     try {
@@ -149,7 +95,7 @@ useEffect(() => {
               idRol: payload.rol.idRol ?? 0,
               nombre: payload.rol.nombre ?? '',
             }
-          : null, // 👈 si no viene, null
+          : null, // si no viene, null
       }
       setUser(basicUser)
 
@@ -164,9 +110,9 @@ useEffect(() => {
       console.log('FULL USER BACKEND:', fullUser);
       const mappedUser: User = {
         ...fullUser,
-        idUsuario: fullUser.idUsuario,
+        idUsuario: fullUser.idUsuario, 
       }
-
+      
       setUser(mappedUser)
       setUserLoaded(true);
     } catch (e) {
