@@ -8,8 +8,10 @@ export interface PaginatedResponse<T> {
   number: number
 }
 
-export async function getSolicitudesTL(token: string): Promise<SolicitudItem[]> {
-  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/teamleader/users/requests/getall`, {
+const BASE_URL = `${import.meta.env.VITE_API_URL}/api/v1/admin/teamleader`
+
+export async function getSolicitudesTL(token: string, page = 0, size = 10): Promise<PaginatedResponse<SolicitudItem>> {
+  const res = await fetch(`${BASE_URL}/requests?page=${page}&size=${size}`, {
     headers: { Authorization: `Bearer ${token}` },
   })
 
@@ -18,7 +20,7 @@ export async function getSolicitudesTL(token: string): Promise<SolicitudItem[]> 
 }
 
 export async function getSolicitudByIdTL(token: string, id: string): Promise<SolicitudItem> {
-  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/teamleader/users/requests/${id}`, {
+  const res = await fetch(`${BASE_URL}/requests/${id}`, {
     headers: { Authorization: `Bearer ${token}` },
   })
 
@@ -27,13 +29,12 @@ export async function getSolicitudByIdTL(token: string, id: string): Promise<Sol
 }
 
 export async function aprobarSolicitudTL(token: string, id: string) {
-  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/teamleader/users/requests/${id}/accept`, {
+  const res = await fetch(`${BASE_URL}/users/requests/${id}/accept`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({}),
   })
 
   if (!res.ok) throw new Error(await res.text())
@@ -41,13 +42,12 @@ export async function aprobarSolicitudTL(token: string, id: string) {
 }
 
 export async function rechazarSolicitudTL(token: string, id: string) {
-  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/teamleader/users/requests/${id}/reject`, {
+  const res = await fetch(`${BASE_URL}/users/requests/${id}/reject`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({}),
   })
 
   if (!res.ok) throw new Error(await res.text())

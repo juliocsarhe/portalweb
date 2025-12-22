@@ -19,25 +19,25 @@ export default function BeneficiosModal({ show, onClose, onSelect, selectedId }:
 
   const beneficios: Beneficio[] = [
     {
-      id: 9,
+      id: 1,
       nombre: 'Préstamos',
       descripcion: 'Préstamos sin intereses!',
       imagen: '/src/assets/image9.png',
     },
     {
-      id: 10,
+      id: 2,
       nombre: 'Capacitaciones',
       descripcion: 'Financiación y 50 horas libres al año',
       imagen: '/src/assets/image10.png',
     },
     {
-      id: 11,
+      id: 3,
       nombre: 'Nutricionista',
       descripcion: 'Convenio con nutricionista y cuota automática',
       imagen: '/src/assets/image11.png',
     },
     {
-      id: 12,
+      id: 4,
       nombre: 'Gym',
       descripcion: 'Convenio con el gym FITTEST',
       imagen: '/src/assets/image12.png',
