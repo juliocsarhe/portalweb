@@ -66,9 +66,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // Obtener solo el ID del rol
         Integer rolId = usuario.getRol().getIdRol();
 
+        String authority = "ROLE_" + rolId;
+
         String token = Jwts.builder()
                 .subject(correo)
                 .claim("rol", rolId) // Solo guardamos el ID del rol
+                .claim("authorities", java.util.List.of(authority))
+                //.expiration(Date.from(new Date().toInstant().plusSeconds(7200))) // 2 horas de validez
                 .expiration(Date.from(new Date().toInstant().plusSeconds(28800))) // 8 horas de validez
                 .issuedAt(Date.from(new Date().toInstant()))
                 .signWith(SECRET_KEY)

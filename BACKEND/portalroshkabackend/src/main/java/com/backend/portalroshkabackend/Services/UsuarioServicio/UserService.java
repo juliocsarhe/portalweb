@@ -1,31 +1,27 @@
 package com.backend.portalroshkabackend.Services.UsuarioServicio;
 
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.SolicitudUserDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserCambContrasDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserCargoDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserEquiposDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserHomeDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserRolDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserSolBeneficioDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserSolDispositivoDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserSolPermisoDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserSolVacacionDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserUpdateDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserUpdateFoto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.tiposBeneficiosDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.tiposDispositivosDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.tiposPermisosDto;
-import com.backend.portalroshkabackend.Models.AsignacionUsuarioEquipo;
-import com.backend.portalroshkabackend.Models.Equipos;
-import com.backend.portalroshkabackend.Models.Solicitud;
-import com.backend.portalroshkabackend.Models.TipoBeneficios;
-import com.backend.portalroshkabackend.Models.TipoDispositivo;
-import com.backend.portalroshkabackend.Models.TipoPermisos;
-import com.backend.portalroshkabackend.Models.Usuario;
+import com.backend.portalroshkabackend.DTO.Usuario.SolicitudUserDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserCambContrasDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserCargoDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserEquiposDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserHomeDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserRolDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserSolBeneficioDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserSolDispositivoDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserSolPermisoDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserSolVacacionDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserUpdateDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserUpdateFoto;
+import com.backend.portalroshkabackend.DTO.Usuario.tiposBeneficiosDto;
+import com.backend.portalroshkabackend.DTO.Usuario.tiposDispositivosDto;
+import com.backend.portalroshkabackend.DTO.Usuario.tiposPermisosDto;
+import com.backend.portalroshkabackend.DTO.common.DefaultResponseDto;
+import com.backend.portalroshkabackend.Models.*;
 import com.backend.portalroshkabackend.Models.Enum.EstadoActivoInactivo;
 import com.backend.portalroshkabackend.Models.Enum.EstadoSolicitudEnum;
 import com.backend.portalroshkabackend.Models.Enum.SolicitudesEnum;
+import com.backend.portalroshkabackend.Repositories.ProyectoRepository;
 import com.backend.portalroshkabackend.Repositories.UsuarioRepositories.AsigUsuarioEquipoRepository;
 // import com.backend.portalroshkabackend.Repositories.UsuarioRepositories.BeneficiosAsignadosRepository;
 import com.backend.portalroshkabackend.Repositories.UsuarioRepositories.SolicitudesTHRepository;
@@ -35,6 +31,9 @@ import com.backend.portalroshkabackend.Repositories.UsuarioRepositories.UsuarioR
 import com.backend.portalroshkabackend.Repositories.UsuarioRepositories.TipoDispositivosRepository;
 
 import com.backend.portalroshkabackend.notification.NotificationService;
+import com.backend.portalroshkabackend.tools.RepositoryService;
+import com.backend.portalroshkabackend.tools.mapper.DefaultResponseMapper;
+import com.backend.portalroshkabackend.tools.security.SecurityUtils;
 import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSolicitudSaEvent;
 import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSolicitudThEvent;
 import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSolicitudTlEvent;
@@ -46,7 +45,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Base64;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -54,6 +52,9 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import static com.backend.portalroshkabackend.tools.MessagesConst.DATABASE_DEFAULT_ERROR;
+import static com.backend.portalroshkabackend.tools.MessagesConst.USUARIO_UPDATED_MESSAGE;
 
 @Service
 public class UserService {
@@ -74,6 +75,17 @@ public class UserService {
 
     @Autowired
     private NotificationService notificationService;
+
+    @Autowired
+    private SecurityUtils securityUtils;
+
+    @Autowired
+    private RepositoryService repositoryService;
+
+    @Autowired
+    private DefaultResponseMapper defaultResponseMapper;
+    private ProyectoRepository proyectoRepository;
+
 
     // @Autowired
     // private BeneficiosAsignadosRepository beneficiosAsignadosRepository;
@@ -342,8 +354,17 @@ public class UserService {
 
                 if (Objects.equals(porcentaje1, porcentaje2)) {
                     LocalDate hoy = LocalDate.now();
-                    long tiempoRestante1 = equipoPrincipal.getFechaLimite() != null ? ChronoUnit.DAYS.between(hoy, equipoPrincipal.getFechaLimite()) : -1;
-                    long tiempoRestante2 = equipoSecundario.getFechaLimite() != null ? ChronoUnit.DAYS.between(hoy, equipoSecundario.getFechaLimite()) : -1;
+
+                    Proyecto proyecto1 = proyectoRepository.findByEquipos(equipoPrincipal).orElse(null);
+                    Proyecto proyecto2 = proyectoRepository.findByEquipos(equipoSecundario).orElse(null);
+
+                    LocalDate fechaLimite1 = proyecto1 != null ? proyecto1.getFechaLimite():null;
+                    LocalDate fechaLimite2 = proyecto2 != null ? proyecto2.getFechaLimite():null;
+
+
+                    long tiempoRestante1 = fechaLimite1 != null ? ChronoUnit.DAYS.between(hoy, fechaLimite1):-1;
+
+                    long tiempoRestante2 = fechaLimite2 != null ? ChronoUnit.DAYS.between(hoy, fechaLimite2):-1;
 
                     lider = tiempoRestante1 >= tiempoRestante2 ? equipoPrincipal.getLider() : equipoSecundario.getLider();
                 } else {
@@ -522,8 +543,15 @@ public class UserService {
 
                 if (Objects.equals(porcentaje1, porcentaje2)) { // si tienen el mismo porcentaje de trabajo se desempata por fecha limite del equipo
                     LocalDate hoy = LocalDate.now();
-                    long tiempoRestante1 = equipoPrincipal.getFechaLimite() != null ? ChronoUnit.DAYS.between(hoy, equipoPrincipal.getFechaLimite()) : -1;
-                    long tiempoRestante2 = equipoSecundario.getFechaLimite() != null ? ChronoUnit.DAYS.between(hoy, equipoSecundario.getFechaLimite()) : -1;
+
+                    Proyecto proyecto1 = proyectoRepository.findByEquipos(equipoPrincipal).orElse(null);
+                    Proyecto proyecto2 = proyectoRepository.findByEquipos(equipoSecundario).orElse(null);
+
+                    LocalDate fechaLimite1 = proyecto1 != null ? proyecto1.getFechaLimite():null;
+                    LocalDate fechaLimite2 = proyecto2 != null ? proyecto2.getFechaLimite():null;
+
+                    long tiempoRestante1 = fechaLimite1 != null ? ChronoUnit.DAYS.between(hoy,fechaLimite1) : -1;
+                    long tiempoRestante2 = fechaLimite2 != null ? ChronoUnit.DAYS.between(hoy, fechaLimite2): -1;
 
                     lider = tiempoRestante1 >= tiempoRestante2 ? equipoPrincipal.getLider() : equipoSecundario.getLider();
                 } else {
@@ -687,37 +715,24 @@ public class UserService {
         return true;
     }
 
-    public boolean actualizarFoto(UserUpdateFoto dto){
+    public DefaultResponseDto actualizarFoto(UserUpdateFoto dto){
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String correo;
-        if (principal instanceof UserDetails) {
-            correo = ((UserDetails) principal).getUsername();
-        } else {
-            correo = principal.toString();
-        }
+        Usuario usuario = securityUtils.getUsuarioActual();
 
-        Usuario usuario = getUserByCorreo(correo);
         if (usuario == null) {
-            throw new RuntimeException("Usuario no encontrado");
+            throw new RuntimeException("Usuario no encontrado"); //TODO: refactorizar excepciones
         }
 
-        if (!esBase64(dto.getFoto())) { // Verifica si la cadena es una imagen en base64
-            return false;
-        }
-        usuario.setUrlPerfil(dto.getFoto()); // Actualiza la foto con la nueva codificada
-        usuarioRepository.save(usuario);
-        return true;
+        usuario.setUrlPerfil(dto.getUrlPerfil()); // Actualiza la foto con la nueva codificada
+
+        repositoryService.save(
+                usuarioRepository,
+                usuario,
+                DATABASE_DEFAULT_ERROR);
+
+        return defaultResponseMapper.build(usuario.getIdUsuario(), USUARIO_UPDATED_MESSAGE);
     }
 
-    public boolean esBase64(String texto) {
-        try {
-            Base64.getDecoder().decode(texto);
-            return true;
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
-    }
 
     // Mapeo de Solicitud a SolicitudUserDto según el nuevo modelo
     private SolicitudUserDto mapSolicitudToDto(Solicitud solicitud) {

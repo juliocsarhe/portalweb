@@ -21,4 +21,7 @@ export const RolesMap: Record<string, Roles> = {
   DIRECTORES: Roles.DIRECTIVO,
   ADMINISTRATIVO: Roles.ADMINISTRATIVO,
   TEAM_LEADER: Roles.TEAM_LEADER,
+
+  'TEAM LEADER': Roles.TEAM_LEADER,
+  'TEAM LIDER': Roles.TEAM_LEADER,
 }

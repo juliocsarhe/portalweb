@@ -1,10 +1,9 @@
 package com.backend.portalroshkabackend.Controllers.HumanResource;
 
-import com.backend.portalroshkabackend.DTO.*;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserDto;
 import com.backend.portalroshkabackend.DTO.common.UserInsertDto;
 import com.backend.portalroshkabackend.DTO.common.UserUpdateDto;
-import com.backend.portalroshkabackend.DTO.th.employees.DefaultResponseDto;
+import com.backend.portalroshkabackend.DTO.common.DefaultResponseDto;
 import com.backend.portalroshkabackend.DTO.th.employees.UserByIdResponseDto;
 import com.backend.portalroshkabackend.DTO.th.employees.UserResponseDto;
 import com.backend.portalroshkabackend.Models.Enum.EstadoActivoInactivo;
@@ -98,7 +97,7 @@ public class EmployeeController {
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
                 .path("/th/users/{id}")
-                .buildAndExpand(user.getIdUsuario())
+                .buildAndExpand(user.getId())
                 .toUri(); // Para retornar en el header la ubicacion en donde se puede encontrar el usuario creado, por si el frontend lo necesita
         return ResponseEntity.created(location).body(user);
     }

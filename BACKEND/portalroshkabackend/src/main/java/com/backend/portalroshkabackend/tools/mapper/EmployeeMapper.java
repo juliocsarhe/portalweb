@@ -1,9 +1,8 @@
 package com.backend.portalroshkabackend.tools.mapper;
 
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserDto;
 import com.backend.portalroshkabackend.DTO.common.UserInsertDto;
 import com.backend.portalroshkabackend.DTO.common.UserUpdateDto;
-import com.backend.portalroshkabackend.DTO.th.employees.DefaultResponseDto;
 import com.backend.portalroshkabackend.DTO.th.employees.UserByIdResponseDto;
 import com.backend.portalroshkabackend.DTO.th.employees.UserResponseDto;
 import com.backend.portalroshkabackend.Models.Usuario;
@@ -15,16 +14,8 @@ import java.time.Period;
 
 public class EmployeeMapper {
 
+
     // ------ ENTITY TO DTO ------
-
-    public static DefaultResponseDto toDefaultResponseDto(Integer idUsuario, String message){
-        DefaultResponseDto dto = new DefaultResponseDto();
-
-        dto.setIdUsuario(idUsuario);
-        dto.setMessage(message);
-
-        return dto;
-    }
 
     // Devolver todos los campos
     public static UserResponseDto toUserResponseDto(Usuario user) {
@@ -116,10 +107,8 @@ public class EmployeeMapper {
     // ------ DTO TO ENTITY ------
 
 
-    public static Usuario toUsuarioFromInsertDto(UserInsertDto insertDto){
+    public static Usuario toUsuarioFromInsertDto(UserInsertDto insertDto, String password){
         Usuario user = new Usuario();
-
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
         user.setNombre(insertDto.getNombre());
         user.setApellido(insertDto.getApellido());
@@ -128,12 +117,13 @@ public class EmployeeMapper {
         user.setRol(insertDto.getRol());
         user.setFechaIngreso(insertDto.getFechaIngreso());
         user.setEstado(insertDto.getEstado());
-        user.setContrasena(encoder.encode(insertDto.getNroCedula()));
         user.setTelefono(insertDto.getTelefono());
         user.setCargo(insertDto.getCargo());
         user.setFoco(insertDto.getFoco());
         user.setSeniority(insertDto.getSeniority());
         user.setFechaNacimiento(insertDto.getFechaNacimiento());
+
+        user.setContrasena(password);
 
         Period period = Period.between(insertDto.getFechaIngreso(), LocalDate.now());
 

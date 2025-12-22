@@ -1,9 +1,9 @@
 package com.backend.portalroshkabackend.Services.HumanResource;
 
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserDto;
 import com.backend.portalroshkabackend.DTO.common.UserInsertDto;
 import com.backend.portalroshkabackend.DTO.common.UserUpdateDto;
-import com.backend.portalroshkabackend.DTO.th.employees.DefaultResponseDto;
+import com.backend.portalroshkabackend.DTO.common.DefaultResponseDto;
 import com.backend.portalroshkabackend.DTO.th.employees.UserByIdResponseDto;
 import com.backend.portalroshkabackend.DTO.th.employees.UserResponseDto;
 import com.backend.portalroshkabackend.Models.Enum.EstadoActivoInactivo;
@@ -14,6 +14,7 @@ import com.backend.portalroshkabackend.notification.NotificationService;
 import com.backend.portalroshkabackend.notification.aws.NotificacitionServiceAws;
 import com.backend.portalroshkabackend.tools.RepositoryService;
 import com.backend.portalroshkabackend.tools.errors.errorslist.user.UserNotFoundException;
+import com.backend.portalroshkabackend.tools.mapper.DefaultResponseMapper;
 import com.backend.portalroshkabackend.tools.mapper.EmployeeMapper;
 import com.backend.portalroshkabackend.tools.validator.ValidatorStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 import static com.backend.portalroshkabackend.tools.MessagesConst.*;
 
 @Service
@@ -34,6 +37,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
     private final ValidatorStrategy<UserInsertDto> insertValidator;
     private final ValidatorStrategy<Usuario> deleteValidator;
     private final ValidatorStrategy<UserUpdateDto> updateValidator;
+    private final DefaultResponseMapper defaultResponseMapper;
 
     private final NotificationService notificationService;
 
@@ -46,8 +50,10 @@ public class EmployeeServiceImpl implements IEmployeeService {
                                @Qualifier("employeeInsertValidator") ValidatorStrategy<UserInsertDto> insertValidator,
                                @Qualifier("employeeDeleteValidator") ValidatorStrategy<Usuario> deleteValidator,
                                @Qualifier("employeeUpdateValidator") ValidatorStrategy<UserUpdateDto> updateValidator,
+                               DefaultResponseMapper defaultResponseMapper,
                                NotificationService notificationService
     ){
+        this.defaultResponseMapper = defaultResponseMapper;
         this.notificationService = notificationService;
         this.userRepository = userRepository;
         this.repositoryService = repositoryService;
@@ -75,7 +81,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
                 DATABASE_DEFAULT_ERROR
         );
 
-        return EmployeeMapper.toDefaultResponseDto(savedUser.getIdUsuario(), PASSWORD_RESETED_MESSAGE);
+        return defaultResponseMapper.build(savedUser.getIdUsuario(), PASSWORD_RESETED_MESSAGE);
     }
 
     @Transactional(readOnly = true)
@@ -115,10 +121,11 @@ public class EmployeeServiceImpl implements IEmployeeService {
     @Transactional
     @Override
     public DefaultResponseDto addEmployee(UserInsertDto insertDto) {
-
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         insertValidator.validate(insertDto);
-
-        Usuario user = EmployeeMapper.toUsuarioFromInsertDto(insertDto); // Para mapear el InserDto a entidad Usuario
+        String tempPassword = UUID.randomUUID().toString().substring(0, 8);
+        String password = encoder.encode(tempPassword);
+        Usuario user = EmployeeMapper.toUsuarioFromInsertDto(insertDto, password); // Para mapear el InserDto a entidad Usuario
 
         Usuario savedUser = repositoryService.save(
                 userRepository,
@@ -128,9 +135,9 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
         //para subscribir los correos de los nuevos usuarios
         notificacitionServiceAws.subscribeNewUserToTopic(savedUser.getCorreo());
-        System.out.println("CREANDO USUARIO NUEVO " + insertDto.getCorreo());
+        notificationService.sendPassword(user, tempPassword);
 
-        return EmployeeMapper.toDefaultResponseDto(savedUser.getIdUsuario(), EMPLOYEE_CREATED_MESSAGE);
+        return defaultResponseMapper.build(savedUser.getIdUsuario(), EMPLOYEE_CREATED_MESSAGE);
 
     }
 
@@ -155,7 +162,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
 
 
-        return EmployeeMapper.toDefaultResponseDto(updatedUser.getIdUsuario(), EMPLOYEE_UPDATED_MESSAGE);
+        return defaultResponseMapper.build(updatedUser.getIdUsuario(), EMPLOYEE_UPDATED_MESSAGE);
 
     }
 
@@ -178,7 +185,7 @@ public class EmployeeServiceImpl implements IEmployeeService {
                 DATABASE_DEFAULT_ERROR
         );
 
-        return EmployeeMapper.toDefaultResponseDto(deletedUser.getIdUsuario(), EMPLOYEE_DELETED_MESSAGE);
+        return defaultResponseMapper.build(deletedUser.getIdUsuario(), EMPLOYEE_DELETED_MESSAGE);
 
     }
 }

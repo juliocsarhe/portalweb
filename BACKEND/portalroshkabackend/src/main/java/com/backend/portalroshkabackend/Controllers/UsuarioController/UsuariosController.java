@@ -10,21 +10,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.backend.portalroshkabackend.DTO.th.novedades.NovedadesResponseDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.SolicitudUserDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserCambContrasDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserHomeDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserMensajeJsonDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserSolBeneficioDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserSolDispositivoDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserSolPermisoDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserSolVacacionDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserUpdateDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.UserUpdateFoto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.tiposBeneficiosDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.tiposDispositivosDto;
-import com.backend.portalroshkabackend.DTO.UsuarioDTO.tiposPermisosDto;
+
+import com.backend.portalroshkabackend.DTO.Usuario.SolicitudUserDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserCambContrasDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserHomeDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserMensajeJsonDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserSolBeneficioDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserSolDispositivoDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserSolPermisoDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserSolVacacionDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserUpdateDto;
+import com.backend.portalroshkabackend.DTO.Usuario.UserUpdateFoto;
+import com.backend.portalroshkabackend.DTO.Usuario.tiposBeneficiosDto;
+import com.backend.portalroshkabackend.DTO.Usuario.tiposDispositivosDto;
+import com.backend.portalroshkabackend.DTO.Usuario.tiposPermisosDto;
 import com.backend.portalroshkabackend.Services.UsuarioServicio.UserService;
 
 
@@ -133,15 +133,9 @@ public class UsuariosController {
     }
 
     @PostMapping("/actualizarfoto")
+
     public ResponseEntity<?> actualizarFoto(@RequestBody UserUpdateFoto dto) {
-
-        boolean actualizado = userService.actualizarFoto(dto);
-
-        if (actualizado) {
-            return ResponseEntity.ok("Foto actualizada correctamente");
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No se pudo actualizar la foto");
-        }
+        return ResponseEntity.ok(userService.actualizarFoto(dto));
     }
 
     // Get de las solicitudes por ID
