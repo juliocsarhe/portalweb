@@ -6,7 +6,7 @@ import {
 import CarruselNovedades from '@/features/novedades/components/CarruselNovedades'
 import AvisosList from '@/features/novedades/components/AvisosList'
 
-// 🔔 notificaciones
+// notificaciones
 import NotificationBell from '../../../features/notificaciones/components/NotificationBell'
 import { useState } from 'react'
 

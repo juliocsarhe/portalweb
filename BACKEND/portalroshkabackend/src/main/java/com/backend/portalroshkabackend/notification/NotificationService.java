@@ -48,7 +48,10 @@ public class NotificationService {
     public void sendNotificationToTeamLeader(Solicitud solicitud, String correo) {
 
         String username = solicitud.getUsuario().getNombre() + " " + solicitud.getUsuario().getApellido();
-        String message = username + " hizo una solicitud de " + solicitud.getTipoSolicitud().toString().toLowerCase();
+        String message = "BIENVENIDO A PORTAL ROSHKA" + ".\n\n"
+                + username + " realizo una solicitud: " + solicitud.getTipoSolicitud().toString().toLowerCase() + ",\n\n"
+                + "Saludos,\n"
+                + "Equipo Portal Roshka";
 
         System.out.println("ENVIANDO CORREO AL LIDER");
 
@@ -61,7 +64,10 @@ public class NotificationService {
     public void sendNotificationToTH(Solicitud solicitud) {
 
         String username = solicitud.getUsuario().getNombre() + " " + solicitud.getUsuario().getApellido();
-        String message = username + " realizo una solicitud: " + solicitud.getTipoSolicitud().toString().toLowerCase();
+        String message = "BIENVENIDO A PORTAL ROSHKA" + ",\n\n"
+                + username + " realizo una solicitud: " + solicitud.getTipoSolicitud().toString().toLowerCase() + ".\n\n"
+                + "Saludos,\n"
+                + "Equipo Portal Roshka";
 
         System.out.println("Enviando correo a TH" + correoTH);
         emailService.sendEmailToUser(correoTH, "NUEVA SOLICITUD", message);
@@ -71,7 +77,10 @@ public class NotificationService {
     public void sendNotificationToSys (Solicitud  solicitud) {
 
         String username = solicitud.getUsuario().getNombre() + " " + solicitud.getUsuario().getApellido();
-        String message = username + " realizo una solicitud: " + solicitud.getTipoSolicitud().toString().toLowerCase();
+        String message = "BIENVENIDO A PORTAL ROSHKA" + ".\n\n"
+                + username + " realizo una solicitud: " + solicitud.getTipoSolicitud().toString().toLowerCase() + ".\n\n"
+                + "Saludos,\n"
+                + "Equipo Portal Roshka";
 
         emailService.sendEmailToUser(correoSA, "NUEVA SOLICITUD", message);
 
@@ -94,13 +103,18 @@ public class NotificationService {
         template.convertAndSendToUser(usuarioCorreo, "/topic/notification", message); //WebSocket
         snsService.sendSolicitudNotification(message); //SNS
 
-
     }
 
     public void notifyUserses(Solicitud solicitud, boolean aprobado) {
         String usuarioCorreo = solicitud.getUsuario().getCorreo();
-        String message = aprobado ? "Tu solicitud de " + solicitud.getTipoSolicitud().toString().toLowerCase() + " ha sido aprobada. "
-                : "Tu solicitud de "  +  solicitud.getTipoSolicitud().toString().toLowerCase() + " ha sido rechazada.";
+        String message = aprobado ? "BIENVENIDO A PORTAL ROSHKA" + ".\n\n" +
+                "Tu solicitud de " + solicitud.getTipoSolicitud().toString().toLowerCase() + " ha sido aprobada." + "\n\n"
+                + "Saludos,\n"
+                + "Equipo Portal Roshka"
+                : "BIENVENIDO A PORTAL ROSHKA" + ".\n\n" +
+                "Tu solicitud de " + solicitud.getTipoSolicitud().toString().toLowerCase() + " ha sido rechazada." + "\n\n"
+                + "Saludos,\n"
+                + "Equipo Portal Roshka";
         String tipoSolicitud = solicitud.getTipoSolicitud().toString().toLowerCase();
 
         System.out.println("ENVIANDO CORREO...");
@@ -128,4 +142,3 @@ public class NotificationService {
     }
 
 }
-

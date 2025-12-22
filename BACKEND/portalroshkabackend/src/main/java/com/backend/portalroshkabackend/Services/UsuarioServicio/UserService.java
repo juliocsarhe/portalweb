@@ -449,7 +449,7 @@ public class UserService {
         solBeneficioDto.setComentario("Solicitud creada con éxito y enviada a Talento Humano");
 
         notificationService.sendNotificationToTH(nuevaSolicitud);
-        NotificarSolicitudThEvent event = new NotificarSolicitudThEvent(0);
+        NotificarSolicitudThEvent event = new NotificarSolicitudThEvent(SolicitudesEnum.BENEFICIO);
         notificationService.sendEvent(event);
 
         return solBeneficioDto;
@@ -517,10 +517,10 @@ public class UserService {
         // Validar que haya al menos una asignación
         if (asignaciones == null || asignaciones.isEmpty()) {
             nuevaSolicitud.setLider(null); // Dirigido a Talento Humano
-            NotificarSolicitudThEvent event = new NotificarSolicitudThEvent(0);
+            NotificarSolicitudThEvent event = new NotificarSolicitudThEvent(SolicitudesEnum.VACACIONES);
             notificationService.sendEvent(event);
         }else {
-            NotificarSolicitudTlEvent event = new NotificarSolicitudTlEvent(0);
+            NotificarSolicitudTlEvent event = new NotificarSolicitudTlEvent(SolicitudesEnum.VACACIONES);
             notificationService.sendEvent(event);
             // Ordenar por porcentaje de trabajo descendente
             //
@@ -613,7 +613,7 @@ public class UserService {
         solDispositivoDto.setComentario("Solicitud de Dispositivo creada con éxito y enviada a SysAdmin");
 
         notificationService.sendNotificationToSys(nuevaSolicitud);
-        NotificarSolicitudSaEvent event = new NotificarSolicitudSaEvent(0);
+        NotificarSolicitudSaEvent event = new NotificarSolicitudSaEvent(SolicitudesEnum.DISPOSITIVO);
         notificationService.sendEvent(event);
 
 

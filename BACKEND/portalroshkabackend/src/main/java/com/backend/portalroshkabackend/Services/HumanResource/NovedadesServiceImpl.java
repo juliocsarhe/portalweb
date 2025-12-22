@@ -49,9 +49,11 @@ public class NovedadesServiceImpl implements INovedadesService {
     public NovedadesDefaultResponseDto create(NovedadesInsertDto dto) {
 
         Usuario user = securityUtils.getUsuarioActual();
-        if (!securityUtils.hasRole(user, SecurityUtils.ROLE_TALENTO_HUMANO)) {
+        if (!securityUtils.hasRole(user, SecurityUtils.ROLE_TALENTO_HUMANO) &&
+                !securityUtils.hasRole(user, SecurityUtils.ROLE_DIRECTORES)) {
             throw new NovedadNotAuthorizedException();
         }
+
 
         insertValidator.validate(dto);
 
@@ -76,9 +78,11 @@ public class NovedadesServiceImpl implements INovedadesService {
     public NovedadesDefaultResponseDto update(NovedadesUpdateDto dto) {
 
         Usuario user = securityUtils.getUsuarioActual();
-        if (!securityUtils.hasRole(user, SecurityUtils.ROLE_TALENTO_HUMANO)) {
+        if (!securityUtils.hasRole(user, SecurityUtils.ROLE_TALENTO_HUMANO) &&
+                !securityUtils.hasRole(user, SecurityUtils.ROLE_DIRECTORES)) {
             throw new NovedadNotAuthorizedException();
         }
+
 
         updateValidator.validate(dto);
 
@@ -109,10 +113,10 @@ public class NovedadesServiceImpl implements INovedadesService {
     public NovedadesDefaultResponseDto delete(Integer id) {
 
         Usuario user = securityUtils.getUsuarioActual();
-        if (!securityUtils.hasRole(user, SecurityUtils.ROLE_TALENTO_HUMANO)) {
+        if (!securityUtils.hasRole(user, SecurityUtils.ROLE_TALENTO_HUMANO) &&
+                !securityUtils.hasRole(user, SecurityUtils.ROLE_DIRECTORES)) {
             throw new NovedadNotAuthorizedException();
         }
-
         // Buscar la novedad
         Novedades novedad = novedadesRepository.findById(id)
                 .orElseThrow(() -> new NovedadNotFoundException("Novedad no encontrada"));

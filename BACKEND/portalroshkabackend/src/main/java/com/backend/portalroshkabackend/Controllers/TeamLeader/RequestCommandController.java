@@ -25,7 +25,7 @@ public class RequestCommandController {
 
         RequestResponseDto respuesta = requestsTeamLeaderService.acceptRequest(idSolicitud);
 
-        NotificarSolicitudAprobadaEvent event = new NotificarSolicitudAprobadaEvent(0);
+        NotificarSolicitudAprobadaEvent event = new NotificarSolicitudAprobadaEvent();
         notificationService.sendEvent(event);
 
         return ResponseEntity.ok(respuesta);
@@ -36,7 +36,7 @@ public class RequestCommandController {
 
         RequestResponseDto respuesta = requestsTeamLeaderService.rejectRequest(idSolicitud);
 
-        NotificarSolicitudRechazadaEvent event = new NotificarSolicitudRechazadaEvent(0);
+        NotificarSolicitudRechazadaEvent event = new NotificarSolicitudRechazadaEvent();
         notificationService.sendEvent(event);
 
         return ResponseEntity.ok(respuesta);

@@ -126,7 +126,7 @@ public class RequestServiceImpl implements IRequestService{
         );
 
        notificationService.notifyUserses(acceptedRequest, true);
-       NotificarSolicitudAprobadaEvent event = new NotificarSolicitudAprobadaEvent(acceptedRequest.getUsuario().getIdUsuario());
+       NotificarSolicitudAprobadaEvent event = new NotificarSolicitudAprobadaEvent();
        notificationService.sendEvent(event);
 
         return requestMapper.toRequestResponseDto(acceptedRequest.getIdSolicitud(), REQUEST_ACCEPTED_MESSAGE);
@@ -152,7 +152,7 @@ public class RequestServiceImpl implements IRequestService{
         );
 
         notificationService.notifyUserses(rejectedRequest, false);
-        NotificarSolicitudRechazadaEvent event = new NotificarSolicitudRechazadaEvent(rejectedRequest.getUsuario().getIdUsuario());
+        NotificarSolicitudRechazadaEvent event = new NotificarSolicitudRechazadaEvent();
         notificationService.sendEvent(event);
 
 
