@@ -7,7 +7,7 @@ import type {
   CargoActionResponse,
 } from '../../../types'
 
-const BASE_URL = 'http://localhost:8080/api/v1/admin/th/cargos'
+const BASE_URL = `${import.meta.env.VITE_API_URL}/api/v1/admin/th/cargos`
 
 /** GET /th/cargos — listado paginado (Spring Page) */
 export async function getCargos(

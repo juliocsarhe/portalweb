@@ -9,178 +9,175 @@ export default function DashboardLayout() {
   const { user, logout } = useAuth()
   const [openMenu, setOpenMenu] = useState<string | null>(null)
 
-  // directivo puede ver todo
-const disponiblePara = (...roles: Roles[]) => {
-  return tieneRol(user, Roles.DIRECTIVO, ...roles)
-}
+  const disponiblePara = (...roles: Roles[]) => {
+    return tieneRol(user, Roles.DIRECTIVO, ...roles)
+  }
 
-const menuOptions = [
-  {
-    id: '/',
-    label: <span className="font-semibold text-[15px]">Inicio</span>,
-    icon: <span className="material-symbols-outlined">home</span>,
-    available: true,
-  },
-
-  {
-    id: 'gestiones',
-    label: <span className="font-semibold text-[15px]">Gestiones</span>,
-    icon: <span className="material-symbols-outlined">folder</span>,
-    available: true,
-    children: [
-      {
-        id: '/solicitudesTH/permisos',
-        label: <span className="font-semibold text-[14px]">Ver Permisos</span>,
-        available: true,
-      },
-      {
-        id: '/solicitudesTH/beneficios',
-        label: <span className="font-semibold text-[14px]">Ver Beneficios</span>,
-        available: true,
-      },
-      {
-        id: '/solicitudesTH/vacaciones',
-        label: <span className="font-semibold text-[14px]">Ver Vacaciones</span>,
-        available: true,
-      },
-      {
-        id: '/solicitudesTL',
-        label: (
-          <span className="font-semibold text-[14px]">Solicitudes de Equipo</span>
-        ),
-        available: disponiblePara(Roles.TEAM_LEADER),
-      },
-    ],
-  },
-
-  {
-    id: 'solicitudes',
-    label: <span className="font-semibold text-[15px]">Solicitudes</span>,
-    icon: <span className="material-symbols-outlined">list_alt</span>,
-    available: true,
-    children: [
-      {
-        id: '/requests',
-        label: <span className="font-semibold text-[14px]">Mis Solicitudes</span>,
-        available: true,
-      },
-      {
-        id: '/request/vacaciones',
-        label: (
-          <span className="font-semibold text-[14px]">Solicitar Vacaciones</span>
-        ),
-        available: true,
-      },
-      {
-        id: '/requests/beneficio',
-        label: (
-          <span className="font-semibold text-[14px]">Solicitar Beneficios</span>
-        ),
-        available: true,
-      },
-      {
-        id: '/requests/permiso',
-        label: (
-          <span className="font-semibold text-[14px]">Solicitar Permisos</span>
-        ),
-        available: true,
-      },
-    ],
-  },
-
-  {
-    id: 'dispositivos',
-    label: <span className="font-semibold text-[15px]">Dispositivos</span>,
-    icon: <span className="material-symbols-outlined">devices</span>,
-    available: true,
-    children: [
-      {
-        id: '/solicitud-dispositivo',
-        label: (
-          <span className="font-semibold text-[14px]">
-            Solicitar Dispositivo
-          </span>
-        ),
-        available: true,
-      },
-      {
-        id: '/dispositivos',
-        label: (
-          <span className="font-semibold text-[14px]">Ver Dispositivos</span>
-        ),
-        available: disponiblePara(Roles.ADMINISTRADOR_DEL_SISTEMA),
-      },
-      {
-        id: '/catalogo-sys',
-        label: (
-          <span className="font-semibold text-[14px]">
-            Tipos de Dispositivos y Ubicaciones
-          </span>
-        ),
-        available: disponiblePara(Roles.ADMINISTRADOR_DEL_SISTEMA),
-      },
-      {
-        id: '/gestion-dispositivos',
-        label: (
-          <span className="font-semibold text-[14px]">
-            Gestión de Dispositivos
-          </span>
-        ),
-        available: disponiblePara(Roles.ADMINISTRADOR_DEL_SISTEMA),
-      },
-    ],
-  },
-
-  {
-    id: '/catalogo-th',
-    label: <span className="font-semibold text-[15px]">Cargos y Roles</span>,
-    icon: <span className="material-symbols-outlined">groups</span>,
-    available: disponiblePara(Roles.TALENTO_HUMANO),
-  },
-  {
-    id: '/usuarios',
-    label: <span className="font-semibold text-[15px]">Funcionarios</span>,
-    icon: <span className="material-symbols-outlined">groups</span>,
-    available: disponiblePara(Roles.TALENTO_HUMANO),
-  },
-
-  {
-    id: '/catalogo-op',
-    label: (
-      <span className="font-semibold text-[15px]">
-        Clientes y Tecnologías
-      </span>
-    ),
-    icon: <span className="material-symbols-outlined">apartment</span>,
-    available: disponiblePara(Roles.OPERACIONES),
-  },
-  {
-    id: '/operations',
-    label: (
-      <span className="font-semibold text-[15px]">Gestión de Equipos</span>
-    ),
-    icon: <span className="material-symbols-outlined">engineering</span>,
-    available: disponiblePara(Roles.OPERACIONES),
-  },
-
-  {
-    id: '/benefits',
-    label: <span className="font-semibold text-[15px]">Beneficios</span>,
-    icon: <span className="material-symbols-outlined">redeem</span>,
-    available: true,
-  },
-
-  {
-    id: '/crear-novedadesTH',
-    label: <span className="font-semibold text-[15px]">Crear Novedades</span>,
-    icon: <span className="material-symbols-outlined">newspaper</span>,
-    available: disponiblePara(
-      Roles.ADMINISTRADOR_DEL_SISTEMA,
-      Roles.TALENTO_HUMANO
-    ),
-  },
-].filter((opt) => opt.available)
-
+  const menuOptions = [
+    {
+      id: '/',
+      label: <span className="font-semibold text-[15px]">Inicio</span>,
+      icon: <span className="material-symbols-outlined">home</span>,
+      available: true,
+    },
+    {
+      id: 'gestiones',
+      label: <span className="font-semibold text-[15px]">Gestiones</span>,
+      icon: <span className="material-symbols-outlined">folder</span>,
+      available: true,
+      children: [
+        {
+          id: '/solicitudesTH/permisos',
+          label: <span className="font-semibold text-[14px]">Ver Permisos</span>,
+          available: true,
+        },
+        {
+          id: '/solicitudesTH/beneficios',
+          label: <span className="font-semibold text-[14px]">Ver Beneficios</span>,
+          available: true,
+        },
+        {
+          id: '/solicitudesTH/vacaciones',
+          label: <span className="font-semibold text-[14px]">Ver Vacaciones</span>,
+          available: true,
+        },
+        {
+          id: '/solicitudesTL',
+          label: <span className="font-semibold text-[14px]">Solicitudes de Equipo</span>,
+          available: disponiblePara(Roles.TEAM_LEADER),
+        },
+      ],
+    },
+    {
+      id: 'solicitudes',
+      label: <span className="font-semibold text-[15px]">Solicitudes</span>,
+      icon: <span className="material-symbols-outlined">list_alt</span>,
+      available: true,
+      children: [
+        {
+          id: '/requests',
+          label: <span className="font-semibold text-[14px]">Mis Solicitudes</span>,
+          available: true,
+        },
+        {
+          id: '/request/vacaciones',
+          label: <span className="font-semibold text-[14px]">Solicitar Vacaciones</span>,
+          available: true,
+        },
+        {
+          id: '/request/beneficio',
+          label: <span className="font-semibold text-[14px]">Solicitar Beneficios</span>,
+          available: true,
+        },
+        {
+          id: '/request/permiso',
+          label: <span className="font-semibold text-[14px]">Solicitar Permisos</span>,
+          available: true,
+        },
+      ],
+    },
+    {
+      id: 'dispositivos',
+      label: <span className="font-semibold text-[15px]">Dispositivos</span>,
+      icon: <span className="material-symbols-outlined">devices</span>,
+      available: true,
+      children: [
+        {
+          id: '/solicitud-dispositivo',
+          label: <span className="font-semibold text-[14px]">Solicitar Dispositivo</span>,
+          available: true,
+        },
+        {
+          id: '/dispositivos',
+          label: <span className="font-semibold text-[14px]">Ver Dispositivos</span>,
+          available: disponiblePara(Roles.ADMINISTRADOR_DEL_SISTEMA),
+        },
+        {
+          id: '/catalogo-sys',
+          label: (
+            <span className="font-semibold text-[14px]">
+              Tipos de Dispositivos y Ubicaciones
+            </span>
+          ),
+          available: disponiblePara(Roles.ADMINISTRADOR_DEL_SISTEMA),
+        },
+        {
+          id: '/gestion-dispositivos',
+          label: <span className="font-semibold text-[14px]">Gestión de Dispositivos</span>,
+          available: disponiblePara(Roles.ADMINISTRADOR_DEL_SISTEMA),
+        },
+      ],
+    },
+    {
+      id: '/catalogo-th',
+      label: <span className="font-semibold text-[15px]">Cargos y Roles</span>,
+      icon: <span className="material-symbols-outlined">groups</span>,
+      available: disponiblePara(Roles.TALENTO_HUMANO),
+    },
+    {
+      id: '/usuarios',
+      label: <span className="font-semibold text-[15px]">Funcionarios</span>,
+      icon: <span className="material-symbols-outlined">groups</span>,
+      available: disponiblePara(Roles.TALENTO_HUMANO),
+    },
+    {
+      id: '/catalogo-op',
+      label: <span className="font-semibold text-[15px]">Clientes y Tecnologías</span>,
+      icon: <span className="material-symbols-outlined">apartment</span>,
+      available: disponiblePara(Roles.OPERACIONES),
+    },
+    {
+      id: '/benefits',
+      label: <span className="font-semibold text-[15px]">Beneficios</span>,
+      icon: <span className="material-symbols-outlined">redeem</span>,
+      available: true,
+    },
+    {
+      id: 'operaciones',
+      label: <span className="font-semibold text-[15px]">Operaciones</span>,
+      icon: <span className="material-symbols-outlined">precision_manufacturing</span>,
+      available: disponiblePara(Roles.OPERACIONES),
+      children: [
+        {
+          id: '/operations/equipos',
+          label: <span className="font-semibold text-[14px]">Gestionar Equipos</span>,
+          available: disponiblePara(Roles.OPERACIONES),
+        },
+        {
+          id: '/operations/proyectos',
+          label: <span className="font-semibold text-[14px]">Gestionar Proyectos</span>,
+          available: disponiblePara(Roles.OPERACIONES),
+        },
+      ],
+    },
+    {
+      id: '/asignar-tareas',
+      label: <span className="font-semibold text-[15px]">Asignar Tareas</span>,
+      icon: <span className="material-symbols-outlined">assignment</span>,
+      available: disponiblePara(Roles.TEAM_LEADER),
+    },
+    {
+      id: '/mi-equipo',
+      label: <span className="font-semibold text-[15px]">Mis Equipos</span>,
+      icon: <span className="material-symbols-outlined">groups</span>,
+      available: disponiblePara(Roles.DESARROLLO, Roles.TEAM_LEADER),
+    },
+    {
+      id: '/mi-proyecto',
+      label: <span className="font-semibold text-[15px]">Mis Proyectos</span>,
+      icon: <span className="material-symbols-outlined">work</span>,
+      available: disponiblePara(Roles.DESARROLLO, Roles.TEAM_LEADER),
+    },
+    {
+      id: '/crear-novedadesTH',
+      label: <span className="font-semibold text-[15px]">Crear Novedades</span>,
+      icon: <span className="material-symbols-outlined">newspaper</span>,
+      available: disponiblePara(
+        Roles.ADMINISTRADOR_DEL_SISTEMA,
+        Roles.TALENTO_HUMANO
+      ),
+    },
+  ].filter((opt) => opt.available)
 
   return (
     <div className="h-screen bg-gray-50 dark:bg-gray-950 flex overflow-hidden">
@@ -191,24 +188,34 @@ const menuOptions = [
                    text-black dark:text-gray-200"
         style={{ WebkitBackdropFilter: 'blur(10px)', backdropFilter: 'blur(10px)' }}
       >
-        {/* Perfil */}
         <div className="p-6 border-b-2 border-black dark:border-gray-800 shrink-0">
-          <NavLink to="/profile" className="flex items-center space-x-3 cursor-pointer hover:opacity-80 transition">
+          <NavLink
+            to="/profile"
+            className="flex items-center space-x-3 cursor-pointer hover:opacity-80 transition"
+          >
             <div className="w-20 h-20 rounded-full overflow-hidden flex items-center justify-center">
               {user?.urlPerfil ? (
-                <img src={`data:image/png;base64,${user.urlPerfil}`} className="w-full h-full object-cover" />
+                <img
+                  src={`data:image/png;base64,${user.urlPerfil}`}
+                  className="w-full h-full object-cover"
+                />
               ) : (
-                <span className="material-symbols-outlined text-6xl text-white">account_circle</span>
+                <span className="material-symbols-outlined text-6xl text-white">
+                  account_circle
+                </span>
               )}
             </div>
             <div>
-              <p className="font-semibold text-black dark:text-gray-100 line-clamp-1">{user?.nombre}</p>
-              <p className="text-sm text-gray-700 dark:text-gray-400">{user?.rol?.nombre}</p>
+              <p className="font-semibold text-black dark:text-gray-100 line-clamp-1">
+                {user?.nombre}
+              </p>
+              <p className="text-sm text-gray-700 dark:text-gray-400">
+                {user?.rol?.nombre}
+              </p>
             </div>
           </NavLink>
         </div>
 
-        {/* Menú */}
         <nav className="flex-1 overflow-y-auto mt-6 custom-scrollbar">
           {menuOptions.map((opt) =>
             opt.children ? (
@@ -227,22 +234,25 @@ const menuOptions = [
                   </span>
                 </button>
                 {openMenu === opt.id &&
-                  opt.children.map((child) => child.available && (
-                    <NavLink
-                      key={child.id}
-                      to={child.id}
-                      className={({ isActive }) =>
-                        [
-                          'w-full text-left px-12 py-2 flex items-center space-x-3 transition-colors text-sm',
-                          isActive
-                            ? 'bg-[#ECB22E] text-white border-r-2 border-[#ECB22E]'
-                            : 'text-black hover:text-blue-500 dark:text-gray-200 dark:hover:text-[#ECB22E]',
-                        ].join(' ')
-                      }
-                    >
-                      <span className="font-medium">{child.label}</span>
-                    </NavLink>
-                  ))}
+                  opt.children.map(
+                    (child) =>
+                      child.available && (
+                        <NavLink
+                          key={child.id}
+                          to={child.id}
+                          className={({ isActive }) =>
+                            [
+                              'w-full text-left px-12 py-2 flex items-center space-x-3 transition-colors text-sm',
+                              isActive
+                                ? 'bg-[#ECB22E] text-white border-r-2 border-[#ECB22E]'
+                                : 'text-black hover:text-blue-500 dark:text-gray-200 dark:hover:text-[#ECB22E]',
+                            ].join(' ')
+                          }
+                        >
+                          <span className="font-medium">{child.label}</span>
+                        </NavLink>
+                      )
+                  )}
               </div>
             ) : (
               <NavLink
@@ -264,7 +274,6 @@ const menuOptions = [
           )}
         </nav>
 
-        {/* Configuración + Logout */}
         <div className="p-6 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
           <NavLink
             to="/configuracion"

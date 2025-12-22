@@ -6,6 +6,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.backend.portalroshkabackend.notification.NotificationService;
+import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSolicitudAprobadaEvent;
+import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSolicitudRechazadaEvent;
 import com.backend.portalroshkabackend.tools.RepositoryService;
 import com.backend.portalroshkabackend.tools.errors.errorslist.solicitudDispositivos.AlreadyCheckedRequestException;
 import com.backend.portalroshkabackend.tools.errors.errorslist.solicitudDispositivos.CommentDRParsingException;
@@ -102,7 +104,11 @@ public class DeviceRequest {
                 DATABASE_DEFAULT_ERROR
         );
 
+        //>>>>>>>>>>>>>>>>
         notificationService.notifyUserses(solicitud, true);
+        NotificarSolicitudAprobadaEvent event = new NotificarSolicitudAprobadaEvent(0);
+        notificationService.sendEvent(event);
+
 
         return convertToDto(solicitud);
 
@@ -132,6 +138,10 @@ public class DeviceRequest {
         );
 
         notificationService.notifyUserses(solicitud, false);
+
+        //>>>>>>>>>>>>>>>>
+        NotificarSolicitudRechazadaEvent event = new NotificarSolicitudRechazadaEvent(0);
+        notificationService.sendEvent(event);
 
         return convertToDto(solicitud);
 

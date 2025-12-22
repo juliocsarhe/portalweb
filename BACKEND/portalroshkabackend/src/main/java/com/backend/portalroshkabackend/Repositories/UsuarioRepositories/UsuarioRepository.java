@@ -1,8 +1,10 @@
 package com.backend.portalroshkabackend.Repositories.UsuarioRepositories;
 
 
+import com.backend.portalroshkabackend.DTO.Operationes.UsuarioisResponseDto;
 import com.backend.portalroshkabackend.Models.Enum.EstadoActivoInactivo;
 import com.backend.portalroshkabackend.Models.Usuario;
+import com.backend.portalroshkabackend.Repositories.OP.UsuarioisRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -40,4 +42,19 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     List<Usuario> findByIdUsuarioNotIn(List<Integer> list);//
 
     List<Usuario> findAllByRol_IdRol(Integer roleId);
-}
+
+    @Query("""
+        SELECT new com.backend.portalroshkabackend.DTO.Operationes.UsuarioisResponseDto(
+            u.idUsuario,
+            u.nombre,
+            u.apellido,
+            u.correo,
+            u.telefono,
+            1
+        )
+        FROM Usuario u
+        JOIN u.rol r
+        WHERE r.idRol = 6
+        AND u.estado = 'A'
+    """)
+    List<UsuarioisResponseDto> obtenerLideres();}

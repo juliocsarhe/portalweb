@@ -7,6 +7,8 @@ import App from './App'
 import { AuthProvider } from './app/providers/AuthContext'
 import './index.css'
 
+
+
 const rootElement = document.getElementById('root')
 if (!rootElement) throw new Error('No se encontró el elemento #root')
 

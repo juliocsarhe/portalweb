@@ -1,13 +1,14 @@
 package com.backend.portalroshkabackend.notification;
 
 import com.backend.portalroshkabackend.Models.Solicitud;
+import com.backend.portalroshkabackend.Models.Usuario;
 import com.backend.portalroshkabackend.Services.UsuariosService;
 import com.backend.portalroshkabackend.notification.aws.NotificacitionServiceAws;
 import com.backend.portalroshkabackend.notification.webSocket.events.Notification;
 import com.backend.portalroshkabackend.notification.ses.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.annotation.Profile;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -21,17 +22,28 @@ public class NotificationService {
         publisher.publishEvent(notification);
     }
 
-    @Autowired
     private UsuariosService usuariosService;
+    private SimpMessagingTemplate template; // WebSocket
+    private NotificacitionServiceAws snsService; // SNS
+    private EmailService emailService;
 
     @Autowired
-    private SimpMessagingTemplate template; // WebSocket
+    public NotificationService(UsuariosService usuariosService,
+                               SimpMessagingTemplate template,
+                               NotificacitionServiceAws  snsService,
+                               EmailService emailService) {
+        this.usuariosService = usuariosService;
+        this.template = template;
+        this.snsService = snsService;
+        this.emailService = emailService;
 
-    @Autowired(required = false)
-    private NotificacitionServiceAws snsService; // SNS
+    }
 
-    @Autowired(required = false)
-    private EmailService emailService;
+    @Value("${correo.th}")
+    private String correoTH;
+
+    @Value("${correo.sa}")
+    private String correoSA;
 
     public void sendNotificationToTeamLeader(Solicitud solicitud, String correo) {
 
@@ -40,46 +52,39 @@ public class NotificationService {
 
         System.out.println("ENVIANDO CORREO AL LIDER");
 
-        if (emailService != null) {
-            emailService.sendEmailToUser(correo, "NUEVA SOLICITUD RECIBIDA", message);
-        }
 
+        emailService.sendEmailToUser(correo, "NUEVA SOLICITUD RECIBIDA", message);
 
 
     }
 
     public void sendNotificationToTH(Solicitud solicitud) {
 
-        String correo = "elias.benittz@gmail.com";
         String username = solicitud.getUsuario().getNombre() + " " + solicitud.getUsuario().getApellido();
         String message = username + " realizo una solicitud: " + solicitud.getTipoSolicitud().toString().toLowerCase();
 
-        if (emailService != null) {
-            emailService.sendEmailToUser(correo, "NUEVA SOLICITUD", message);
-        }
+        System.out.println("Enviando correo a TH" + correoTH);
+        emailService.sendEmailToUser(correoTH, "NUEVA SOLICITUD", message);
+
     }
 
     public void sendNotificationToSys (Solicitud  solicitud) {
-        String correo = "elias.benittz@gmail.com";
+
         String username = solicitud.getUsuario().getNombre() + " " + solicitud.getUsuario().getApellido();
         String message = username + " realizo una solicitud: " + solicitud.getTipoSolicitud().toString().toLowerCase();
 
-        if (emailService != null) {
-            emailService.sendEmailToUser(correo, "NUEVA SOLICITUD", message);
-        }
+        emailService.sendEmailToUser(correoSA, "NUEVA SOLICITUD", message);
 
     }
 
     public void alertTH (Solicitud solicitud, boolean aprobado ) {
 
-
         String username = solicitud.getUsuario().getNombre() + " " + solicitud.getUsuario().getApellido();
         String message = aprobado ? "Al usuario " + username + " se la ha aprobado la solicitud " + solicitud.getTipoSolicitud().toString().toLowerCase()
                 : "Al usuario " + username + " se la ha rechazado la solicitud " + solicitud.getTipoSolicitud().toString().toLowerCase();
 
-        if (emailService != null) {
-            emailService.sendEmailToUser("elias.benittz@gmail.com", "Solicitud aprobada por un Team Lider", message );
-        }
+        emailService.sendEmailToUser(correoTH, "Solicitud aprobada por un Team Lider", message );
+
     }
 
     public void notifyUser(Solicitud solicitud, boolean aprobado) {
@@ -87,25 +92,40 @@ public class NotificationService {
         String usuarioCorreo = solicitud.getUsuario().getCorreo();
 
         template.convertAndSendToUser(usuarioCorreo, "/topic/notification", message); //WebSocket
+        snsService.sendSolicitudNotification(message); //SNS
 
-        if(snsService != null) {
-            snsService.sendSolicitudNotification(message); //SNS
 
-        }
     }
 
     public void notifyUserses(Solicitud solicitud, boolean aprobado) {
         String usuarioCorreo = solicitud.getUsuario().getCorreo();
-        String message = aprobado ? "Tu solicitud ha sido aprobada." : "Tu solicitud ha sido rechazada.";
+        String message = aprobado ? "Tu solicitud de " + solicitud.getTipoSolicitud().toString().toLowerCase() + " ha sido aprobada. "
+                : "Tu solicitud de "  +  solicitud.getTipoSolicitud().toString().toLowerCase() + " ha sido rechazada.";
         String tipoSolicitud = solicitud.getTipoSolicitud().toString().toLowerCase();
-
-        //emailService.sendEmailToUser("aguilaroviedojoseariel31@gmail.com", "PRUEBA123", "SOLO A JOSEE");
 
         System.out.println("ENVIANDO CORREO...");
 
+        emailService.sendEmailToUser(usuarioCorreo, "Estado de solicitud de " + tipoSolicitud, message);
+    }
+
+    public void sendPassword(Usuario usuario, String password) {
+        String usuarioCorreo = usuario.getCorreo();
+        String message = "Bienvenido al Portal Roshka\n\n" +
+                "Hola " + usuarioCorreo + ",\n\n" +
+                "Se ha creado tu cuenta en el Portal Roshka. A continuación tus credenciales de acceso temporales:\n\n" +
+                "Usuario: " + usuario.getCorreo() + "\n" +
+                "Contraseña temporal: " + password + "\n\n" +
+                "Importante: Esta contraseña es temporal y puedes cambiarla en tu primer inicio de sesión.\n\n" +
+                "Si no solicitaste esta cuenta, ignora este correo.\n\n" +
+                "Saludos,\n" +
+                "Equipo Portal Roshka";
+
         if (emailService != null) {
-            emailService.sendEmailToUser(usuarioCorreo, "Estado de solicitud de " + tipoSolicitud, message);
+            emailService.sendEmailToUser(usuarioCorreo,
+                    "Acceso al Portal Roshka: Credenciales Temporales",
+                    message);
         }
     }
+
 }
 
