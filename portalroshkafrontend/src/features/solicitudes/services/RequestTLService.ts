@@ -8,10 +8,10 @@ export interface PaginatedResponse<T> {
   number: number
 }
 
-const BASE_URL = `${import.meta.env.VITE_API_URL}/api/v1/admin/teamleader`
+const BASE_URL = `${import.meta.env.VITE_API_URL}/api/v1/teamleader`
 
 export async function getSolicitudesTL(token: string, page = 0, size = 10): Promise<PaginatedResponse<SolicitudItem>> {
-  const res = await fetch(`${BASE_URL}/requests?page=${page}&size=${size}`, {
+  const res = await fetch(`${BASE_URL}/requests/vacations`, {
     headers: { Authorization: `Bearer ${token}` },
   })
 

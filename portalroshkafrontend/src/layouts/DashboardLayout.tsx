@@ -41,11 +41,6 @@ export default function DashboardLayout() {
           label: <span className="font-semibold text-[14px]">Ver Vacaciones</span>,
           available: true,
         },
-        {
-          id: '/solicitudesTL',
-          label: <span className="font-semibold text-[14px]">Solicitudes de Equipo</span>,
-          available: disponiblePara(Roles.TEAM_LEADER),
-        },
       ],
     },
     {
