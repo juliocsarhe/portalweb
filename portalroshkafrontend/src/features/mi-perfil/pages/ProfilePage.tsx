@@ -3,7 +3,6 @@ import { useState } from 'react'
 import { useAuth } from '../../../app/providers/AuthContext'
 import EditableField from '../../../shared/ui/components/EditableField'
 import UploadImageButton from '../../../shared/ui/components/UploadImageButton'
-import { uploadImageToCloudinary } from '../../novedades/services/uploadImageToCloudinary'
 import ProfileHistory from '@/shared/ui/components/ProfileHistory'
 import { ProfileHistoryItem } from '@/features/asignacion-equipo/types/ProfileHistory.types'
 import { useProfileHistory } from '@/shared/hooks/useProfileHistory'
@@ -32,6 +31,14 @@ function namesFrom(input: any, key = 'nombre'): string[] {
   return []
 }
 
+// 🔧 función para convertir archivo a Base64
+const toBase64 = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => resolve(reader.result as string)
+    reader.onerror = (error) => reject(error)
+  })
 
 export default function ProfilePage() {
   const { user, token, refreshUser } = useAuth()
@@ -65,48 +72,52 @@ export default function ProfilePage() {
 
 
   const handleImageChange = async (file: File) => {
-  try {
-    setIsUploading(true)
-    setUploadError(null)
-    setSuccessMessage(null)
+    try {
+      setIsUploading(true)
+      setUploadError(null)
+      setSuccessMessage(null)
 
-    if (!user) {
-      throw new Error('Usuario no está cargado')
-    }
+      console.log('=== FRONTEND DEBUG ===')
+      console.log('Archivo:', file.name, file.size, file.type)
 
-    const imageUrl = await uploadImageToCloudinary(file)
+      const base64Image = await toBase64(file)
+      const cleanBase64 = base64Image.split(',')[1] // solo el puro contenido
 
+      console.log('Base64 longitud:', base64Image.length)
+      console.log('Base64 inicia con:', base64Image.substring(0, 30))
+      console.log('Contiene data:image:', base64Image.startsWith('data:image'))
 
-    const res = await fetch(
-      'http://localhost:8080/api/v1/usuarios/actualizarfoto',
-      {
+      console.log('Usuario actual:', user)
+
+      if (!user) {
+        throw new Error('Usuario no está cargado')
+      }
+
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/usuarios/actualizarfoto`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('auth_token')}`,
+          Authorization: `Bearer ${localStorage.getItem('auth_token')}`, // 🔑 token de auth
         },
-        body: JSON.stringify({
-          urlPerfil: imageUrl,
-        }),
+        body: JSON.stringify({ foto: cleanBase64 }),
+      })
+
+      if (!res.ok) {
+        throw new Error('Error al actualizar la imagen')
       }
-    )
 
-    if (!res.ok) {
-      throw new Error('Error guardando la imagen')
+      refreshUser()
+      console.log('Usuario desde refresUser:', user)
+
+      setSuccessMessage('Imagen actualizada correctamente')
+      setTimeout(() => setSuccessMessage(null), 3000)
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : 'Error al subir la imagen')
+      console.error('Error al subir la imagen:', err)
+    } finally {
+      setIsUploading(false)
     }
-
-    await refreshUser()
-
-    setSuccessMessage('Imagen actualizada correctamente')
-    setTimeout(() => setSuccessMessage(null), 3000)
-  } catch (err) {
-    setUploadError(err instanceof Error ? err.message : 'Error al subir la imagen')
-    console.error(err)
-  } finally {
-    setIsUploading(false)
   }
-}
-
 
   return (
     <>
@@ -131,23 +142,29 @@ export default function ProfilePage() {
 
           {/* Contenido */}
           <div className="flex-1 overflow-auto p-4 md:p-6">
-            <div className="overflow-hidden rounded-2xl border border-white/40 dark:border-gray-700 bg-white/50 dark:bg-gray-800/70 backdrop-blur-xs shadow-xs">
-              {/* Encabezado responsive */}
-              <div className="p-4 md:p-6 flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-                <div className="flex items-center gap-4 min-w-0">
-                  {/* {user.fotoBase64 } */}
+            <div className="overflow-hidden rounded-2xl border border-white/40 dark:border-gray-700 bg-white/50 dark:bg-gray-800/70
+            backdrop-blur-xs shadow-xs">
 
-                  {user.urlPerfil ? (
-                    <img
-                      src={user.urlPerfil}
-                      alt={fullName}
-                      className="h-16 w-16 md:h-20 md:w-20 rounded-2xl object-cover shrink-0 shadow-sm"
-                    />
-                  ) : (
-                    <div className="h-16 w-16 md:h-20 md:w-20 rounded-2xl bg-linear-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white font-bold text-2xl shrink-0 shadow-sm">
-                      {fullName.charAt(0).toUpperCase()}
-                    </div>
-                  )}
+
+              <div className="p-6 flex flex-row gap-8 w-full items-start">
+
+                {/* Encabezado responsive */}
+                <div className="w-1/3 flex flex-col gap-4">
+                  <div className="flex items-center gap-4 min-w-0">
+
+                    {/* {user.fotoBase64 } */}
+                    {user.urlPerfil ? (
+                      <img
+                        src={`data:image/png;base64,${user.urlPerfil}`}
+                        alt={fullName}
+                        className="h-16 w-16 md:h-20 md:w-20 rounded-full object-cover shrink-0 shadow-sm"
+                      />
+                    ) : (
+                      <div className="h-16 w-16 md:h-20 md:w-20 rounded-full bg-linear-to-br from-blue-400 to-purple-500 flex
+                                   items-center justify-center text-white font-bold text-2xl shrink-0 shadow-sm">
+                        {fullName.charAt(0).toUpperCase()}
+                      </div>
+                    )}
 
                     <div className="min-w-0">
                       <div className="text-xl md:text-2xl font-semibold leading-tight text-gray-900 dark:text-gray-100 truncate">
