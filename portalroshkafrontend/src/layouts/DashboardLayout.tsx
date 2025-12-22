@@ -5,13 +5,10 @@ import '../shared/ui/styles/scrollbar.css'
 import { useState } from 'react'
 import { tieneRol } from '../shared/utils/permisos'
 
-
-
 export default function DashboardLayout() {
   const { user, logout } = useAuth()
   const [openMenu, setOpenMenu] = useState<string | null>(null)
 
-  // directivo puede ver todo
   const disponiblePara = (...roles: Roles[]) => {
     return tieneRol(user, Roles.DIRECTIVO, ...roles)
   }
@@ -23,7 +20,6 @@ export default function DashboardLayout() {
       icon: <span className="material-symbols-outlined">home</span>,
       available: true,
     },
-
     {
       id: 'gestiones',
       label: <span className="font-semibold text-[15px]">Gestiones</span>,
@@ -52,7 +48,6 @@ export default function DashboardLayout() {
         },
       ],
     },
-
     {
       id: 'solicitudes',
       label: <span className="font-semibold text-[15px]">Solicitudes</span>,
@@ -81,7 +76,6 @@ export default function DashboardLayout() {
         },
       ],
     },
-
     {
       id: 'dispositivos',
       label: <span className="font-semibold text-[15px]">Dispositivos</span>,
@@ -101,7 +95,9 @@ export default function DashboardLayout() {
         {
           id: '/catalogo-sys',
           label: (
-            <span className="font-semibold text-[14px]">Tipos de Dispositivos y Ubicaciones</span>
+            <span className="font-semibold text-[14px]">
+              Tipos de Dispositivos y Ubicaciones
+            </span>
           ),
           available: disponiblePara(Roles.ADMINISTRADOR_DEL_SISTEMA),
         },
@@ -112,7 +108,6 @@ export default function DashboardLayout() {
         },
       ],
     },
-
     {
       id: '/catalogo-th',
       label: <span className="font-semibold text-[15px]">Cargos y Roles</span>,
@@ -125,7 +120,6 @@ export default function DashboardLayout() {
       icon: <span className="material-symbols-outlined">groups</span>,
       available: disponiblePara(Roles.TALENTO_HUMANO),
     },
-
     {
       id: '/catalogo-op',
       label: <span className="font-semibold text-[15px]">Clientes y Tecnologías</span>,
@@ -133,16 +127,55 @@ export default function DashboardLayout() {
       available: disponiblePara(Roles.OPERACIONES),
     },
     {
-      id: '/operations',
-      label: <span className="font-semibold text-[15px]">Gestión de Equipos</span>,
-      icon: <span className="material-symbols-outlined">engineering</span>,
+      id: '/benefits',
+      label: <span className="font-semibold text-[15px]">Beneficios</span>,
+      icon: <span className="material-symbols-outlined">redeem</span>,
+      available: true,
+    },
+    {
+      id: 'operaciones',
+      label: <span className="font-semibold text-[15px]">Operaciones</span>,
+      icon: <span className="material-symbols-outlined">precision_manufacturing</span>,
       available: disponiblePara(Roles.OPERACIONES),
+      children: [
+        {
+          id: '/operations/equipos',
+          label: <span className="font-semibold text-[14px]">Gestionar Equipos</span>,
+          available: disponiblePara(Roles.OPERACIONES),
+        },
+        {
+          id: '/operations/proyectos',
+          label: <span className="font-semibold text-[14px]">Gestionar Proyectos</span>,
+          available: disponiblePara(Roles.OPERACIONES),
+        },
+      ],
+    },
+    {
+      id: '/asignar-tareas',
+      label: <span className="font-semibold text-[15px]">Asignar Tareas</span>,
+      icon: <span className="material-symbols-outlined">assignment</span>,
+      available: disponiblePara(Roles.TEAM_LEADER),
+    },
+    {
+      id: '/mi-equipo',
+      label: <span className="font-semibold text-[15px]">Mis Equipos</span>,
+      icon: <span className="material-symbols-outlined">groups</span>,
+      available: disponiblePara(Roles.DESARROLLO, Roles.TEAM_LEADER),
+    },
+    {
+      id: '/mi-proyecto',
+      label: <span className="font-semibold text-[15px]">Mis Proyectos</span>,
+      icon: <span className="material-symbols-outlined">work</span>,
+      available: disponiblePara(Roles.DESARROLLO, Roles.TEAM_LEADER),
     },
     {
       id: '/crear-novedadesTH',
       label: <span className="font-semibold text-[15px]">Crear Novedades</span>,
       icon: <span className="material-symbols-outlined">newspaper</span>,
-      available: disponiblePara(Roles.ADMINISTRADOR_DEL_SISTEMA, Roles.TALENTO_HUMANO),
+      available: disponiblePara(
+        Roles.ADMINISTRADOR_DEL_SISTEMA,
+        Roles.TALENTO_HUMANO
+      ),
     },
   ].filter((opt) => opt.available)
 
@@ -155,7 +188,6 @@ export default function DashboardLayout() {
                    text-black dark:text-gray-200"
         style={{ WebkitBackdropFilter: 'blur(10px)', backdropFilter: 'blur(10px)' }}
       >
-        {/* Perfil */}
         <div className="p-6 border-b-2 border-black dark:border-gray-800 shrink-0">
           <NavLink
             to="/profile"
@@ -177,12 +209,13 @@ export default function DashboardLayout() {
               <p className="font-semibold text-black dark:text-gray-100 line-clamp-1">
                 {user?.nombre}
               </p>
-              <p className="text-sm text-gray-700 dark:text-gray-400">{user?.rol?.nombre}</p>
+              <p className="text-sm text-gray-700 dark:text-gray-400">
+                {user?.rol?.nombre}
+              </p>
             </div>
           </NavLink>
         </div>
 
-        {/* Menú */}
         <nav className="flex-1 overflow-y-auto mt-6 custom-scrollbar">
           {menuOptions.map((opt) =>
             opt.children ? (
@@ -241,7 +274,6 @@ export default function DashboardLayout() {
           )}
         </nav>
 
-        {/* Configuración + Logout */}
         <div className="p-6 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
           <NavLink
             to="/configuracion"

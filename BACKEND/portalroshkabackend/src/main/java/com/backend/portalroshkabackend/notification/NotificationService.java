@@ -107,4 +107,3 @@ public class NotificationService {
         emailService.sendEmailToUser(usuarioCorreo, "Estado de solicitud de " + tipoSolicitud, message);
     }
 }
-

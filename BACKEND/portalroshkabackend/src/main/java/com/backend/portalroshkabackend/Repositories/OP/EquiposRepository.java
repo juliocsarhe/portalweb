@@ -15,8 +15,8 @@ public interface EquiposRepository extends JpaRepository<Equipos, Integer> {
     Page<Equipos> findAllByOrderByNombreDesc(Pageable pageable);
 
     // по имени клиента
-    Page<Equipos> findAllByOrderByCliente_NombreAsc(Pageable pageable);
-    Page<Equipos> findAllByOrderByCliente_NombreDesc(Pageable pageable);
+//    Page<Equipos> findAllByOrderByCliente_NombreAsc(Pageable pageable);
+//    Page<Equipos> findAllByOrderByCliente_NombreDesc(Pageable pageable);
 
     // по имени лидера
     Page<Equipos> findAllByOrderByLider_NombreAsc(Pageable pageable);
@@ -37,4 +37,7 @@ public interface EquiposRepository extends JpaRepository<Equipos, Integer> {
     Equipos findByIdEquipo(Integer idEquipo);
 
     List<Equipos> findAllByLider_IdUsuario(Integer idUsuario);
+
+    List<Equipos> findAllByUsuarios_IdUsuario(Integer idUsuario);
+
 }
