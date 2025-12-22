@@ -8,7 +8,7 @@ interface Props {
 }
 
 export default function NotificationBell({ userId, userRol }: Props) {
-    const { notifications, setNotifications, open, toggleOpen } = useNotifications(userId, userRol);
+    const { notifications, clearNotifications, open, toggleOpen } = useNotifications(userId, userRol);
     const buttonRef = useRef<HTMLButtonElement>(null);
     const [buttonPosition, setButtonPosition] = useState({ top: 0, right: 0 });
     const [isAnimating, setIsAnimating] = useState(false);
@@ -40,7 +40,7 @@ export default function NotificationBell({ userId, userRol }: Props) {
                 )}
             </button>
 
-            {/* Panel de notificaciones usando Portal */}
+            {/* Panel de notificaciones*/}
             {open && createPortal(
                 <div 
                     className={`fixed w-80 bg-white/95 dark:bg-gray-800/95 backdrop-blur-lg shadow-2xl rounded-xl p-4 border border-gray-200 dark:border-gray-700 z-[9999] max-h-96 overflow-y-auto
@@ -93,7 +93,7 @@ export default function NotificationBell({ userId, userRol }: Props) {
                     {notifications.length > 0 && (
                         <button
                             onClick={() => {
-                                setNotifications([]);
+                                clearNotifications();
                                 console.log('Notificaciones limpiadas');
                             }}
                             className="mt-3 w-full text-xs text-blue-600 dark:text-blue-400 hover:underline hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
@@ -104,6 +104,7 @@ export default function NotificationBell({ userId, userRol }: Props) {
                 </div>,
                 document.body
             )}
+
 
             {/* Estilos para la animación */}
             <style>{`
@@ -121,118 +122,3 @@ export default function NotificationBell({ userId, userRol }: Props) {
         </>
     );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import { useNotifications } from '../hooks/useNotifications';
-
-// export default function NotificationBell({ userId }: { userId: number }) {
-//     const { notifications, setNotifications, open, toggleOpen } =
-
-
-//     useNotifications(userId);
-//     return (
-//     <div className="relative">
-//         <button onClick={toggleOpen} className="relative">
-//         🔔
-//         {notifications.length > 0 && (
-//             <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1">
-//             {notifications.length}
-//             </span>
-//         )}
-//         </button>
-//         <div className={`absolute right-0 mt-2 w-64 ${open ? '' : 'hidden'}`}>
-//         <h3 className="font-bold mb-2">Notificaciones</h3>
-//         {notifications.length === 0 ? (
-//             <p>No hay notificaciones</p>
-//         ) : (
-//     notifications.map((n, i) => (
-//             <p key={i} className="text-sm py-1">
-//                 • {n.message}
-//             </p>
-//             ))
-//         )}
-//         {notifications.length > 0 && (
-//             <button
-//             onClick={() => setNotifications([])}
-//             className="mt-2 text-xs text-blue-500"
-//             >
-//             Marcar todas como leídas
-//             </button>
-//         )}
-//         </div>
-//     </div>
-//     );
-// }

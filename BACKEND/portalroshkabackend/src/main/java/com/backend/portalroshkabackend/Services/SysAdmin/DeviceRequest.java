@@ -106,7 +106,7 @@ public class DeviceRequest {
 
         //>>>>>>>>>>>>>>>>
         notificationService.notifyUserses(solicitud, true);
-        NotificarSolicitudAprobadaEvent event = new NotificarSolicitudAprobadaEvent(0);
+        NotificarSolicitudAprobadaEvent event = new NotificarSolicitudAprobadaEvent();
         notificationService.sendEvent(event);
 
 
@@ -137,10 +137,9 @@ public class DeviceRequest {
                 DATABASE_DEFAULT_ERROR
         );
 
-        notificationService.notifyUserses(solicitud, false);
 
-        //>>>>>>>>>>>>>>>>
-        NotificarSolicitudRechazadaEvent event = new NotificarSolicitudRechazadaEvent(0);
+        notificationService.notifyUserses(solicitud, false);
+        NotificarSolicitudRechazadaEvent event = new NotificarSolicitudRechazadaEvent();
         notificationService.sendEvent(event);
 
         return convertToDto(solicitud);
