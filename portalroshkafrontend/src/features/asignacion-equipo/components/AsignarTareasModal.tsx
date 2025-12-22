@@ -75,7 +75,7 @@ export default function AsignarTareasModal({
           ✕
         </button>
 
-        <h2 className="text-xl font-semibold mb-4">Asignar tarea</h2>
+        <h2 className="text-xl font-semibold mb-4 dark:text-gray-300">Asignar tarea</h2>
         <div className="mb-4 text-sm text-gray-700 dark:text-gray-300 space-y-1">
           <p>
             <strong>Usuario:</strong>{' '}

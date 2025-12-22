@@ -11,8 +11,6 @@ export function useAsignarTareas(token: string | null) {
   const [idProyecto, setIdProyecto] = useState<number | undefined>()
 
   const fetchData = useCallback(async () => {
-    console.log('TOKEN EN useAsignarTareas 👉', token)
-
     if (!token) return
 
     setLoading(true)
@@ -26,21 +24,13 @@ export function useAsignarTareas(token: string | null) {
         },
       })
 
-      console.log('STATUS 👉', res.status)
-
       if (!res.ok) {
         throw new Error(`Error ${res.status}`)
       }
 
-      const json = await res.json()
-
-      console.log('JSON QUE LLEGA DEL BACK 👉', json)
-      console.log('ES ARRAY 👉', Array.isArray(json))
-      console.log('LARGO 👉', json?.length)
-
-      setData(json)
+      const json: UsuarioEquipoProyectoItem[] = await res.json()
+      setData(json) 
     } catch (err) {
-      console.error(err)
       setError('Error al cargar usuarios')
     } finally {
       setLoading(false)

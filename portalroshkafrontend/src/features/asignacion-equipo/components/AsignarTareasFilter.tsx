@@ -53,7 +53,7 @@ export default function AsignarTareasFilters({
 
       
               <div className="flex flex-col">
-        <label className="text-sm font-medium mb-1">Buscar</label>
+        <label className="text-sm font-medium mb-1 dark:text-gray-300">Buscar</label>
             <input
           type="text"
           placeholder="Buscar por usuario, equipo o proyecto"
