@@ -47,10 +47,7 @@ import RequestViewTL from '../../features/solicitudes/pages/RequestViewTL.tsx'
 import RequestViewPage from '../../features/solicitudes/pages/RequestViewPage.tsx'
 import RequestTLPage from '../../features/solicitudes/pages/RequestTLPage.tsx'
 
-/* -----------------------------------------
-   IMPORTS NUEVOS PARA EQUIPOS Y PROYECTOS
------------------------------------------- */
-// Operaciones – Equipos (rutas reales)
+
 import EquiposPage from '../../features/operations/equipos/EquiposPage'
 import EquipoFormPageOps from '../../features/operations/equipos/EquipoFormPage'
 import EditarEquipoPageOps from '../../features/operations/equipos/EditarEquipoPage'

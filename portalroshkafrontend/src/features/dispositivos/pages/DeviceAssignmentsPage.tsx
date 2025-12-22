@@ -22,7 +22,7 @@ export default function DeviceAssignmentsPage({ embedded = false }: Props) {
 
   const [page, setPage] = useState(0)
 
-  const puedeVerAsignaciones = tieneRol(user, Roles.ADMINISTRADOR_DEL_SISTEMA, Roles.OPERACIONES)
+  const puedeVerAsignaciones = tieneRol(user, Roles.ADMINISTRADOR_DEL_SISTEMA, Roles.OPERACIONES, Roles.DIRECTIVO)
 
   // Hook especializado con paginación real
   const {

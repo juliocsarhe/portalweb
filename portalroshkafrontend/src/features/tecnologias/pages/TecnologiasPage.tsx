@@ -2,7 +2,7 @@
 import { useMemo, useState } from 'react'
 
 import { useAuth } from '../../../app/providers/AuthContext'
-import { Roles as RolesEnum } from '../../../types/roles'
+import { Roles, Roles as RolesEnum } from '../../../types/roles'
 import PageLayout from '../../../layouts/PageLayout'
 import { useTecnologiasList } from '../hooks/useTecnologiasList'
 import { useTecnologiasForm } from '../hooks/useTecnologiasForm'
@@ -23,7 +23,7 @@ interface Props {
 
 export default function TecnologiasPage({ embedded = false }: Props) {
   const { token, user } = useAuth()
-  const canEdit = tieneRol(user, RolesEnum.OPERACIONES)
+  const canEdit = tieneRol(user, RolesEnum.OPERACIONES, Roles.DIRECTIVO)
 
   const [page, setPage] = useState(0)
   const [selected, setSelected] = useState<TecnologiaResponse | null>(null)
