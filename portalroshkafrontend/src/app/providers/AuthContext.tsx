@@ -62,25 +62,21 @@ type AuthContextType = {
 
   const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-  /* ===============================
-    HELPERS
-  ================================ */
-
-  // Decodificar JWT
-  function parseJwt(token: string): any {
-    try {
-      const base = token.split('.')[1]
-      const json = decodeURIComponent(
-        atob(base)
-          .split('')
-          .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-          .join('')
-      )
-      return JSON.parse(json)
-    } catch {
-      return {}
-    }
+// decode JWT payload
+function parseJwt(token: string): any {
+  try {
+    const base = token.split('.')[1]
+    const json = decodeURIComponent(
+      atob(base)
+        .split('')
+        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .join('')
+    )
+    return JSON.parse(json)
+  } catch {
+    return {}
   }
+}
 
   // Mapear ID de rol → nombre (CLAVE DEL PROBLEMA)
   function mapRolNombre(idRol: number): string {
@@ -114,13 +110,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(null)
   const [userLoaded, setUserLoaded] = useState(false);
 
-  useEffect(() => {
-    const storedToken = localStorage.getItem('auth_token')
-    if (storedToken) {
-      setToken(storedToken)
-      decodeAndSetUser(storedToken)
-    }
-  }, [])
+useEffect(() => {
+  const storedToken = localStorage.getItem('auth_token')
+
+  if (storedToken && storedToken.trim() !== '') {
+    setToken(storedToken)
+    decodeAndSetUser(storedToken)
+  } else {
+    setToken(null)
+    setUser(null)
+  }
+}, [])
 
   const decodeAndSetUser = async (jwtToken: string) => {
     try {
@@ -154,7 +154,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(basicUser)
 
       // Ahora pedimos los datos completos al backend
-      const res = await fetch('http://localhost:8080/api/v1/usuarios/me', {
+      const res = await fetch(`http://localhost:8080/api/v1/usuarios/me`, {
         headers: { Authorization: `Bearer ${jwtToken}` },
       })
 
@@ -164,7 +164,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.log('FULL USER BACKEND:', fullUser);
       const mappedUser: User = {
         ...fullUser,
-        idUsuario: fullUser.idUsuario, // 🔥 ESTE ES EL FIX
+        idUsuario: fullUser.idUsuario,
       }
 
       setUser(mappedUser)
@@ -172,35 +172,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (e) {
       console.error('Error al decodificar el token:', e)
       setUser(null)
-    }
-<<<<<<< HEAD
-      setUser(null)
       setUserLoaded(true);
     }
-=======
-      logout()
   }
 
->>>>>>> origin/develop
+  const login = (jwtToken: string) => {
+    localStorage.setItem('auth_token', jwtToken)
+    setToken(jwtToken)
+    decodeAndSetUser(jwtToken)
   }
 
-    const login = (jwtToken: string) => {
-      localStorage.setItem('auth_token', jwtToken)
-      setToken(jwtToken)
-      decodeAndSetUser(jwtToken)
-    }
-
-    const logout = () => {
-      localStorage.removeItem('auth_token')
-      setUser(null)
-      setToken(null)
-    }
-
-    const refreshUser = () => {
-      if (token) decodeAndSetUser(token)
-    }
-
+  const logout = () => {
+    localStorage.removeItem('auth_token')
+    setUser(null)
+    setToken(null)
   }
+
+  const refreshUser = () => {
+    if (token) decodeAndSetUser(token)
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -218,14 +209,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   )
 }
 
-  /* ===============================
-    HOOK
-  ================================ */
-
-  export const useAuth = () => {
-    const context = useContext(AuthContext)
-    if (!context) {
-      throw new Error('useAuth debe usarse dentro de un AuthProvider')
-    }
-    return context
-  }
+export const useAuth = () => {
+  const context = useContext(AuthContext)
+  if (!context) throw new Error('useAuth debe usarse dentro de un AuthProvider')
+  return context
+}

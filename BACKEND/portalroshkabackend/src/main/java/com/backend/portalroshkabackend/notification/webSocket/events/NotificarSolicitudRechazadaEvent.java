@@ -7,9 +7,7 @@ public class NotificarSolicitudRechazadaEvent implements Notification {
     private int id;
 
     public NotificarSolicitudRechazadaEvent(int id) {
-
         this.id = id;
-
     }
 
     @Override

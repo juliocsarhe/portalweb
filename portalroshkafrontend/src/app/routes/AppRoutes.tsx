@@ -77,8 +77,8 @@ export default function AppRoutes() {
 
           {/* Solicitudes */}
           <Route path="/requests" element={<RequestPage />} />
-          <Route path="/requests/beneficio" element={<RequestFormPage />} />
-          <Route path="/requests/permiso" element={<RequestFormPage />} />
+          <Route path="/request/beneficio" element={<RequestFormPage />} />
+          <Route path="/request/permiso" element={<RequestFormPage />} />
           <Route path="/request/vacaciones" element={<RequestFormPage />} />
           <Route path="/requests/:id" element={<RequestViewPageUsuario />} />
 
