@@ -18,7 +18,7 @@ export default function AsignarTareasPage(){
 
     const {token, user} = useAuth()
 
-    const puedeVer = tieneRol(user, Roles.TEAM_LEADER)
+    const puedeVer = tieneRol(user, Roles.TEAM_LEADER, Roles.DIRECTIVO)
 
     if(!token)return <p>No estas autorizado.</p>
     if(!puedeVer)return <p>No tienes permisos para ver esta pagina.</p>

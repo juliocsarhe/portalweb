@@ -1,6 +1,7 @@
 // src/service/clientesService.ts
 import { throwIfNotOk } from '../../../shared/utils/http'
 import type { ClientesPageResponse, ClienteResponse, ClienteRequest } from '../../../types'
+const BASE_URL = `${import.meta.env.VITE_API_URL}/api/v1/admin/operations/clientes`
 // Ajustá esta ruta según dónde tengas tu helper:
 
 /**
@@ -18,7 +19,7 @@ export async function getClientes(
   if (sortBy) params.append('sortBy', sortBy)
   if (sort) params.append('sort', sort)
 
-  const res = await fetch(`${import.meta.env.VITE_API_URL}/clientes?${params.toString()}`, {
+  const res = await fetch(`${BASE_URL}?${params.toString()}`, {
     headers: { Authorization: `Bearer ${token}` },
   })
 

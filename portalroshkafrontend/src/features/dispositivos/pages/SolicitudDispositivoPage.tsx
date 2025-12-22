@@ -29,7 +29,7 @@ export default function SolicitudDispositivoPage({
   const [showModal, setShowModal] = useState(false)
 
   // Rol del usuario
-  const isSysAdmin = tieneRol(user, Roles.ADMINISTRADOR_DEL_SISTEMA)
+  const isSysAdmin = tieneRol(user, Roles.ADMINISTRADOR_DEL_SISTEMA, Roles.DIRECTIVO)
 
   // Vista de gestión global → listado de TODAS las solicitudes
   const isGestionView = forceSysAdmin

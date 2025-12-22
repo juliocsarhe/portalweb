@@ -19,7 +19,7 @@ public class HistorialDescripcionController {
     private final IHistorialDescripcionService historialDescripcionService;
 
     @PostMapping("/historial/descripcion")
-    @PreAuthorize("hasAnyAuthority('ROLE_6','ROLE_2')")
+    @PreAuthorize("hasAnyAuthority('ROLE_5','ROLE_6','ROLE_2')")
     public ResponseEntity<Void> registrarDescripcion(
             @RequestBody HistorialDescripcionDTO historialDto,
             Authentication authentication

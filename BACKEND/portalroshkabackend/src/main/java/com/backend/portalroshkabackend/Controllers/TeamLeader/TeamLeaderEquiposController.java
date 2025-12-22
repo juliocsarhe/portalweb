@@ -26,7 +26,6 @@ public class TeamLeaderEquiposController {
 
 
     @GetMapping("/equipos/usuarios")
-    @PreAuthorize("hasAnyAuthority('ROLE_6')")
     public ResponseEntity<List<UsuarioEquipoProyectoDTO>> listarUsuarios(Authentication authentication){
 
 

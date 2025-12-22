@@ -33,7 +33,7 @@ export default function ClientesPage({ embedded = false }: Props) {
   const [rowToDelete, setRowToDelete] = useState<ClienteResponse | null>(null)
 
   // Reglas de permisos básicas
-  const canEdit = tieneRol(user, Roles.OPERACIONES)
+  const canEdit = tieneRol(user, Roles.OPERACIONES, Roles.DIRECTIVO)
 
   // Listado paginado
   const { data, loading, error, refresh } = useClientesList(token, {
