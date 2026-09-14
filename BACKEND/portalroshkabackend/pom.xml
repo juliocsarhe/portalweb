@@ -127,6 +127,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Swagger / OpenAPI para generar la collection de Postman automáticamente -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.5.0</version>
+        </dependency>
+
         <!-- SNS aws
         <dependency>
             <groupId>software.amazon.awssdk</groupId>

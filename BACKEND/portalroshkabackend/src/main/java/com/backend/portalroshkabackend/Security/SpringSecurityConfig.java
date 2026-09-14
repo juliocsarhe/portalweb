@@ -69,6 +69,9 @@ public class SpringSecurityConfig {
                     .requestMatchers("/ws/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/usuarios/**").permitAll()
                 
+                // Swagger / OpenAPI
+                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+                
                 // Reglas específicas ANTES de las generales - ORDEN IMPORTANTE
                 
                 // ROLE_1 - TALENTO HUMANO: Acceso a recursos humanos
