@@ -14,11 +14,13 @@ import java.time.LocalDateTime;
 // import jakarta.persistence.CascadeType;
 // import jakarta.persistence.OneToOne;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
 
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "solicitudes")

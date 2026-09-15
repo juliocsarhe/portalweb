@@ -5,10 +5,12 @@ import java.time.LocalDate;
 import com.backend.portalroshkabackend.Models.Enum.EstadoAsignacion;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class DeviceAssignmentDTO {

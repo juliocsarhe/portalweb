@@ -23,11 +23,13 @@ import jakarta.persistence.ManyToOne;
 // import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "dispositivos")
 public class Dispositivo {
