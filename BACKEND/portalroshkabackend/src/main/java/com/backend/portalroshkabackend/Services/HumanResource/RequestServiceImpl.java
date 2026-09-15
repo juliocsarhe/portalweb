@@ -8,7 +8,6 @@ import com.backend.portalroshkabackend.Models.Solicitud;
 import com.backend.portalroshkabackend.Repositories.TH.SolicitudRepository;
 import com.backend.portalroshkabackend.Services.HumanResource.subservices.IAcceptRequestService;
 import com.backend.portalroshkabackend.notification.NotificationService;
-import com.backend.portalroshkabackend.notification.aws.NotificacitionServiceAws;
 import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSolicitudAprobadaEvent;
 import com.backend.portalroshkabackend.notification.webSocket.events.NotificarSolicitudRechazadaEvent;
 import com.backend.portalroshkabackend.tools.RepositoryService;
@@ -35,7 +34,6 @@ public class RequestServiceImpl implements IRequestService{
     private final NotificationService notificationService;
 
     @Autowired(required = false)
-    private NotificacitionServiceAws notificacitionServiceAws;
 
 
     ValidatorStrategy<Solicitud> requestValidator;

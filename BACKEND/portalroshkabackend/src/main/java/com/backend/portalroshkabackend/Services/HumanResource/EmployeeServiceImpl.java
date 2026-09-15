@@ -11,7 +11,6 @@ import com.backend.portalroshkabackend.Models.Usuario;
 import com.backend.portalroshkabackend.Repositories.TH.UserRepository;
 import com.backend.portalroshkabackend.Repositories.TH.UsuarioSpecifications;
 import com.backend.portalroshkabackend.notification.NotificationService;
-import com.backend.portalroshkabackend.notification.aws.NotificacitionServiceAws;
 import com.backend.portalroshkabackend.tools.RepositoryService;
 import com.backend.portalroshkabackend.tools.errors.errorslist.user.UserNotFoundException;
 import com.backend.portalroshkabackend.tools.mapper.DefaultResponseMapper;
@@ -42,7 +41,6 @@ public class EmployeeServiceImpl implements IEmployeeService {
     private final NotificationService notificationService;
 
     @Autowired(required = false)
-    private NotificacitionServiceAws notificacitionServiceAws;
 
     @Autowired
     public EmployeeServiceImpl(UserRepository userRepository,
@@ -134,7 +132,6 @@ public class EmployeeServiceImpl implements IEmployeeService {
         );
 
         //para subscribir los correos de los nuevos usuarios
-        notificacitionServiceAws.subscribeNewUserToTopic(savedUser.getCorreo());
         notificationService.sendPassword(user, tempPassword);
 
         return defaultResponseMapper.build(savedUser.getIdUsuario(), EMPLOYEE_CREATED_MESSAGE);
