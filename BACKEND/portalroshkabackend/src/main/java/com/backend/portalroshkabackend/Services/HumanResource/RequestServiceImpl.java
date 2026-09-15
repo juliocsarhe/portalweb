@@ -33,9 +33,6 @@ public class RequestServiceImpl implements IRequestService{
     private final RequestMapper requestMapper;
     private final NotificationService notificationService;
 
-    @Autowired(required = false)
-
-
     ValidatorStrategy<Solicitud> requestValidator;
 
     @Autowired
